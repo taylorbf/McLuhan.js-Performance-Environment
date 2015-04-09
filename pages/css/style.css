@@ -1,0 +1,23 @@
+body {
+	margin:0;
+	padding:0;
+	height:100%;
+}
+
+h1 {
+	font-family:"Anonymous Pro";
+	font-weight:800;
+	font-size:11pt;
+	text-align:center;
+	letter-spacing:0.2em;
+	padding:5px;
+
+}
+
+#terminal {
+	height:200px;
+	border:solid 1px #333;
+	border-width: 1px 0px;
+	width:400px;
+	margin:5px auto;
+}

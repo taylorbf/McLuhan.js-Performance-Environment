@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+	<title>dream</title>
+	<link href='http://fonts.googleapis.com/css?family=Josefin+Sans:100,400' rel='stylesheet' type='text/css'>
+</head>
+<body>
+
+<style>
+	body,div {
+		font-family:'Josefin Sans';
+		font-size:25px;
+		font-weight:100;
+		position:absolute;
+		top:0px;
+		left:0px;
+	}
+	.fullScreen {
+		width:100%;
+		height:100%;
+		text-align:center;
+	}
+	.normal {
+		padding:10px;
+	}
+</style>
+
+<canvas id="c" style="position:absolute;height:3000px;width:1500px;z-index:100"></canvas>
+
+	<style>
+		body{
+			margin:0px;
+			padding:0px;
+		}
+	</style>
+
+
+	<script>
+
+	var canvas = document.getElementById("c");
+	var context = canvas.getContext("2d");
+	canvas.width = 1500;
+	canvas.height = 3000;
+
+
+	function defineCanvas() {
+		space.canvas = canvas;
+		space.context = context;
+	}
+
+	opener.console.log(name+ " says hello");
+
+
+	</script>
+
+</body>
+</html>

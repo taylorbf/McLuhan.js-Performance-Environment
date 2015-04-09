@@ -1,0 +1,2 @@
+{"_id":"osc:127.0.0.1:9001","originalId":"127.0.0.1:9001","data":{"subscriptions":["/"],"infos":{}},"namespace":"osc"}
+{"_id":"websockets:0","originalId":"0","data":{"subscriptions":["/mosaic","/"],"infos":{}},"namespace":"websockets"}
