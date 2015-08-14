@@ -12,9 +12,13 @@
   </head>
   <body>
 
-  	<h1>McLuhan.js: Live Coding the Browser</h1>
+  	<h1>McLuhan.js</h1>
 
 	<script>
+
+  var walls = {}
+  var receivers = {}
+  m.deck(8)
 
 	$(function() {
 
@@ -25,9 +29,32 @@
 
       rhizome.on('message', function(address, args) { 
         switch (address) {
-          case '/push':
-          	console.log(args)
-            eval(args[0]);
+          case '/wall':
+            if (args[0]=="make") {
+              walls[args[1]] = new wall(args[2])
+            }
+            break;
+          case '/media':
+            if (args[0]=="make") {
+              // ['make',type,wallname,method,params]
+              walls[args[2]][args[1]] = walls[args[2]][args[3]](args[4])
+            }
+            break;
+          case '/receiver': 
+            console.log("receiver made")
+            console.log(args[0])
+            console.log(args[1])
+            eval("receivers['"+args[0]+"'] = "+args[1])
+            var wctx = {
+              wall: walls[args[2]],
+              media: walls[args[2]][args[3]] ? walls[args[2]][args[3]] : false
+            }
+            receivers[args[0]] = receivers[args[0]].bind(wctx)
+            break;
+          case '/control':
+            receivers[args[0]](JSON.parse(args[1]))
+            console.log(args[1])
+            break;
         }
       })
 

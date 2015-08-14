@@ -1,63 +1,55 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <title>Rhizome example</title>
-  <script src="/rhizome/rhizome.js"></script>
-  <script src="js/jquery-2.1.0.min.js"></script>
-  <script src="js/nexusUI.js"></script>
-  <script src="js/Tone.js"></script>
-  <link rel="stylesheet" type="text/css" href="css/styles.css" />
-  <script>
+  <head>
+  <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width">
+	<script src="../dist/mcluhan.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script src="./jcubic/js/jquery-1.7.1.min.js"></script>
+  </head>
+  <body>
 
+  	<script>
 
-    $(function() {
+  	function goto(page) {
+  		window.location.href = "-" + page + ".html"
+  	}
+  	</script>
 
-      t = new Tone.Oscillator(440, "sine");
-      t.start()
-      t.volume.value = -20
-      t.toMaster()
+	<style>
+		button { display:block; margin:10px auto; }
+	</style>
 
+	<h1>McLuhan.js Demos<h1>
 
-      rhizome.start(function(err) {
-        // We want to receive all the messages, so we subscribe to '/'
-        rhizome.send('/sys/subscribe', ['/'])
-      })
+	<button onclick="goto('film')">Film</button>
 
-      rhizome.on('message', function(address, args) { 
-        switch (address) {
-          case '/slider1':
-            t.volume.value = nx.scale(args[0],0,1,-50,0)
-            break;
-        }
-      })
+	<button onclick="goto('cassette')">Cassette</button>
 
-      rhizome.on('connected', function() {
-        console.log('connected!')
-      })
+	<button onclick="goto('hack')">Hack</button>
 
-      rhizome.on('connection lost', function() {
-        console.log('connection lost!')
-      })
+	<!-- <button onclick="goto('presence')">Presence</button> -->
 
-      rhizome.on('queued', function() {
-        console.log('queued!')
-      })
+	<button onclick="goto('voice')">Voice</button>
 
-    })
+	<button onclick="goto('lattice')">Lattice</button>
 
-    nx.onload = function() {
+	<button onclick="goto('wall')">Wall</button>
 
-      meter1.setup(Tone.context,t)
+	<button onclick="goto('paper')">Paper</button>
 
-    }
-    
-  </script>
-</head>
+	<button onclick="goto('photo')">Photo</button>
 
-<body>
+	<footer>Ben Taylor • 2015</footer>
 
-  <canvas nx="meter" style="height:300px;width:100px"></canvas>
+	<!-- 
+	preparation section!
+	please make your browser this big (show guides)
+	move it to center of screen (show arrow!)
+	nice alert when done
+	-->
 
-</body>
-
+  </body>
 </html>
