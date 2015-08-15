@@ -3,16 +3,18 @@ var rackindex = 0;
 var items = new Array();
 var media = new Array();
 var shelves = new Array();
+var racks = new Array();
 
-var shelf = function(type) {
+var shelf = function(type,name) {
 	var self = this;
-	this.index = shelves.length;
+	this.ID = name
 	this.hasUGen = false;
 	this.widgets = []
+
 //	this.wall = new wall(type)
 //	this.wall.shelf = this;
 	this.make = function() {
-		var htmlstr = '<div class="dropzone" id="dropzone'+this.index+'">'
+		var htmlstr = '<div class="dropzone" id="dropzone'+this.ID+'">'
 				//	+ '<div class="emptyrack emptywall">WALL</div>'
 					+ '<div class="racks"></div>'
 					+ '<div class="emptyrack emptymedia"></div>'
@@ -20,7 +22,7 @@ var shelf = function(type) {
 		$("#shelves").append(htmlstr)
 		//this.droppable();
 
-		this.container = $("#dropzone"+this.index)[0]
+		this.container = $("#dropzone"+this.ID)[0]
 		this.rackcontainer = $(this.container).find(".racks")[0]
 
 	//	this.mediatypes = ["hear","see","watch"]
@@ -38,7 +40,7 @@ var shelf = function(type) {
 	this.units = new Array();
 	this.make()
 	this.remove = function() {
-		$('#dropzone'+this.index).remove()
+		$('#dropzone'+this.ID).remove()
 	}
 	/*this.droppable = function() {
 		$("#dropzone"+self.index).droppable({
@@ -65,6 +67,7 @@ function addRack(type,shelf) {
 }
 
 var rack = function (type,shelf) {
+
 
 	var rackid = "rack"+rackindex
 	rackindex++
@@ -93,6 +96,12 @@ var rack = function (type,shelf) {
 	title.innerHTML = rackinfo.type
 //	container.appendChild(title)
 
+	var newrack = {
+		type: type,
+		shelf: shelf,
+		id: rackid,
+		widgets: {}
+	}
 
 	for (var i=0;i<parts.length;i++) {
 
@@ -132,8 +141,6 @@ var rack = function (type,shelf) {
 		widget.actionstring = action.toString();
 		//action = action.bind(widget)
 		widget.mediatype = type
-		console.log("-----")
-		console.log(shelf.ID)
 		
 		Network.makeReceiver(widget.canvasID,widget.actionstring,shelf.ID,widget.mediatype)
 
@@ -156,6 +163,9 @@ var rack = function (type,shelf) {
 
 		shelf.widgets.push(widget)
 
+		widget.rack = newrack;
+		newrack.widgets[widget.canvasID] = widget
+
 
 	}
 
@@ -177,6 +187,8 @@ var rack = function (type,shelf) {
 		}
 		
 	}
+
+	racks.push(newrack)
 
 	return 
 
@@ -695,6 +707,15 @@ var Parts = {
 			action: function(data) {
 				this.media.load(data.text)
 			},
+			localaction: function(data) {
+				for (var key in this.rack.widgets) {
+					if (key.indexOf("waveform")) {
+					//	this.rack.widgets[key].load()
+					//	would need a local buffer instance
+					//	would need to time it right so already loaded
+					}
+				}
+			},
 			size: {
 				w: 60,
 				h: 20
@@ -749,10 +770,10 @@ var Parts = {
 			} 
 		},
 		{
-			type: "range",
+			type: "waveform",
 			label: "loop",
 			action: function(data) {
-				this.media.skip(data.start*10,data.stop*10)
+				this.media.skip(data.start,data.stop)
 			},
 			size: {
 				w: 100,

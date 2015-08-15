@@ -70,8 +70,8 @@
         console.log("makeWall")
         console.log(name, type)
         rhizome.send('/wall', ['make',name,type])
-        var newshelf = new shelf(type)
-        newshelf.ID = name
+        var newshelf = new shelf(type,name)
+       // newshelf.ID = name
         shelves[name] = newshelf
         addRack("wall",newshelf)
       },
@@ -91,8 +91,6 @@
     }
 
     </script>
-      }
-
   </head>
   <body>
 
@@ -144,9 +142,7 @@
         nx.colorize("accent","#1bd")
         nx.colorize("border","#666")
         nx.colorize("black","#ccc")
-       // ghost1.watch();
-       // 
-       // 
+
         jest = new Jest("playlist1",ghostlist1,49)
        // jest2 = new Jest("playlist2",ghostlist2,50)
 
@@ -159,16 +155,12 @@
 
       }
 
-      console.log("tester")
-
-
       $(function() {
 
         // how to load this????
        // loadScript("https://maps.googleapis.com/maps/api/js?v=3.exp");
         
       })
-
 
       //MOVE TO OWN FILE
 
@@ -177,62 +169,16 @@
         Network.makeWall("a","line")
         Network.makeWall("b","fauve")
 
-
-
-      // receive all traffic
-
-    /*    for (var key in nx.widgets) {
-          with (nx.widgets[key]) {
-            on('*',function(data) {
-              //console.log(data, this.actionstring)
-              //if (this.actionstring) {
-              //  console.log(this.actionstring)
-             
-             //   eval("var pigeon = "+this.actionstring)
-             //   pigeon = pigeon.bind(this,data)
-                console.log(this.canvasID, JSON.stringify(data))
-                rhizome.send('/control',[this.canvasID, JSON.stringify(data)])
-               // rhizome.send('/control',[this.actionstring,this.wallname,this.medianame])
-                //  console.log(widget.action.toString())
-              //}
-            })
-          }
-        } */
-
-
       }
 
       function createMedia() {
 
+        Network.makeMedia("film","a","watch","lake")
         Network.makeMedia("film","b","watch","lake")
-      //  a.video = a.watch("lake")
-      //  addRack("film",a.shelf,a.video)
-      
-      /*  Network.
-        a.audio = a.hear("pno")
-        addRack("cassette",a.shelf,a.audio)
-        b.video = b.watch("lake")
-        addRack("film",b.shelf,b.video) */
+        Network.makeMedia("cassette","a","hear","pno")
+        Network.makeMedia("cassette","b","hear","pno")
+
       }
-
-
-      setTimeout(function() {
-      /*  // a things
-        a.video = a.watch("lake")
-        addRack("film",a.shelf,a.video)
-        a.audio = a.hear("pno")
-        addRack("cassette",a.shelf,a.audio)
-
-
-
-        b.video = b.watch("lake")
-        addRack("film",b.shelf,b.video) */
-      },4000)
-
-
-
-
-
 
 
     </script>
