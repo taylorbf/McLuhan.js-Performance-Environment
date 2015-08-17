@@ -141,10 +141,14 @@ var rack = function (type,shelf) {
 		widget.actionstring = action.toString();
 		//action = action.bind(widget)
 		widget.mediatype = type
+		if (parts[i].localaction) {
+			widget.localaction = parts[i].localaction.bind(widget)
+		}
 		
 		Network.makeReceiver(widget.canvasID,widget.actionstring,shelf.ID,widget.mediatype)
 
 		widget.on('*', function(data) {
+			if (this.localaction) { this.localaction(data) }
 			rhizome.send('/control',[this.canvasID, JSON.stringify(data)])
 		}.bind(widget))
 
@@ -681,7 +685,7 @@ var Parts = {
 		type: "cassette",
 		size: {
 			w: 130,
-			h: 170
+			h: 190
 		},
 		widgets: [
 
@@ -709,11 +713,9 @@ var Parts = {
 			},
 			localaction: function(data) {
 				for (var key in this.rack.widgets) {
-					if (key.indexOf("waveform")) {
-					//	this.rack.widgets[key].load()
-					//	would need a local buffer instance
-					//	would need to time it right so already loaded
-					}
+					if (key.indexOf("waveform")>=0) {
+						this.rack.widgets[key].setBuffer( sampler._buffers[data.text]._buffer )
+      				}
 				}
 			},
 			size: {
@@ -734,6 +736,7 @@ var Parts = {
 			label: "pause",
 			action: function(data) {
 				if (data.value) {
+					console.log(this.media)
 					this.media.stop()
 					this.media.hide()
 				} else {
@@ -773,11 +776,11 @@ var Parts = {
 			type: "waveform",
 			label: "loop",
 			action: function(data) {
-				this.media.skip(data.start,data.stop)
+				this.media.skip(data.starttime/1000,data.stoptime/1000)
 			},
 			size: {
-				w: 100,
-				h: 40
+				w: 120,
+				h: 60
 			},
 			loc: {
 				x: 0,

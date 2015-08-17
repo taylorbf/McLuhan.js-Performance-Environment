@@ -34,6 +34,20 @@
 
     <script>
 
+
+    /* Audio stuff */
+
+
+      var sampler = new Tone.Sampler({
+          "pno" : "./media/pno.mp3",
+          "pnoc3" : "./media/pnoc3.mp3"
+        },{
+          player: {
+            loop: true,
+          }
+      }) 
+
+
      /* SERVER */
      $(function() {
 
