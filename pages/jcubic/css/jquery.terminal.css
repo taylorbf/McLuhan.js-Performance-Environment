@@ -41,7 +41,7 @@
 @keyframes blink {
   0%, 100% {
         background-color: #fff;
-        color: #aaa;
+        color: #777;
   }
   50% {
         background-color: #eee; /* not #aaa because it's seem there is Google Chrome bug */
@@ -51,7 +51,7 @@
 @-webkit-keyframes blink {
   0%, 100% {
         background-color: #fff;
-        color: #aaa;
+        color: #777;
   }
   50% {
         background-color: #000;
@@ -61,7 +61,7 @@
 @-ms-keyframes blink {
   0%, 100% {
         background-color: #fff;
-        color: #aaa;
+        color: #777;
   }
   50% {
         background-color: #eee;
@@ -71,7 +71,7 @@
 @-moz-keyframes blink {
   0%, 100% {
         background-color: #fff;
-        color: #aaa;
+        color: #777;
   }
   50% {
         background-color: #eee;
@@ -92,7 +92,7 @@
     background-color: #FFF;
     font-size: 15px;
     line-height: 20px;
-    opacity:0.8;
+    opacity:1;
 }
 .terminal-output > div {
     min-height: 14px;
@@ -104,13 +104,13 @@
     float: left;
 }
 .terminal .inverted, .cmd .inverted, .cmd .cursor.blink {
-    background-color: #aaa;
+    background-color: #777;
     color: #000;
 }
 .terminal .terminal-output div div::-moz-selection,
 .terminal .terminal-output div span::-moz-selection,
 .terminal .terminal-output div div a::-moz-selection {
-    background-color: #aaa;
+    background-color: #777;
     color: #000;
 }
 .terminal .terminal-output div div::selection,
@@ -118,7 +118,7 @@
 .terminal .terminal-output div span::selection,
 .cmd > span::selection,
 .cmd .prompt span::selection {
-    background-color: #aaa;
+    background-color: #777;
     color: #000;
 }
 .terminal .terminal-output div.error, .terminal .terminal-output div.error div {

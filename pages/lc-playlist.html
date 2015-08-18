@@ -1,0 +1,129 @@
+<html>
+	<head>
+	</head>
+	<body>
+
+
+
+		<div id="lcplaylist"></div>
+
+		<script>
+
+			var LCPlaylist = function(parentID) {
+
+				this.playlist = []
+
+				this.current = false
+
+				this.parentID = parentID
+
+				this.container = document.createElement("div")
+				this.container.className = "playlist"
+
+				this.parent = document.getElementById(this.parentID)
+				this.parent.appendChild(this.container)
+
+				this.mover = {}
+
+				this.nameIndex = 0
+
+				this.nexttitle = false;
+
+			}
+
+			Jest.prototype.add = function(command) {
+
+				var piece = document.createElement("div")
+				piece.className = "item"
+				this.container.appendChild(piece)
+
+				var text = document.createElement("div")
+				text.innerHTML = "~ " + command;
+				text.className = "text"
+				piece.appendChild(text)
+
+				var vis = document.createElement("div")
+				vis.className = "vis"
+				piece.appendChild(vis)
+
+				var closer = document.createElement("div")
+				closer.className = "close"
+				closer.innerHTML = "-"
+				piece.appendChild(closer)
+				closer.addEventListener("mousedown",this.cut.bind(this,name,piece))
+
+				/*function(index,piece) {
+					this.cut(index,piece);
+				}.bind(this,name,piece) */
+
+				this.playlist.push({
+					name: this.nameIndex++,
+					commande: command,
+					vis: vis
+				})
+
+				var self = this;
+
+				$([this.container]).sortable({
+				  containment: "parent",
+				  start: function( event, ui ) {
+				  	this.mover.start = ui.item.index()
+				  }.bind(self),
+				  update: function( event, ui ) {
+				  	this.mover.end = ui.item.index()
+				  	this.move(this.mover.start,this.mover.end)
+				  }.bind(self)
+				})
+
+			}
+
+			Jest.prototype.move = function(start,end) {
+				this.playlist.splice(end, 0, this.playlist.splice(start, 1)[0])
+			}
+
+			Jest.prototype.next = function() {
+				if (this.playlist.length==0) {
+					return {buffer:[]}
+				}
+				if (this.current) {
+					var curr = this.playlist.indexOf(this.current)
+					curr++;
+				} else {
+					var curr = 0;
+				}
+				if (curr>=this.playlist.length) {
+					curr = 0;
+				}
+				if (this.playlist.length>0) {
+					var next = this.playlist[curr]
+					this.current = next;
+					return next;
+				}
+			}
+
+			Jest.prototype.drawvis = function(ratio) {
+			//	this.current.vis.style.width = ratio * 107 + "%"	
+			}
+
+			Jest.prototype.cut = function(index,piece) {
+				for (var i=0;i<this.playlist.length;i++) {
+					if (this.playlist[i].name == index) {
+						this.playlist.splice(i,1)
+						this.container.removeChild(piece)
+					}
+				}
+				if (this.playlist.length==0) {
+				/*	this.recorder.pause();
+					this.recorder.next = {buffer:[]}
+					this.recorder.playbuffer = []
+					this.recorder.playbufferSize = 0 */
+
+				}
+				console.log(this.playlist)
+			}
+
+		</script>
+
+
+	</body>
+</html>
