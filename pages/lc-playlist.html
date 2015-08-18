@@ -1,11 +1,71 @@
 <html>
 	<head>
+		<script src="js/jquery.js"></script>
+		<script src="js/jquery-ui.js"></script>
 	</head>
 	<body>
 
+		<style>
+
+		.playlist {
+			font-family:helvetica neue;
+			font-weight:light;
+			border:solid 1px black;
+			width:400px;
+			height:200px;
+		}
+
+		.playlist > .item {
+			/*background-color:#eee; */
+			border-bottom:solid 0px #ddd;
+			cursor:pointer;
+			position:relative;
+			overflow:hidden;
+		}
+
+		.playlist > .item > .text {
+			text-align:left;
+			box-sizing:border-box;
+			cursor:pointer;
+			position:relative;
+			z-index:2;
+		}
+
+		.playlist > .item > .text, .playlist > .item > .close {
+
+			font-size:11pt;
+			line-height:1em;
+			padding:4px 10px;
 
 
-		<div id="lcplaylist"></div>
+		}
+
+		.playlist > .item > .vis {
+			background-color:#0bd;
+			cursor:pointer;
+			width:0px;
+			height:100%;
+			position:absolute;
+			top:0px;
+			left:0px;
+			z-index:0;
+		}
+
+		.playlist > .item > .close {
+			cursor:pointer;
+			height:100%;
+			position:absolute;
+			color:#000;
+			top:0px;
+			right:0px;
+			z-index:2;
+			background-color:#fff;
+			text-align:center;
+		}
+
+		</style>
+
+		<div id="playlist"></div>
 
 		<script>
 
@@ -31,7 +91,7 @@
 
 			}
 
-			Jest.prototype.add = function(command) {
+			LCPlaylist.prototype.add = function(command) {
 
 				var piece = document.createElement("div")
 				piece.className = "item"
@@ -48,7 +108,7 @@
 
 				var closer = document.createElement("div")
 				closer.className = "close"
-				closer.innerHTML = "-"
+				closer.innerHTML = "&times;"
 				piece.appendChild(closer)
 				closer.addEventListener("mousedown",this.cut.bind(this,name,piece))
 
@@ -77,11 +137,11 @@
 
 			}
 
-			Jest.prototype.move = function(start,end) {
+			LCPlaylist.prototype.move = function(start,end) {
 				this.playlist.splice(end, 0, this.playlist.splice(start, 1)[0])
 			}
 
-			Jest.prototype.next = function() {
+			LCPlaylist.prototype.next = function() {
 				if (this.playlist.length==0) {
 					return {buffer:[]}
 				}
@@ -101,11 +161,11 @@
 				}
 			}
 
-			Jest.prototype.drawvis = function(ratio) {
+			LCPlaylist.prototype.drawvis = function(ratio) {
 			//	this.current.vis.style.width = ratio * 107 + "%"	
 			}
 
-			Jest.prototype.cut = function(index,piece) {
+			LCPlaylist.prototype.cut = function(index,piece) {
 				for (var i=0;i<this.playlist.length;i++) {
 					if (this.playlist[i].name == index) {
 						this.playlist.splice(i,1)
@@ -121,6 +181,11 @@
 				}
 				console.log(this.playlist)
 			}
+
+			var playlist = new LCPlaylist("playlist")
+
+			console.log(LCPlaylist)
+			console.log(playlist)
 
 		</script>
 
