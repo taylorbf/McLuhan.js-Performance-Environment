@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width">
+<!--	<script type="text/javascript" src="http://cdn.tonejs.org/latest/Tone.min.js"></script> -->
+	<script src="speakClient.js"></script>
+	<script src="js/mcluhan.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Nixie+One' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Anonymous+Pro' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link href="./jcubic/css/jquery.terminal.css" rel="stylesheet"/>
+    <script src="./jcubic/js/jquery-1.7.1.min.js"></script>
+    <script src="./jcubic/js/jquery.mousewheel-min.js"></script>
+    <script src="./jcubic/js/jquery.terminal-min.js"></script>
+  </head>
+  <body>
+
+  	<h1>McLuhan.js: Live Coding the Browser</h1>
+
+  	<div id="main" style="margin:0 auto;width:400px;border:solid 0px #ccc;padding:0px;position:relative;overflow:hidden">
+
+	  	<canvas id="presence" style="position:absolute;top:0px"></canvas>
+
+		<div id="terminal" style="position:absoolute;top:0px;z-index:2;width:400px"></div>
+
+	</div>
+
+	<script>
+
+		m.deck(8)
+
+		var current = {
+    		wall: "",
+    		media: "",
+    		type: "",
+    		params: ""
+    	}
+
+    	var codingcontext = false
+
+		$('#terminal').terminal(function(command) {
+	        try {
+	         //   eval.apply(window, [command]);
+	           translate(command);
+	        } catch (e) {
+	        	console.log(e)
+	            $("#terminal").terminal().set_command(command);
+	            return e.message;
+	        }
+	      //  return command;
+	    }, {
+	        completion: ["add","addsamples","adsr","adsr32","beat","beat32","bounce","bp","chorus","clamp","clshift","delay","destroy","dfb","dlevel","dtime","eval","famt","fenv","ffreq","fres","group","hp","loop","lp","merge","nl","nl32","notch","notes","pan","play","remove","render","render32","reverse","rf","ri","root","sample","saw","select","shift","sine","speed","square","sseq","step","stretch","sync","track","trans","tremolo","tri","type","vol"],
+	        greetings: "What Would JODI Do?",
+	        prompt: "~ ",
+	        keypress: function(e) {
+	        	// +
+	        	if (e.which==43) {
+	        		var nextcolor = rainbow[colorcount.tick()]
+	        		distantwalls[nextcolor] = new wall("line")
+	        		codingcontext = walls[nextcolor]
+	        		$("#terminal").terminal().set_command("");
+	        		return false;
+	        	}
+	        	// `
+	        	if (e.which==96) {
+	        		
+	        	}
+	        //  socket.emit('typing',$("#terminal .cmd span")[1].innerHTML)
+	        }
+	    });
+
+		var rainbow = ["red", "orange", "green", "blue", "purple" ]
+
+		var walls = []
+
+		/* walls {
+			"i": [ 
+			  "fall",
+			  "eye"
+			]
+		} */
+
+	    function translate(command) {
+
+	    	var words = command.split(" ");
+	    	var output = "";
+
+	    	current.media = false
+	    	current.type = false
+	    	current.params = false
+
+	    /*	for (var key in walls) {
+	    		if (key==words[0]) {
+	    			current.wall = key
+	    			break;
+	    		}
+	    		for (var key2 in walls[key]) {
+	    			if (key2==words[0]) {
+	    				current.wall = key
+	    				current.media = key2
+	    				break;
+	    			}
+	    		}
+	    	} 
+	    	if (!current.wall) {
+
+	    	} */
+
+	    /*	if (walls[key]) {
+
+	    	} else {
+
+	    	} */
+
+	    /*	switch(words[0]) {
+	    		case "eye"
+	    	} */
+
+	    	output = current.wall + "." + current.media
+
+	    	console.log(output);
+
+	    }
+
+
+
+	    /* Ben Library */
+
+	    var Counter = function(limit) {
+	    	this.max = 0;
+	    	this.current = -1;
+	    	this.tick = function() {
+	    		this.current++;
+	    		if (this.current>=this.limit) {
+	    			this.current = 0;
+	    		}
+	    		return this.current;
+	    	}
+	    	this.downtick = function() {
+	    		this.current--;
+	    		if (this.current <= this.limit) {
+	    			this.current = this.limit-1;
+	    		}
+	    		return this.current;
+	    	}
+	    }
+
+	    var colorcount = new Counter(rainbow.length);
+
+	</script>
+
+  </body>
+</html>
