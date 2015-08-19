@@ -108,6 +108,7 @@
 
 			this.callback = cb;
 
+			this.limit = 10
 			this.current = 0
 
 			this.parentID = parentID
@@ -172,6 +173,11 @@
 			data.event = "add"
 
 			this.callback(data);
+
+			if (this.playlist.length>=this.limit) {
+				var index = this.playlist[0].name
+				this.cut(index,document.getElementById("fragment"+index))
+			}
 
 		}
 
@@ -239,7 +245,9 @@
 		PoemVis.prototype.highlight = function(data) {
 
 			$(".poemvis-fragment").css("opacity", "0.7")
-			$("#poemfragment"+data.name).css("opacity", "1")
+			if (data) {
+				$("#poemfragment"+data.name).css("opacity", "1")
+			}
 
 		}
 
@@ -273,7 +281,6 @@
 			console.log(data.command)
 
 		})
-
 
 		var poemvis = new PoemVis("poemvis")
 
