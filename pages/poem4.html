@@ -8,25 +8,31 @@
 	<script src="speakClient.js"></script>
 	<script src="js/mcluhan.js"></script>
 	<script src="js/translator.js"></script>
-	<link href='http://fonts.googleapis.com/css?family=Nixie+One' rel='stylesheet' type='text/css'>
-	<link href='http://fonts.googleapis.com/css?family=Anonymous+Pro' rel='stylesheet' type='text/css'>
+	<script src="js/lc-playlist.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Anonymous+Pro:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="css/coding.css">
     <link href="./jcubic/css/jquery.terminal.css" rel="stylesheet"/>
     <script src="./jcubic/js/jquery-1.7.1.min.js"></script>
     <script src="./jcubic/js/jquery.mousewheel-min.js"></script>
     <script src="./jcubic/js/jquery.terminal-min.js"></script>
+
+	<script src="js/jquery-ui.js"></script>
   </head>
   <body>
 
   	<h1>McLuhan.js: real.time net.art</h1>
 
-  	<div id="main" style="margin:0 auto;width:400px;border:solid 2px #555;padding:0px;position:relative;overflow:hidden">
+  	<div id="main" style="margin:0 auto;width:400px;border:solid 2px #555;padding:5px 0px 0px;position:relative;overflow:hidden">
 
 	  	<canvas id="presence" style="position:absolute;top:0px"></canvas>
 
-		<div id="terminal" style="position:absoolute;top:0px;z-index:2;text-align:left"></div>
+		<div id="playlist"></div>
+
+		<div id="terminal" style="z-index:2;text-align:left"></div>
 
 	</div>
+
+	<div id="poemvis"></div>
 
 	<script>
 
@@ -53,21 +59,23 @@
     	}
 
 		$('#terminal').terminal(function(command) {
-
-
-			// use local.context and "~ "+command
-
-			//var formatted = "[[;"+local.context+";#FFF]~ "+command+"]"
-            //$("#terminal").terminal().echo(formatted)
-           	var code = Translate.toCode(command);
-           	console.log(code);
+           	
            	try {
-           		eval(code);
-           	} catch(e) {
 
+           		eval( Translate.toCode(command) );
+           		var norepeat = command.indexOf("to ")==0 ? true : false;
+           		playlist.add(command, local.context, norepeat)
+           		return false;
+
+           	} catch(e) {
+           		return false;
            	}
-	    	return false;
-	      	// return command;
+
+           	return false;
+
+           	console.log(command)
+           	console.log("doh!")
+           	
 	    }, {
 	        completion: ["add","addsamples","adsr","adsr32","beat","beat32","bounce","bp","chorus","clamp","clshift","delay","destroy","dfb","dlevel","dtime","eval","famt","fenv","ffreq","fres","group","hp","loop","lp","merge","nl","nl32","notch","notes","pan","play","remove","render","render32","reverse","rf","ri","root","sample","saw","select","shift","sine","speed","square","sseq","step","stretch","sync","track","trans","tremolo","tri","type","vol"],
 	        greetings: "",
@@ -98,6 +106,41 @@
 		var rainbow = ["red", "orange", "green", "blue", "purple" ]
 
 		var walls = []
+
+
+		/* INSTANCES */
+
+		var playlist = new LCPlaylist("playlist", function(data) {
+			
+			// data.index, data.command, data.event
+			
+			switch (data.event) {
+				case "add":
+					poemvis.add(data)
+					break;
+				case "playback":
+					poemvis.highlight(data)
+					try {
+						eval( Translate.toCode(data.command) )
+					} catch(e) {
+
+					}
+					break;
+			}
+			
+			
+
+		})
+
+		var poemvis = new PoemVis("poemvis")
+
+		setInterval("playlist.tick()", 1000);
+
+
+
+
+
+
 
 		
 
@@ -141,24 +184,6 @@
     	}
 
 
-
-
-
-
-
-/*
-
- 
-		case "to":
-			// to hear a piano
-			
-		case "and"
-			//and open pno3
-			//and explore by hand
-			//i.e. "and" would keep the last object used!
-			
-
-*/
 
 
 

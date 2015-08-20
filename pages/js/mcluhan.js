@@ -2564,7 +2564,7 @@ Wall.prototype.kill = function() {
 }
 
 /**
- * Destroy this wall and return all windows to stack
+ * Destroy one window of a wall
  */
 Wall.prototype.killWindow = function(index) {
 	this.elements[index].kill()
@@ -2614,7 +2614,6 @@ Wall.prototype.trans = function(x,y,time) {
 /* move and resize to new pattern configuration */
 Wall.prototype.shapeshift = function(pattern,time) {
 	var patt = this.patterns[pattern];
-	console.log(patt);
 	for (var i=0;i<this.elements.length;i++) {
 		this.elements[i].size(patt[i%patt.length].w*m.stage.w,patt[i%patt.length].h*m.stage.h,0)
 		this.elements[i].move(patt[i%patt.length].x*m.stage.w+m.stage.x,patt[i%patt.length].y*m.stage.h+m.stage.y,time)
@@ -2648,14 +2647,14 @@ Wall.prototype.size = function() {
 }
 
 /**
- * Move all windows to an x/y location
+ * Move all windows to by an x/y amount
  * @return {Wall}
  */
 Wall.prototype.moveby = function() {
 }
 
 /**
- * Resize all windows to a specific w/h
+ * Resize all windows by an w/h amount
  * @return {Wall}
  */
 Wall.prototype.sizeby = function() {
@@ -2663,7 +2662,8 @@ Wall.prototype.sizeby = function() {
 
 
 /* resize whole wall to certain amount */
-
+Wall.prototype.scalesize = function() {
+}
 
 
 

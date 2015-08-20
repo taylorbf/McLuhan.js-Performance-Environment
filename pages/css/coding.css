@@ -143,3 +143,83 @@ footer {
   	vertical-align: middle;
 }
 
+/* lc playlist and poem vis */
+
+
+.playlist {
+	font-weight:light;
+	width:400px;
+	height:200px;
+}
+
+.playlist > .item {
+	/*background-color:#eee; */
+	border-bottom:solid 0px #ddd;
+	cursor:pointer;
+	position:relative;
+	overflow:hidden;
+}
+
+.playlist > .item > .text {
+	text-align:left;
+	box-sizing:border-box;
+	cursor:pointer;
+	position:relative;
+	z-index:2;
+}
+
+.playlist > .item > .text, .playlist > .item > .close {
+
+	font-size:11pt;
+	line-height:1em;
+	padding:4px 10px;
+
+
+}
+
+.playlist > .item > .vis {
+	background-color:#0bd;
+	cursor:pointer;
+	width:0px;
+	height:100%;
+	position:absolute;
+	top:0px;
+	left:0px;
+	z-index:0;
+}
+
+.playlist > .item > .close {
+	cursor:pointer;
+	height:100%;
+	position:absolute;
+	color:#000;
+	top:0px;
+	right:0px;
+	z-index:2;
+	background-color:#fff;
+	text-align:center;
+}
+
+/* poemvis */
+
+#poemvis {
+	margin:20px 0px;
+	font-family:helvetica neue;
+	font-weight:light;
+	border:solid 1px black;
+	width:400px;
+	height:200px;
+	padding:10px;
+	box-sizing:border-box;
+}
+
+.poemvis-fragment {
+	padding:0px 3px;
+	line-height:1.3em;
+	opacity:0.5;
+}
+
+.terminal-output {
+	display:none;
+}
+
