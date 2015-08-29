@@ -27,7 +27,7 @@ var LCPlaylist = function(parentID, cb) {
 
 }
 
-LCPlaylist.prototype.add = function(command, color, norepeat) {
+LCPlaylist.prototype.add = function(command, code, color, norepeat) {
 
 	this.color = color
 
@@ -53,6 +53,7 @@ LCPlaylist.prototype.add = function(command, color, norepeat) {
 	this.playlist.push({
 		name: name,
 		command: command,
+		code: code,
 		norepeat: norepeat
 	})
 

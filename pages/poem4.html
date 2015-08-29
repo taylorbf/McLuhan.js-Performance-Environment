@@ -17,6 +17,7 @@
     <script src="./jcubic/js/jquery.terminal-min.js"></script>
 
 	<script src="js/jquery-ui.js"></script>
+	 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
   </head>
   <body>
 
@@ -36,7 +37,7 @@
 
 	<script>
 
-		m.deck(8)
+		m.deck(16)
 
 		var current = {
     		wall: "",
@@ -62,19 +63,20 @@
            	
            	try {
 
-           		eval( Translate.toCode(command) );
-           		var norepeat = command.indexOf("to ")==0 ? true : false;
-           		playlist.add(command, local.context, norepeat)
-           		return false;
+           		
+
+           		var code = Translate.toCode(command)
+				eval( code );
+
+           		var norepeat = command.indexOf("to ")==0 ? true : false
+           		playlist.add( command, code, local.context, norepeat)
+           		
 
            	} catch(e) {
            		return false;
            	}
 
            	return false;
-
-           	console.log(command)
-           	console.log("doh!")
            	
 	    }, {
 	        completion: ["add","addsamples","adsr","adsr32","beat","beat32","bounce","bp","chorus","clamp","clshift","delay","destroy","dfb","dlevel","dtime","eval","famt","fenv","ffreq","fres","group","hp","loop","lp","merge","nl","nl32","notch","notes","pan","play","remove","render","render32","reverse","rf","ri","root","sample","saw","select","shift","sine","speed","square","sseq","step","stretch","sync","track","trans","tremolo","tri","type","vol"],
@@ -121,7 +123,7 @@
 				case "playback":
 					poemvis.highlight(data)
 					try {
-						eval( Translate.toCode(data.command) )
+						eval( data.code )
 					} catch(e) {
 
 					}
@@ -134,7 +136,7 @@
 
 		var poemvis = new PoemVis("poemvis")
 
-		setInterval("playlist.tick()", 1000);
+		//setInterval("playlist.tick()", 500)
 
 
 
@@ -179,7 +181,7 @@
     	var distant = {
     		walls: {},
     		createWall: function(nextcolor) {
-    			window[nextcolor] = new wall("line")
+    			window[nextcolor] = new wall("grid4")
     		}
     	}
 

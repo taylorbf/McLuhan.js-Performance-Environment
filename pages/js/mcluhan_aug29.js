@@ -647,13 +647,7 @@ Medium.prototype.size = function(params) {
 	this.params.height ? this.element.style.width = this.params.height+"px" : false;*/
 }
 
-Medium.prototype.move = function(params,y) {
-	if (typeof params == "number") {
-		params = {
-			x: params,
-			y: y
-		}
-	}
+Medium.prototype.move = function(params) {
 	for (var i = 0; i<this.element.length; i++) {
 		this.element[i].style.position = "absolute";
 		params.x ? this.element[i].style.left = params.x+"px" : false;
@@ -676,7 +670,7 @@ Medium.prototype.fade = function(level) {
 		this.element[i].style.opacity = level;
 	}
 }
-Medium.prototype.hide = function() {
+Medium.prototype.hide = function(level) {
 	for (var i = 0; i<this.element.length; i++) {
 		this.element[i].style.visibility = "hidden";
 	}
@@ -912,7 +906,7 @@ Cassette.prototype.jumpTo = function(start) {
  */
 Cassette.prototype.skip = function(start,stop) {
 	this.start = start ? start : 1;
-	this.stop = stop ? stop : this.start + 0.2;
+	this.stop = stop ? stop : 1.2;
 	if (this.interval) {
 		clearInterval(this.interval);
 	}
@@ -926,16 +920,16 @@ Cassette.prototype.skip = function(start,stop) {
  * Stop skipping the audio file
  */
 Cassette.prototype.unskip = function() {
-	this.skipping = false
-	this.start = false
+	this.skipping = false;
+	this.start = false;
 	this.stop = false
-	clearInterval(this.interval)
-	this.interval = false
-	return this
+	clearInterval(this.interval);
+	this.interval = false;
+	return this;
 }
 
 /**
- * Change the audio file's playback rate (does not change pitch!)
+ * Change the audio file's playback rate
  * @param  {float} rate Playback rate (0.25 - 4)
  */
 Cassette.prototype.speed = function(rate) {
@@ -2570,7 +2564,7 @@ Wall.prototype.kill = function() {
 }
 
 /**
- * Destroy one window in the wall
+ * Destroy one window of a wall
  */
 Wall.prototype.killWindow = function(index) {
 	this.elements[index].kill()
@@ -2649,30 +2643,26 @@ Wall.prototype.move = function(x,y,time) {
  * Resize all windows to a specific w/h
  * @return {Wall}
  */
-Wall.prototype.size = function(w,h,time) {
-	for (var i=0;i<this.elements.length;i++) {
-		this.elements[i].size(w,h,time)
-	}
+Wall.prototype.size = function() {
 }
 
 /**
- * Move all windows by an x/y amount
+ * Move all windows to by an x/y amount
  * @return {Wall}
  */
 Wall.prototype.moveby = function() {
 }
 
 /**
- * Resize all windows by a w/h amount
+ * Resize all windows by an w/h amount
  * @return {Wall}
  */
 Wall.prototype.sizeby = function() {
 }
 
 
-/* resize whole wall while keeping window relationships */
-
-Wall.prototype.scaleSize = function() {
+/* resize whole wall to certain amount */
+Wall.prototype.scalesize = function() {
 }
 
 
@@ -3293,7 +3283,7 @@ window.interval = function(rate,func) {
 	x.ms(100);
 	x.stop()
 	// later
-	x.start()
+	x.start
 	//can change function midway
 	x.event = function() { ... }
 
