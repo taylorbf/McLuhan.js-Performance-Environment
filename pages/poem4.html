@@ -37,7 +37,7 @@
 
 	<script>
 
-		m.deck(16)
+		m.deck(8)
 
 		var current = {
     		wall: "",
@@ -181,7 +181,7 @@
     	var distant = {
     		walls: {},
     		createWall: function(nextcolor) {
-    			window[nextcolor] = new wall("grid4")
+    			window[nextcolor] = new wall("line")
     		}
     	}
 

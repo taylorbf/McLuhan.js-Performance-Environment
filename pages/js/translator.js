@@ -59,6 +59,21 @@ var Translate = {
     			mode = "media"
     			break;
     		//case or
+        
+
+        case "wander":
+          //cut off the first 3
+          //send everything else through this.toCode()
+          //wander by foot piano move A B
+          //=> var something = m.interval("piano.move(A1,B1)",50)
+          //or..
+          //=> gesture1.add(piano.move)
+          //what about for walls?
+          //
+          current.method = "scramble"
+          current.params = ""
+          mode = "wall"
+          break;
 
 
     		// wall-specific
