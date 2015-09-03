@@ -274,3 +274,9 @@ var Gesture = function(cb,xlow,xhigh,ylow,yhigh) {
       this.cb(x,y)
 
     }
+
+
+
+
+
+    
