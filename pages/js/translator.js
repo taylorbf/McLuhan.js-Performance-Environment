@@ -64,7 +64,7 @@ var Translate = {
         case "wander":
           //cut off the first 3
           //send everything else through this.toCode()
-          //wander by foot piano move A B
+          //wander by foot piano move
           //=> var something = m.interval("piano.move(A1,B1)",50)
           //or..
           //=> gesture1.add(piano.move)
@@ -279,4 +279,4 @@ var Gesture = function(cb,xlow,xhigh,ylow,yhigh) {
 
 
 
-    
+

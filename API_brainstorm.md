@@ -101,12 +101,53 @@ piano[i].skip(_1x,1) -l 10 -b .1
 leads to code:
 
 show() | hide() -b 4
-piano = hear("piano")
+intervals.push(bt.interval("show()","hide()",beat*4)
+//returns index so x can stop it, nullify
+
+piano = hear("pno")
+piano = hear("pno")
+
 piano.move(r(0,m.stage.w),r(0,m.stage.h)) -b 1
+bt.interval("piano.move(r(0,m.stage.w),r(0,m.stage.h))",beat*1)
 
 piano[i].move(r0-100,r0-100) -l 10 -b 4
-piano[i].skip(_1x,1) -l 10 -b .1
+bt.interval(function() {
+	for (var i=0;i<10;i++) {
+		piano[i].move(r(0-100),r(0-100))
+	}
+}, beat*4)
 
 
+
+piano[i].skip(_1x*50,1) -l 10 -b .1 -s (speed) r10+1 
+line15gestures = []
+for (var i=0;i<10;i++) {
+	line15gestures = new Gesture(function(data) {
+		piano[i].move(data.x*50,r(0-100))
+	})
+}
+
+or 
+
+line15gestures = []
+for (var i=0;i<10;i++) {
+	line15gestures.push(new Gesture1())
+}
+bt.interval(function() {
+	for (var i=0;i<10;i++) {
+		piano[i].move(line15gestures[i].tick().x*50,r(0-100))
+	}
+}, beat*4)
+
+or
+
+piano[i].skip(_1x*50,1) -b r1-10 -l 10
+line15intervals = []
+for (var i=0;i<10;i++) {
+	line15intervals.push( bt.interval(function(i) {
+		piano[i].move(r(0-100),r(0-100))
+	}.bind(this,i), beat*r(1,10)) )
+
+}
 
 
