@@ -120,6 +120,7 @@ bt.interval(function() {
 
 
 piano[i].skip(_1x*50,1) -l 10 -b .1 -s (speed) r10+1 
+
 line15gestures = []
 for (var i=0;i<10;i++) {
 	line15gestures = new Gesture(function(data) {
@@ -139,9 +140,11 @@ bt.interval(function() {
 	}
 }, beat*4)
 
-or
+
+
 
 piano[i].skip(_1x*50,1) -b r1-10 -l 10
+
 line15intervals = []
 for (var i=0;i<10;i++) {
 	line15intervals.push( bt.interval(function(i) {
@@ -149,5 +152,56 @@ for (var i=0;i<10;i++) {
 	}.bind(this,i), beat*r(1,10)) )
 
 }
+
+
+
+===================
+
+new method would be to code the gesture from within.....
+
+move(a(width),b(height)) 100
+move(a(width),b(height)) -b .5
+
+move(a(width),b(height)) @ 100
+show() | hide() @ 10000
+
+piano.loop(ri(length,.1)) @ 200
+piano.loop(a(length),.2) @ 200
+
+these beat intervals gets attached to the playlist moment.
+what happens when it is 'overwritten'? can replace old moments?
+
+15 piano.loop(a(length)) @ 400
+15 piano.loop(bounce(0,length)) @ 400
+
+if attached to local thing playlist... how can be removed from distant viewer? store it in line15intervals? or intervals[15][ ..... ]
+
+
+
+
+
+========
+
+musician's toolkit
+
+scale.major(60)
+scale.major(7,2)
+scale.minor
+scale.minor.natural
+scale.dorian
+scale.pentatonic
+
+ri()
+rf()
+bounce()?
+
+markov
+
+mtof
+ftom
+
+bt.interval
+sync(interval1,interval2)
+phase(interval1,interval2)
 
 

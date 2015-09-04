@@ -1,0 +1,281 @@
+<!doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+  <script type="text/javascript" src="http://cdn.tonejs.org/latest/Tone.min.js"></script>
+	<script src="js/lc-playlist2.js"></script>
+	<script src="js/translator3.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Anonymous+Pro:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="css/coding.css">
+    <link href="./jcubic/css/jquery.terminal.css" rel="stylesheet"/>
+    <script src="./jcubic/js/jquery-1.7.1.min.js"></script>
+    <script src="./jcubic/js/jquery.mousewheel-min.js"></script>
+    <script src="./jcubic/js/jquery.terminal-min.js"></script>
+		<script src="js/jquery-ui.js"></script>
+  </head>
+  <body>
+
+  	<h1>McLuhan.js *Environment*</h1>
+
+  	<div id="main" style="margin:0 auto;width:400px;border:solid 2px #555;padding:5px 0px 0px;position:relative;overflow:hidden">
+
+	  	<canvas id="presence" style="position:absolute;top:0px"></canvas>
+
+		<div id="playlist"></div>
+
+		<div id="terminal" style="z-index:2;text-align:left"></div>
+
+	</div>
+
+	<div id="poemvis"></div>
+
+	<script>
+
+		  var current = {
+    		wall: "",
+    		media: "",
+    		type: "",
+    		params: ""
+    	}
+
+    	var local = {
+    		context: "black",
+    		walls: [],
+    		nextWall: function() {
+    			var colori = local.walls.indexOf(local.context)
+    			colori++
+    			if (colori >= local.walls.length) {
+    				colori = 0
+    			}
+    			return local.walls[colori];
+    		}
+    	}
+
+			$('#terminal').terminal(function(command) {
+           	
+       	try {
+
+       		var code = Translate.toCode(command)
+
+					//eval( code );
+					//
+					console.log(local.context)
+
+       		playlist.add( command, code, local.context)
+       		
+
+       	} catch(e) {
+       		console.log(e);
+       	}
+
+       	return false;
+           	
+	    }, {
+        completion: ["add"],
+        greetings: "",
+        prompt: "~ ",
+        keypress: function(e) {
+        	// +
+        	if (e.which==43) {
+        		var nextcolor = rainbow[colorcount.tick()]
+        		//distant.walls[nextcolor] = new wall("line")
+        		distant.createWall(nextcolor);
+        		local.context = nextcolor
+        		local.walls.push(nextcolor)
+        		$("#terminal").terminal().set_command("")
+        		$("#terminal .cmd").css("color", local.context)
+        		return false;
+        	}
+        	// `
+        	if (e.which==96) {
+        		local.context = local.nextWall();
+        		//$("#terminal").terminal().set_command("")
+        		$("#terminal .cmd").css("color", local.context)
+        		return false;
+        	}
+        //  socket.emit('typing',$("#terminal .cmd span")[1].innerHTML)
+        }
+	    });
+
+		var rainbow = ["red", "orange", "green", "blue", "purple" ]
+
+		var walls = []
+
+
+
+
+		/* INSTANCES */
+
+		var playlist = new LCPlaylist("playlist", function(data) {
+			
+			// data.index, data.command, data.event
+			console.log(data)
+			
+			switch (data.event) {
+				case "add":
+					poemvis.add(data)
+					break;
+				case "playback":
+					poemvis.highlight(data)
+					try {
+						eval( data.code )
+					} catch(e) {
+
+					}
+					break;
+			}
+
+		})
+
+		var poemvis = new PoemVis("poemvis")
+
+
+
+
+
+		var sine = new Tone.SimpleSynth().toMaster()
+
+		sine.play = function(note) {
+
+			sine.triggerAttackRelease(note,0.1)
+
+		}
+
+
+
+
+
+
+		/*
+		 interval with controllable speed / interval time
+			bt.interval()
+		*/
+
+		window.VariableSpeedInterval = function(rate,func) {
+			this.rate = rate
+			this.on = true;
+			this.event = func ? func : function() { };
+			this.pulse = function() {
+				if (this.on) {
+					this.time.last = new Date().getTime()
+					this.event();
+					//var delay = force ? force : this.rate
+					this.timeout = setTimeout(this.pulse.bind(this),this.rate)
+				}
+			}
+			this.stop = function() {
+				this.on = false;
+			}
+			this.start = function() {
+				this.on = true;
+				this.pulse();
+			}
+			this.time = {
+				last: false,
+				cur: false
+			}
+			this.ms = function(newrate) {
+				var oldrate = this.rate;
+				this.rate = newrate;
+
+				this.time.cur = new Date().getTime()
+				if (this.time.cur - this.time.last > newrate) {
+					clearTimeout(this.timeout)
+					this.pulse();
+				} else if (newrate < oldrate) {
+					clearTimeout(this.timeout)
+					var delay = this.rate - (this.time.cur - this.time.last);
+					if (delay < 0 ) { delay = 0 }
+					this.timeout = setTimeout(this.pulse.bind(this),delay)
+				}
+			}
+			this.start();
+		}
+
+		window.interval = function(rate,func) {
+			var _int = new VariableSpeedInterval(rate,func)
+			return _int;
+		}
+
+		/* use like this:
+		    // func is optional
+			var x = interval(50, function() {   bla ... })
+			x.ms(100);
+			x.stop()
+			// later
+			x.start()
+			//can change function midway
+			x.event = function() { ... }
+
+		*/
+
+
+
+		/*
+		random function that executes (returns new num) each time
+			this should probably be global
+		*/
+
+
+		window.rand = function(scale) {
+			return random.bind(null,scale)
+		}
+		/* use like this:
+
+		a = new Wall()
+		a.moveTo(rand(WIDTH),rand(HEIGHT))
+
+
+		
+
+	    
+
+
+
+	    /* Ben Library */
+
+	    var Counter = function(limit) {
+	    	this.max = 0;
+	    	this.current = -1;
+	    	this.tick = function() {
+	    		this.current++;
+	    		if (this.current>=this.limit) {
+	    			this.current = 0;
+	    		}
+	    		return this.current;
+	    	}
+	    	this.downtick = function() {
+	    		this.current--;
+	    		if (this.current <= this.limit) {
+	    			this.current = this.limit-1;
+	    		}
+	    		return this.current;
+	    	}
+	    }
+
+	    var colorcount = new Counter(rainbow.length);
+
+
+
+
+	    /* distant */
+
+    	var distant = {
+    		walls: {},
+    		createWall: function(nextcolor) {
+    			window[nextcolor] = new wall("line")
+    		}
+    	}
+
+
+
+
+
+
+
+
+	</script>
+
+  </body>
+</html>
