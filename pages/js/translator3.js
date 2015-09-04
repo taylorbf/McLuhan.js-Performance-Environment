@@ -9,18 +9,19 @@ var Translate = {
       if (parsed[1]) {
         var beat = parsed[1]
       }
-      console.log(code)
-      console.log(beat)
 
-      interval(1000,function() { eval( code ) })
+     // interval = "interval(1000,function() { eval( code ) })"
 
       //var tag = command.slice(command.indexOf("|")-1,command.length)
 
       //var codes = code.split(" | ")
 
-      output = code
+     // output = code
 
-    	return output
+    	return {
+        code: code, // eventually an array?
+        beat: beat
+      }
 
     },
     parseParams: function(paramsIn) {

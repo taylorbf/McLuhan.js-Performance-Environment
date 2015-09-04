@@ -4,7 +4,7 @@ var LCPlaylist = function(parentID, cb) {
 
 	this.playlist = []
 
-	this.line = 0;
+	this.lineIndex = 0;
 
 	this.callback = cb;
 
@@ -29,24 +29,27 @@ var LCPlaylist = function(parentID, cb) {
 
 }
 
-LCPlaylist.prototype.add = function(command, code, color, norepeat) {
-
-	this.line++
+LCPlaylist.prototype.add = function(command, info, color) {
 
 	this.color = color
 
-	var name = this.nameIndex++
+	this.lineIndex++
 
 	var piece = document.createElement("div")
 	piece.className = "item"
 	piece.style.color = this.color
-	piece.id = "fragment"+name
+	piece.id = "fragment"+this.lineIndex
 	this.container.appendChild(piece)
 
 	var text = document.createElement("div")
-	text.innerHTML = this.line + " ~ " + command;
+	text.innerHTML = this.lineIndex + " ~ " + command;
 	text.className = "text"
 	piece.appendChild(text)
+
+	var vis = document.createElement("div")
+	vis.className = "beatvis"
+	vis.style.backgroundColor = color
+	piece.appendChild(vis)
 
 	var closer = document.createElement("div")
 	closer.className = "close"
@@ -54,12 +57,23 @@ LCPlaylist.prototype.add = function(command, code, color, norepeat) {
 	piece.appendChild(closer)
 	closer.addEventListener("mousedown",this.cut.bind(this,name,piece))
 
-	this.playlist.push({
-		name: name,
+	var newline = {
+		index: this.lineIndex,
+		wall: color,
 		command: command,
-		code: code,
-		norepeat: norepeat
-	})
+		code: info.code,
+		duration: info.beat
+	}
+	newline.interval = interval(info.beat,function(newline) {
+			//with (eval(newline.color)) {
+				eval(newline.code) // distant, most likely....
+			//}
+			//console.log(this)
+			this.ping(newline)
+	}.bind(this,newline))
+		//.bind(eval(color))
+
+	this.playlist.push(newline)
 
 	var self = this;
 
@@ -132,6 +146,27 @@ LCPlaylist.prototype.cut = function(index,piece) {
 		}
 	}
 }
+
+LCPlaylist.prototype.ping = function(line) {
+
+	/*var linepiece = document.getElementById("fragment"+line.index))
+	var vispiece = document.querySelector('#fragment'+line.index + ' .beatvis');
+	
+	vispiece.style.webkitTransition = "opacity 0s;"
+  vispiece.style.transition = "opacity 0s;"
+	vispiece.style.opacity = 1;
+	vispiece.style.webkitTransition = "opacity 0.2s;"
+  vispiece.style.transition = "opacity 0.2s;"
+	vispiece.style.opacity = 0; */
+	console.log(line)
+	$("#fragment"+line.index+" .beatvis").css("opacity","1").animate({"opacity":0},line.duration)
+	//console.log(vispiece)
+}
+
+
+
+
+
 
 
 

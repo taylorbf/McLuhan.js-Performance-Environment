@@ -39,6 +39,8 @@
     		params: ""
     	}
 
+    	var black = {test: "thing"}
+
     	var local = {
     		context: "black",
     		walls: [],
@@ -56,17 +58,13 @@
            	
        	try {
 
-       		var code = Translate.toCode(command)
-
-					//eval( code );
-					//
-					console.log(local.context)
-
-       		playlist.add( command, code, local.context)
-       		
+       		var info = Translate.toCode(command)
+       		playlist.add(command, info, local.context )
 
        	} catch(e) {
+
        		console.log(e);
+
        	}
 
        	return false;
@@ -110,14 +108,15 @@
 		var playlist = new LCPlaylist("playlist", function(data) {
 			
 			// data.index, data.command, data.event
-			console.log(data)
+			console.log("playlist callback says: ", data)
 			
 			switch (data.event) {
 				case "add":
-					poemvis.add(data)
+
+				//	poemvis.add(data)
 					break;
 				case "playback":
-					poemvis.highlight(data)
+				//	poemvis.highlight(data)
 					try {
 						eval( data.code )
 					} catch(e) {
