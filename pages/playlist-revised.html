@@ -119,20 +119,16 @@
 					console.log("add", data)
 
 					local.intervals["line"+data.index] = interval(data.duration,function(data) {
-						//with (eval(newline.color)) {
-						//	eval(data.code) // distant, most likely....
-						//}
-						//console.log(this)
-						console.log(data.duration)
 						this.ping(data)
 					}.bind(this,data))
 
+
+					// happens distantly
+					data.gencode = createGens(data.index,data.code)
 					distant.intervals["line"+data.index] = interval(data.duration,function(data) {
-						//with (eval(newline.color)) {
-							eval(data.code) // distant, most likely....
-						//}
-						//console.log(this)
-						//this.ping(data)
+							//with (eval(data.wall)) {
+								eval(data.gencode) // distant, most likely....
+							//}
 					}.bind(this,data))
 				//	poemvis.add(data)
 					break;
@@ -245,10 +241,52 @@
 
 		a = new Wall()
 		a.moveTo(rand(WIDTH),rand(HEIGHT))
+		*/
 
+/*
+		window.bounce = function(scale) {
+			// what will need to happen in here?
+			// 
+			// new Bounce
+			// or new Gesture
+			// or new Generator
+			/*
+			 text in would be:
+			 sine.play(random(20)+200) @ 200
+			 sine.play(choice(20,40,60)+200) @ 200
+			 sine.play(bounce(0,200)+200) @ 200
+			 sine.play(A(0,200)+200) @ 200
+			 // bounce is over 16 or 32 steps?
+			
+			 result would be....
+			 sine.play(_bounce1+200)
+			 sine.play(line1.gens[0]()+200)
 
+			 but would be great to be able to compound like:
+			 sine.play(choice(bounce(0,100),bounce(100,0))+200) @ 200
+
+			 could also markov:
+			 sine.play(markov1(0,0.1,0.2,0.3)) @ markov1(100,200,300,400)
+			 markov1 could have built-in probabilities for each argument.
+			 all of same markov's within a line could be tied together. thatd be nice!
+
+			 so....
+			 random, choice don't need gens
+			 bounce, gesture, markov do need gens
+			 bounce should not have ability for choice() or rand() arg
+			 neither should gesture
+			 neither should markov. so! fine.
+
+			 can search for index of bounce(, gesture1x(, markov(
+			 jest(0,50)
+
+			 orrrr could.... have the first bounce() push some properties into distant.gens, then act on those properties each time.
+			 but how would bounce know which properties were its?
+
+			
+		}
 		
-
+*/
 	    
 
 
@@ -286,12 +324,49 @@
     		createWall: function(nextcolor) {
     			window[nextcolor] = new wall("line")
     		},
-    		intervals: {}
+    		intervals: {},
+    		gens: {}
+    	}
+
+    	
+    	var createGens = function(index,code) {
+    		console.log(index)
+    		var gens = ["bounce","gesture","markov"]
+    		distant.gens["line"+index] = []
+    		for (var i=0;i<code.length;i++) {
+    			for (var j=0;j<gens.length;j++) {
+    				if (code.slice(i).indexOf(gens[j]+"(")==0) {
+    					console.log(i)
+    					distant.gens["line"+index].push({
+    						orig: code.slice(i,code.slice(i).indexOf(")")+i), 
+    						type: gens[j]
+    					})
+    				}
+    			}
+    		}
+    		console.log(distant.gens)
+    		return ""
+    	//	distant.gens["line"+index].push
     	}
 
 
+    	function bounce(start, end, iterations) {
+			  if(start === undefined || end === undefined || !iterations) {
+			    return function() { return 0; };
+			  }
 
-
+			  iterations--;
+			  var current = 0;
+			  var direction = -1;
+			  return function() {
+			    var result = start + (current * ( (end - start) / iterations ));
+			    if(current === 0 || current === iterations ) {
+			      direction *= -1;
+			    }
+			    current += direction;
+			    return result;
+				};
+			}
 
 
 
