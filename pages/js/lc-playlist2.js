@@ -10,7 +10,7 @@ var LCPlaylist = function(parentID, cb) {
 
 	this.color = "black"
 
-	this.limit = 10
+	this.limit = 20
 	this.current = 0
 
 	this.parentID = parentID
@@ -64,14 +64,14 @@ LCPlaylist.prototype.add = function(command, info, color) {
 		code: info.code,
 		duration: info.beat
 	}
-	newline.interval = interval(info.beat,function(newline) {
+/*	newline.interval = interval(info.beat,function(newline) {
 			//with (eval(newline.color)) {
 				eval(newline.code) // distant, most likely....
 			//}
 			//console.log(this)
 			this.ping(newline)
 	}.bind(this,newline))
-		//.bind(eval(color))
+		//.bind(eval(color)) */
 
 	this.playlist.push(newline)
 
@@ -88,7 +88,7 @@ LCPlaylist.prototype.add = function(command, info, color) {
 	  }.bind(self)
 	})
 
-	var data = this.playlist[this.playlist.length-1]
+	var data = newline
 	data.event = "add"
 
 	if (this.playlist.length>=this.limit) {
@@ -148,19 +148,7 @@ LCPlaylist.prototype.cut = function(index,piece) {
 }
 
 LCPlaylist.prototype.ping = function(line) {
-
-	/*var linepiece = document.getElementById("fragment"+line.index))
-	var vispiece = document.querySelector('#fragment'+line.index + ' .beatvis');
-	
-	vispiece.style.webkitTransition = "opacity 0s;"
-  vispiece.style.transition = "opacity 0s;"
-	vispiece.style.opacity = 1;
-	vispiece.style.webkitTransition = "opacity 0.2s;"
-  vispiece.style.transition = "opacity 0.2s;"
-	vispiece.style.opacity = 0; */
-	console.log(line)
-	$("#fragment"+line.index+" .beatvis").css("opacity","1").animate({"opacity":0},line.duration)
-	//console.log(vispiece)
+	$("#fragment"+line.index+" .beatvis").stop().css("opacity","1").animate({"opacity":0},parseInt(line.duration))
 }
 
 

@@ -149,7 +149,7 @@ footer {
 .playlist {
 	font-weight:light;
 	width:400px;
-	height:200px;
+	height:300px;
 }
 
 .playlist > .item {
@@ -188,6 +188,7 @@ footer {
 	z-index:0;
 	border-radius:6px;
 	-webkit-border-radius:6px;
+	opacity:0;
 }
 
 .playlist > .item > .close {

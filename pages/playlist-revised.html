@@ -4,6 +4,7 @@
   <meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
   <script type="text/javascript" src="http://cdn.tonejs.org/latest/Tone.min.js"></script>
+	<script src="js/bt.js"></script>
 	<script src="js/lc-playlist2.js"></script>
 	<script src="js/translator3.js"></script>
 	<link href='http://fonts.googleapis.com/css?family=Anonymous+Pro:400,700' rel='stylesheet' type='text/css'>
@@ -51,7 +52,8 @@
     				colori = 0
     			}
     			return local.walls[colori];
-    		}
+    		},
+    		intervals: {}
     	}
 
 			$('#terminal').terminal(function(command) {
@@ -74,8 +76,9 @@
         greetings: "",
         prompt: "~ ",
         keypress: function(e) {
-        	// +
-        	if (e.which==43) {
+        	// ~
+        	console.log(e.which)
+        	if (e.which==126) {
         		var nextcolor = rainbow[colorcount.tick()]
         		//distant.walls[nextcolor] = new wall("line")
         		distant.createWall(nextcolor);
@@ -113,6 +116,15 @@
 			switch (data.event) {
 				case "add":
 
+					console.log("add")
+
+					local.intervals["line"+data.line] = interval(data.duration,function(data) {
+						//with (eval(newline.color)) {
+							eval(data.code) // distant, most likely....
+						//}
+						//console.log(this)
+						this.ping(data)
+					}.bind(this,data))
 				//	poemvis.add(data)
 					break;
 				case "playback":

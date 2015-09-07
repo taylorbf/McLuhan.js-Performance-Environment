@@ -132,7 +132,7 @@ window.random = function(scale,max) {
 	if (max) {
 		return Math.floor(Math.random() * (max-scale) + scale);
 	} else {
-  		return Math.floor(Math.random() * scale);
+  	return Math.floor(Math.random() * scale);
 	}
 }
 
