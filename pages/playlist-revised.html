@@ -116,14 +116,23 @@
 			switch (data.event) {
 				case "add":
 
-					console.log("add")
+					console.log("add", data)
 
-					local.intervals["line"+data.line] = interval(data.duration,function(data) {
+					local.intervals["line"+data.index] = interval(data.duration,function(data) {
+						//with (eval(newline.color)) {
+						//	eval(data.code) // distant, most likely....
+						//}
+						//console.log(this)
+						console.log(data.duration)
+						this.ping(data)
+					}.bind(this,data))
+
+					distant.intervals["line"+data.index] = interval(data.duration,function(data) {
 						//with (eval(newline.color)) {
 							eval(data.code) // distant, most likely....
 						//}
 						//console.log(this)
-						this.ping(data)
+						//this.ping(data)
 					}.bind(this,data))
 				//	poemvis.add(data)
 					break;
@@ -276,7 +285,8 @@
     		walls: {},
     		createWall: function(nextcolor) {
     			window[nextcolor] = new wall("line")
-    		}
+    		},
+    		intervals: {}
     	}
 
 

@@ -55,7 +55,7 @@ LCPlaylist.prototype.add = function(command, info, color) {
 	closer.className = "close"
 	closer.innerHTML = "&times;"
 	piece.appendChild(closer)
-	closer.addEventListener("mousedown",this.cut.bind(this,name,piece))
+	closer.addEventListener("mousedown",this.cut.bind(this,this.lineIndex,piece))
 
 	var newline = {
 		index: this.lineIndex,
@@ -139,10 +139,17 @@ LCPlaylist.prototype.tick = function() {
 }
 
 LCPlaylist.prototype.cut = function(index,piece) {
+	console.log(index)
 	for (var i=0;i<this.playlist.length;i++) {
-		if (this.playlist[i].name == index) {
+		if (this.playlist[i].index == index) {
+			console.log(i)
 			this.playlist.splice(i,1)
 			this.container.removeChild(piece)
+			local.intervals["line"+index].stop()
+			local.intervals["line"+index] = null
+			distant.intervals["line"+index].stop()
+			distant.intervals["line"+index] = null
+
 		}
 	}
 }
