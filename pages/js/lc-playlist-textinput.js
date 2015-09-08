@@ -45,6 +45,17 @@ LCPlaylist.prototype.add = function(command, info, color) {
 	text.type = "text"
 	text.value = this.lineIndex + " ~ " + command;
 	text.className = "text"
+	text.parent = piece
+	text.addEventListener('keydown',function(e) {
+		console.log(e.target.parent)
+		console.log(e.target.parent.id.replace("fragment",""))
+		if (e.which==13) {
+			this.cut(e.target.parent.id.replace("fragment",""))
+			var code = e.target.value.split(" ~ ")
+			var info = Translate.toCode(code[1])
+      this.add(code[1], info, local.context )
+		} 
+	}.bind(this))
 	piece.appendChild(text)
 
 	var vis = document.createElement("div")
@@ -56,7 +67,7 @@ LCPlaylist.prototype.add = function(command, info, color) {
 	closer.className = "close"
 	closer.innerHTML = "&times;"
 	piece.appendChild(closer)
-	closer.addEventListener("mousedown",this.cut.bind(this,this.lineIndex,piece))
+	closer.addEventListener("mousedown",this.cut.bind(this,this.lineIndex))
 
 	var newline = {
 		index: this.lineIndex,
@@ -139,13 +150,11 @@ LCPlaylist.prototype.tick = function() {
 
 }
 
-LCPlaylist.prototype.cut = function(index,piece) {
-	console.log(index)
+LCPlaylist.prototype.cut = function(index) {
 	for (var i=0;i<this.playlist.length;i++) {
 		if (this.playlist[i].index == index) {
-			console.log(i)
 			this.playlist.splice(i,1)
-			this.container.removeChild(piece)
+			this.container.removeChild(document.getElementById("fragment"+index))
 			local.intervals["line"+index].stop()
 			local.intervals["line"+index] = null
 			distant.intervals["line"+index].stop()
