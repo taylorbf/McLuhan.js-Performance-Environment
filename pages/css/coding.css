@@ -163,9 +163,16 @@ footer {
 .playlist > .item > .text {
 	text-align:left;
 	box-sizing:border-box;
-	cursor:pointer;
+	cursor:text;
 	position:relative;
 	z-index:2;
+	font-family:"Anonymous Pro", helvetica neue;
+	outline:none;
+	border:none;
+	font-size:12pt;
+	color:black;
+	width:100%;
+	background-color:transparent;
 }
 
 .playlist > .item > .text, .playlist > .item > .close {
