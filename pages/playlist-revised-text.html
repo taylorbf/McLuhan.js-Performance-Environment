@@ -39,8 +39,16 @@
 			nx.onload = function() {
 
 				nx.colorize("black")
-				trace1.nodeSize = 6
+				trace1.nodeSize = 8
 				trace1.on('*',function(data) {
+					// done so that the Array object keeps its reference within all the generators. I.e. is not made into a new object.
+					while (_Gesture1Buffer.length > 0) {
+						_Gesture1Buffer.pop()
+					}
+					for (var i=0;i<data.path.length;i++) {
+						_Gesture1Buffer[i] = data.path[i]
+					}	
+
 					// will need to set all generators.... 
 					// maybe gens should all go to some central array?
 					// or maybe they always look to some central variable <<<variable!
@@ -430,20 +438,17 @@
 
 			/* GESTURE */
 
+			_Gesture1Buffer = [
+					{x: 0, y: 1 },
+					{x: 1, y: 0 }
+			]
 
 			var Gesture = function(xlow,xhigh) {
 
 				var ylow = 0
 				var yhigh = 0
 
-				this.buffer = [
-					[0,0],
-					[.5,0],
-					[0,.5],
-					[1,1],
-					[0.9,.75],
-					[0,.2]
-				]
+				this.buffer = _Gesture1Buffer
 			
 				this.bufferIndex = 0
 				this.speed = 1
@@ -478,8 +483,8 @@
 
 				var interpDistance = (this.bufferIndex - lowerIndex*interval) / interval
 
-				var x = interp(interpDistance, this.buffer[lowerIndex][0],this.buffer[upperIndex][0])
-				var y = interp(interpDistance, this.buffer[lowerIndex][1],this.buffer[upperIndex][1])
+				var x = interp(interpDistance, this.buffer[lowerIndex].x,this.buffer[upperIndex].x)
+				var y = interp(interpDistance, this.buffer[lowerIndex].y,this.buffer[upperIndex].y)
 
 				x *= scale(x,0,1,this.range.x[0],this.range.x[1])
 
