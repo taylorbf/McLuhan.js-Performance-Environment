@@ -331,22 +331,29 @@
     	
     	var createGens = function(index,code) {
     		console.log(index)
-    		var gens = ["bounce","gesture","markov"]
+    		var gennames = ["bounce","gesture","markov"]
     		distant.gens["line"+index] = []
     		for (var i=0;i<code.length;i++) {
-    			for (var j=0;j<gens.length;j++) {
-    				if (code.slice(i).indexOf(gens[j]+"(")==0) {
-    					console.log(i)
-    					distant.gens["line"+index].push({
-    						orig: code.slice(i,code.slice(i).indexOf(")")+i), 
-    						type: gens[j]
+    			console.log(code)
+    			for (var j=0;j<gennames.length;j++) {
+    				if (code.slice(i).indexOf(gennames[j]+"(")==0) {
+    					var end = code.slice(i).indexOf(")")+i+1
+    					var linekey = "line"+index
+    					distant.gens[linekey].push({
+    						orig: code.slice(i,end), 
+    						type: gennames[j],
+    						start: i,
+    						end: end
     					})
+    					var genIndex = distant.gens[linekey].length - 1
+    					code = code.replace(distant.gens[linekey][genIndex].orig,'distant.gens["'+linekey+'"]['+genIndex+'].generator.tick()')
     				}
     			}
     		}
-    		console.log(distant.gens)
-    		return ""
-    	//	distant.gens["line"+index].push
+    		for (var i=0;i<distant.gens["line"+index].length;i++) {
+    			distant.gens["line"+index][i].generator = eval("new " + distant.gens["line"+index][i].orig[0].toUpperCase() + distant.gens["line"+index][i].orig.slice(1))
+    		}
+    		return code
     	}
 
 
@@ -366,6 +373,23 @@
 			    current += direction;
 			    return result;
 				};
+			}
+
+			function Bounce() {
+				this.value = 100
+				this.direction = 1
+				this.step = 10
+				this.tick = function() {
+					this.value += this.direction * this.step
+					if (this.value > 300) {
+						this.direction = -1
+						this.value = 300
+					} else if (this.value < 100) {
+						this.direction = 1
+						this.value = 100
+					}
+					return this.value
+				}
 			}
 
 
