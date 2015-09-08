@@ -7,6 +7,7 @@
 	<script src="js/bt.js"></script>
 	<script src="js/lc-playlist-textinput.js"></script>
 	<script src="js/translator3.js"></script>
+	<script src="js/nexusUI.js"></script>
 	<link href='http://fonts.googleapis.com/css?family=Anonymous+Pro:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="css/coding.css">
     <link href="./jcubic/css/jquery.terminal.css" rel="stylesheet"/>
@@ -29,9 +30,25 @@
 
 	</div>
 
+	<canvas nx="trace"></canvas>
+
 	<div id="poemvis"></div>
 
 	<script>
+
+			nx.onload = function() {
+
+				nx.colorize("black")
+				trace1.nodeSize = 6
+				trace1.on('*',function(data) {
+					// will need to set all generators.... 
+					// maybe gens should all go to some central array?
+					// or maybe they always look to some central variable <<<variable!
+					// that way, if I change that one variable, they will receive it
+					// instead of having to call 'setBuffer' on each gesture in kind.
+				})
+
+			}
 
 		  var current = {
     		wall: "",
