@@ -246,3 +246,10 @@ a.moveTo(rand(WIDTH),rand(HEIGHT))
 array forEach
 
 */
+
+
+//what key? in the key of 200 hz? or matching some sample's key?...
+
+window.major = function(note,octave) {
+  this.arr = []
+}
