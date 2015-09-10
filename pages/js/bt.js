@@ -251,5 +251,5 @@ array forEach
 //what key? in the key of 200 hz? or matching some sample's key?...
 
 window.major = function(note,octave) {
-  this.arr = []
+  this.arr = [1,1.125,1.25,1.3333333333333333,1.5,1.6875,1.875]
 }
