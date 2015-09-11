@@ -10,6 +10,12 @@ var Translate = {
         var beat = parsed[1]
       }
 
+      if (code.split(" ")[0] == parseInt(code.split(" ")[0])) {
+        var reference = parseInt(code.split(" ")[0])
+        code = code.slice(code.indexOf(" ")+1)
+        console.log(code)
+      }
+
      // interval = "interval(1000,function() { eval( code ) })"
 
       //var tag = command.slice(command.indexOf("|")-1,command.length)
@@ -20,7 +26,8 @@ var Translate = {
 
     	return {
         code: code, // eventually an array?
-        beat: beat
+        beat: beat,
+        reference: reference
       }
 
     },

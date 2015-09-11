@@ -37,6 +37,10 @@
 	<script>
 
 			//m.deck(8)
+			//
+			var m = {
+				variables: []
+			}
 
 			nx.onload = function() {
 
@@ -138,36 +142,54 @@
 		var playlist = new LCPlaylist("playlist", function(data) {
 			
 			// data.index, data.command, data.event
-			console.log("playlist callback says: ", data)
-			
-			switch (data.event) {
-				case "add":
-
-					console.log("add", data)
-
-					local.intervals["line"+data.index] = interval(data.duration,function(data) {
-						this.ping(data)
-					}.bind(this,data))
+			// data.duration, data.reference
+		
 
 
-					// happens distantly
-					data.gencode = createGens(data.index,data.code)
-					distant.intervals["line"+data.index] = interval(data.duration,function(data) {
-							//with (eval(data.wall)) {
-								eval(data.gencode) // distant, most likely....
-							//}
-					}.bind(this,data))
-				//	poemvis.add(data)
-					break;
-				case "playback":
-				//	poemvis.highlight(data)
-					try {
-						eval( data.code )
-					} catch(e) {
+			if (!data.duration) {
 
+				//distant
+				data.gencode = createGens(data.index,data.code)
+				if (data.reference) {
+					with (m.variables[data.reference]) {
+						console.log(m.variables[data.reference])
+						//happens distantly
+						//console.log(data.gencode)
+						eval(data.gencode)
 					}
-					break;
+				} else {
+					//with (eval(data.wall)) {
+						m.variables[data.index] = eval(data.gencode)
+						console.log("returns", m.variables[data.index])
+					//}
+				}
+					
+			} else {
+				
+				local.intervals["line"+data.index] = interval(data.duration,function(data) {
+					this.ping(data)
+				}.bind(this,data))
+
+				// happens distantly
+				data.gencode = createGens(data.index,data.code)
+				distant.intervals["line"+data.index] = interval(data.duration,function(data) {
+						// distant
+						if (data.reference) {
+							with (m.variables[data.reference]) {
+								//happens distantly
+								eval(data.gencode)
+							}
+						} else {
+							//with (eval(data.wall)) {
+								m.variables[data.reference] = eval(data.gencode)
+								console.log(m.variables[data.reference])
+							//}
+						}
+				}.bind(this,data))
+				//poemvis.add(data)
+				
 			}
+	
 
 		})
 

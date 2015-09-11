@@ -72,6 +72,7 @@ LCPlaylist.prototype.add = function(command, info, color) {
 		wall: color,
 		command: command,
 		code: info.code,
+		reference: info.reference,
 		duration: info.beat // duration is now a string to be evaluated later
 	}
 /*	newline.interval = interval(info.beat,function(newline) {
