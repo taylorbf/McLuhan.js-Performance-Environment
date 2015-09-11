@@ -92,11 +92,11 @@
        	try {
 
        		var info = Translate.toCode(command)
-       		playlist.add(command, info, local.context )
+       		playlist.add(command, info, local.context)
 
        	} catch(e) {
 
-       		console.log(e);
+       		console.log("bad command", e);
 
        	}
 
@@ -108,7 +108,6 @@
         prompt: "~ ",
         keypress: function(e) {
         	// ~
-        	console.log(e.which)
         	if (e.which==126) {
         		var nextcolor = rainbow[colorcount.tick()]
         		//distant.walls[nextcolor] = new wall("line")
@@ -148,19 +147,17 @@
 
 			if (!data.duration) {
 
-				//distant
+				//happens distantly
 				data.gencode = createGens(data.index,data.code)
 				if (data.reference) {
 					with (m.variables[data.reference]) {
-						console.log(m.variables[data.reference])
-						//happens distantly
-						//console.log(data.gencode)
 						eval(data.gencode)
 					}
 				} else {
 					//with (eval(data.wall)) {
 						m.variables[data.index] = eval(data.gencode)
-						console.log("returns", m.variables[data.index])
+						console.log(m.variables[data.index])
+						console.log(this)
 					//}
 				}
 					
@@ -181,8 +178,8 @@
 							}
 						} else {
 							//with (eval(data.wall)) {
-								m.variables[data.reference] = eval(data.gencode)
-								console.log(m.variables[data.reference])
+								m.variables[data.index] = eval(data.gencode)
+								console.log(m.variables[data.index])
 							//}
 						}
 				}.bind(this,data))
@@ -191,7 +188,7 @@
 			}
 	
 
-		})
+		}.bind(window))
 
 		var poemvis = new PoemVis("poemvis")
 
@@ -304,11 +301,9 @@
 
     	
     	var createGens = function(index,code) {
-    		console.log(index)
     		var gennames = ["bounce","gesture","markov"]
     		distant.gens["line"+index] = []
     		for (var i=0;i<code.length;i++) {
-    			console.log(code)
     			for (var j=0;j<gennames.length;j++) {
     				if (code.slice(i).indexOf(gennames[j]+"(")==0) {
     					var end = code.slice(i).indexOf(")")+i+1
@@ -452,6 +447,63 @@
 //
 //pattern(0,10,8) could mean create a dream6 style pattern out of 8 divisions of 0 and 10
 //wander(0,10) could mean wander by step (1? 0.1?) between 0 and 10
+
+
+
+
+
+ /* LOOP shorthand...
+
+1 ~ pian = [] 
+2 ~ -l 10 pian.push(hear("pno"))
+3 ~ -l 10 pian[i].play(r(2)) @ 500
+
+1 ~ pian = [] 
+2 ~ -l 10 pian.push(hear("pno"))
+3 ~ pian.each("play(600)") @ 500
+
+1 ~ [] 
+2 ~ -l 10 1 push(hear("pno"))
+3 ~ 1 each("play(600)") @ 500
+
+1 ~ []
+2 ~ 1 push(hear("piano")) @ 0 10
+3 ~ 1 play(r(1,2)) @ 0 10 @ 500
+
+
+would you ever do -l lineNum code....?
+
+1 ~ explore("montana")
+2 ~ 1 info() -l ...
+
+
+
+
+
+
+so.....
+
+
+1 ~ piano = []
+2 ~ -l 10 piano[i] = hear("pno")
+3 ~ 1 each("play(600)") @ 500
+
+
+
+
+-1 wraps a loop around the code
+for (var i=0;i<10;i++) {
+	piano[i] = hear("pno"))
+}
+
+-1 wraps a loop around the code
+every 500ms:
+for (var i=0;i<10;i++) {
+	piano[i].play(r(1,2))
+}
+
+
+*/
 
 
 

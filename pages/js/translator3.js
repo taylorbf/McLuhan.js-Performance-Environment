@@ -10,10 +10,15 @@ var Translate = {
         var beat = parsed[1]
       }
 
+      if (code.split(" ")[0] == "-l") {
+        var loop = code.split(" ")[0]
+        code = code.slice(code.indexOf(code.split(" ")[2]))
+        console.log(code)
+      }
+
       if (code.split(" ")[0] == parseInt(code.split(" ")[0])) {
         var reference = parseInt(code.split(" ")[0])
         code = code.slice(code.indexOf(" ")+1)
-        console.log(code)
       }
 
      // interval = "interval(1000,function() { eval( code ) })"
