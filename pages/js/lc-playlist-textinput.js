@@ -47,8 +47,6 @@ LCPlaylist.prototype.add = function(command, info, color) {
 	text.className = "text"
 	text.parent = piece
 	text.addEventListener('keydown',function(e) {
-		console.log(e.target.parent)
-		console.log(e.target.parent.id.replace("fragment",""))
 		if (e.which==13) {
 			this.cut(e.target.parent.id.replace("fragment",""))
 			var code = e.target.value.split(" ~ ")
@@ -74,7 +72,7 @@ LCPlaylist.prototype.add = function(command, info, color) {
 		wall: color,
 		command: command,
 		code: info.code,
-		duration: info.beat
+		duration: info.beat // duration is now a string to be evaluated later
 	}
 /*	newline.interval = interval(info.beat,function(newline) {
 			//with (eval(newline.color)) {
@@ -108,6 +106,7 @@ LCPlaylist.prototype.add = function(command, info, color) {
 		this.cut(index,document.getElementById("fragment"+index))
 	}
 
+	//executes playlist callback
 	this.callback(data);
 
 }
@@ -165,7 +164,7 @@ LCPlaylist.prototype.cut = function(index) {
 }
 
 LCPlaylist.prototype.ping = function(line) {
-	$("#fragment"+line.index+" .beatvis").stop().css("opacity","1").animate({"opacity":0},parseInt(line.duration))
+	$("#fragment"+line.index+" .beatvis").stop().css("opacity","1").animate({"opacity":0},100)
 }
 
 

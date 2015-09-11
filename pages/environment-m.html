@@ -3,11 +3,12 @@
   <head>
   <meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-  <script type="text/javascript" src="http://cdn.tonejs.org/latest/Tone.min.js"></script>
+  <!--<script type="text/javascript" src="http://cdn.tonejs.org/latest/Tone.min.js"></script> -->
 	<script src="js/bt.js"></script>
 	<script src="js/lc-playlist-textinput.js"></script>
 	<script src="js/translator3.js"></script>
 	<script src="js/nexusUI.js"></script>
+	<script src="js/mcluhan.js"></script>
 	<link href='http://fonts.googleapis.com/css?family=Anonymous+Pro:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="css/coding.css">
     <link href="./jcubic/css/jquery.terminal.css" rel="stylesheet"/>
@@ -18,15 +19,15 @@
   </head>
   <body>
 
-	<h1>McLuhan.js *Environment*</h1>
+  	<h1>McLuhan.js *Environment*</h1>
 
-	<div id="main">
+  	<div id="main" style="margin:0 auto;width:400px;border:solid 2px #555;padding:5px 0px 0px;position:relative;overflow:hidden">
 
-  	<canvas id="presence" style="position:absolute;top:0px"></canvas>
+	  	<canvas id="presence" style="position:absolute;top:0px"></canvas>
 
 		<div id="playlist"></div>
 
-		<div id="terminal" style="z-index:2;text-align:left;position:absolute;bottom:0px;width:100%"></div>
+		<div id="terminal" style="z-index:2;text-align:left"></div>
 
 	</div>
 
@@ -36,7 +37,7 @@
 
 	<script>
 
-			//m.deck(8)
+			m.deck(8)
 
 			nx.onload = function() {
 
@@ -176,7 +177,7 @@
 
 
 
-
+/*
 		var sine = new Tone.SimpleSynth().toMaster()
 		var poly = new Tone.PolySynth(30, Tone.SimpleSynth).toMaster();
 
@@ -191,9 +192,90 @@
 
 		}
 
+*/
 
 
 
+
+		/*
+		 interval with controllable speed / interval time
+			bt.interval()
+		*/
+
+		window.VariableSpeedInterval = function(rate,func) {
+			this.rate = rate
+			this.on = true;
+			this.event = func ? func : function() { };
+			this.pulse = function() {
+				if (this.on) {
+					this.time.last = new Date().getTime()
+					this.event();
+					//var delay = force ? force : this.rate
+					this.timeout = setTimeout(this.pulse.bind(this),this.rate)
+				}
+			}
+			this.stop = function() {
+				this.on = false;
+			}
+			this.start = function() {
+				this.on = true;
+				this.pulse();
+			}
+			this.time = {
+				last: false,
+				cur: false
+			}
+			this.ms = function(newrate) {
+				var oldrate = this.rate;
+				this.rate = newrate;
+
+				this.time.cur = new Date().getTime()
+				if (this.time.cur - this.time.last > newrate) {
+					clearTimeout(this.timeout)
+					this.pulse();
+				} else if (newrate < oldrate) {
+					clearTimeout(this.timeout)
+					var delay = this.rate - (this.time.cur - this.time.last);
+					if (delay < 0 ) { delay = 0 }
+					this.timeout = setTimeout(this.pulse.bind(this),delay)
+				}
+			}
+			this.start();
+		}
+
+		window.interval = function(rate,func) {
+			var _int = new VariableSpeedInterval(rate,func)
+			return _int;
+		}
+
+		/* use like this:
+		    // func is optional
+			var x = interval(50, function() {   bla ... })
+			x.ms(100);
+			x.stop()
+			// later
+			x.start()
+			//can change function midway
+			x.event = function() { ... }
+
+		*/
+
+
+
+		/*
+		random function that executes (returns new num) each time
+			this should probably be global
+		*/
+
+
+		window.rand = function(scale) {
+			return random.bind(null,scale)
+		}
+		/* use like this:
+
+		a = new Wall()
+		a.moveTo(rand(WIDTH),rand(HEIGHT))
+		*/
 
 /*
 		window.bounce = function(scale) {

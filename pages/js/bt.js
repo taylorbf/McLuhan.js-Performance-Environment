@@ -170,7 +170,7 @@ window.VariableSpeedInterval = function(rate,func) {
 			this.time.last = new Date().getTime()
 			this.event();
 			//var delay = force ? force : this.rate
-			this.timeout = setTimeout(this.pulse.bind(this),this.rate)
+			this.timeout = setTimeout(this.pulse.bind(this),eval(this.rate))
 		}
 	}
 	this.stop = function() {
@@ -227,8 +227,8 @@ random function that executes (returns new num) each time
 */
 
 
-window.rand = function(scale) {
-	return random.bind(null,scale)
+window.rand = function(scale1,scale2) {
+	return random(scale1,scale2)
 }
 /* use like this:
 
@@ -253,3 +253,12 @@ array forEach
 window.major = function(note,octave) {
   this.arr = [1,1.125,1.25,1.3333333333333333,1.5,1.6875,1.875]
 }
+
+//what kind of code?
+//
+//major(wander(20,70))
+//markov(majorscale)
+//markov(majorscale) .... really don't need to do 'major' stuff yet. going to focus on samples.
+//
+//pattern(0,10,8) could mean create a dream6 style pattern out of 8 divisions of 0 and 10
+//wander(0,10) could mean wander by step (1? 0.1?) between 0 and 10
