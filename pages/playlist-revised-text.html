@@ -3,7 +3,7 @@
   <head>
   <meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-  <script type="text/javascript" src="js/Tone.min.js"></script>
+  <script type="text/javascript" src="js/Tone.js"></script>
 	<script src="js/bt.js"></script>
 	<script src="js/lc-playlist-textinput.js"></script>
 	<script src="js/translator3.js"></script>
@@ -156,15 +156,12 @@
 				} else {
 					//with (eval(data.wall)) {
 						m.variables[data.index] = eval(data.gencode)
-						console.log(m.variables[data.index])
-						console.log(this)
 					//}
 				}
 					
 			} else {
 				
 				local.intervals["line"+data.index] = interval(data.duration,function(data) {
-					console.log(this)
 					this.ping(data)
 				}.bind(playlist,data))
 

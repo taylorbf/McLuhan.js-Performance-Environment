@@ -3,12 +3,13 @@
   <head>
   <meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-  <!--<script type="text/javascript" src="http://cdn.tonejs.org/latest/Tone.min.js"></script> -->
+<!--  <script type="text/javascript" src="js/Tone.min.js"></script> -->
 	<script src="js/bt.js"></script>
 	<script src="js/lc-playlist-textinput.js"></script>
 	<script src="js/translator3.js"></script>
 	<script src="js/nexusUI.js"></script>
 	<script src="js/mcluhan.js"></script>
+	<!-- cannot use .min because scambles global 'm' variable -->
 	<link href='http://fonts.googleapis.com/css?family=Anonymous+Pro:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="css/coding.css">
     <link href="./jcubic/css/jquery.terminal.css" rel="stylesheet"/>
@@ -19,15 +20,15 @@
   </head>
   <body>
 
-  	<h1>McLuhan.js *Environment*</h1>
+	<h1>McLuhan.js *Environment*</h1>
 
-  	<div id="main" style="margin:0 auto;width:400px;border:solid 2px #555;padding:5px 0px 0px;position:relative;overflow:hidden">
+	<div id="main">
 
-	  	<canvas id="presence" style="position:absolute;top:0px"></canvas>
+  	<canvas id="presence" style="position:absolute;top:0px"></canvas>
 
 		<div id="playlist"></div>
 
-		<div id="terminal" style="z-index:2;text-align:left"></div>
+		<div id="terminal" style="z-index:2;text-align:left;position:absolute;bottom:0px;width:100%"></div>
 
 	</div>
 
@@ -38,6 +39,11 @@
 	<script>
 
 			m.deck(8)
+			m.variables = []
+			
+			/*m = {
+				variables: []
+			} */
 
 			nx.onload = function() {
 
@@ -86,16 +92,16 @@
 
 			$('#terminal').terminal(function(command) {
            	
-       	try {
+     //  	try {
 
        		var info = Translate.toCode(command)
-       		playlist.add(command, info, local.context )
+       		playlist.add(command, info, local.context)
 
-       	} catch(e) {
+     /*  	} catch(e) {
 
-       		console.log(e);
+       		console.log("EVAL ERROR", e);
 
-       	}
+       	} */
 
        	return false;
            	
@@ -105,7 +111,6 @@
         prompt: "~ ",
         keypress: function(e) {
         	// ~
-        	console.log(e.which)
         	if (e.which==126) {
         		var nextcolor = rainbow[colorcount.tick()]
         		//distant.walls[nextcolor] = new wall("line")
@@ -139,38 +144,54 @@
 		var playlist = new LCPlaylist("playlist", function(data) {
 			
 			// data.index, data.command, data.event
-			console.log("playlist callback says: ", data)
-			
-			switch (data.event) {
-				case "add":
+			// data.duration, data.reference
+		
 
-					console.log("add", data)
+			//IF NO BEAT
+			if (!data.duration) {
 
-					local.intervals["line"+data.index] = interval(data.duration,function(data) {
-						this.ping(data)
-					}.bind(this,data))
-
-
-					// happens distantly
-					data.gencode = createGens(data.index,data.code)
-					distant.intervals["line"+data.index] = interval(data.duration,function(data) {
-							//with (eval(data.wall)) {
-								eval(data.gencode) // distant, most likely....
-							//}
-					}.bind(this,data))
-				//	poemvis.add(data)
-					break;
-				case "playback":
-				//	poemvis.highlight(data)
-					try {
-						eval( data.code )
-					} catch(e) {
-
+				//happens distantly
+				data.gencode = createGens(data.index,data.code)
+				if (data.reference) {
+					with (m.variables[data.reference]) {
+						eval(data.gencode)
 					}
-					break;
-			}
+				} else {
+				//	with (eval(data.wall)) {
+					//	console.log(this)
+						m.variables[data.index] = eval(data.gencode)
+				//	}
+				}
+				
+			//IF A BEAT		
+			} else {
+				
+				local.intervals["line"+data.index] = interval(data.duration,function(data) {
+					this.ping(data)
+				}.bind(playlist,data))
 
-		})
+				// happens distantly
+				data.gencode = createGens(data.index,data.code)
+				distant.intervals["line"+data.index] = interval(data.duration,function(data) {
+						// distant
+						if (data.reference) {
+							with (m.variables[data.reference]) {
+								//happens distantly
+								eval(data.gencode)
+							}
+						} else {
+							with (eval(data.wall)) {
+								console.log(data.wall)
+								m.variables[data.index] = eval(data.gencode)
+							}
+						}
+				}.bind(this,data))
+				//poemvis.add(data)
+				
+			}
+	
+
+		}.bind(window))
 
 		var poemvis = new PoemVis("poemvis")
 
@@ -191,91 +212,10 @@
 			poly.triggerAttackRelease(note,0.1)
 
 		}
-
 */
 
 
 
-
-		/*
-		 interval with controllable speed / interval time
-			bt.interval()
-		*/
-
-		window.VariableSpeedInterval = function(rate,func) {
-			this.rate = rate
-			this.on = true;
-			this.event = func ? func : function() { };
-			this.pulse = function() {
-				if (this.on) {
-					this.time.last = new Date().getTime()
-					this.event();
-					//var delay = force ? force : this.rate
-					this.timeout = setTimeout(this.pulse.bind(this),this.rate)
-				}
-			}
-			this.stop = function() {
-				this.on = false;
-			}
-			this.start = function() {
-				this.on = true;
-				this.pulse();
-			}
-			this.time = {
-				last: false,
-				cur: false
-			}
-			this.ms = function(newrate) {
-				var oldrate = this.rate;
-				this.rate = newrate;
-
-				this.time.cur = new Date().getTime()
-				if (this.time.cur - this.time.last > newrate) {
-					clearTimeout(this.timeout)
-					this.pulse();
-				} else if (newrate < oldrate) {
-					clearTimeout(this.timeout)
-					var delay = this.rate - (this.time.cur - this.time.last);
-					if (delay < 0 ) { delay = 0 }
-					this.timeout = setTimeout(this.pulse.bind(this),delay)
-				}
-			}
-			this.start();
-		}
-
-		window.interval = function(rate,func) {
-			var _int = new VariableSpeedInterval(rate,func)
-			return _int;
-		}
-
-		/* use like this:
-		    // func is optional
-			var x = interval(50, function() {   bla ... })
-			x.ms(100);
-			x.stop()
-			// later
-			x.start()
-			//can change function midway
-			x.event = function() { ... }
-
-		*/
-
-
-
-		/*
-		random function that executes (returns new num) each time
-			this should probably be global
-		*/
-
-
-		window.rand = function(scale) {
-			return random.bind(null,scale)
-		}
-		/* use like this:
-
-		a = new Wall()
-		a.moveTo(rand(WIDTH),rand(HEIGHT))
-		*/
 
 /*
 		window.bounce = function(scale) {
@@ -364,11 +304,9 @@
 
     	
     	var createGens = function(index,code) {
-    		console.log(index)
     		var gennames = ["bounce","gesture","markov"]
     		distant.gens["line"+index] = []
     		for (var i=0;i<code.length;i++) {
-    			console.log(code)
     			for (var j=0;j<gennames.length;j++) {
     				if (code.slice(i).indexOf(gennames[j]+"(")==0) {
     					var end = code.slice(i).indexOf(")")+i+1
@@ -512,6 +450,63 @@
 //
 //pattern(0,10,8) could mean create a dream6 style pattern out of 8 divisions of 0 and 10
 //wander(0,10) could mean wander by step (1? 0.1?) between 0 and 10
+
+
+
+
+
+ /* LOOP shorthand...
+
+1 ~ pian = [] 
+2 ~ -l 10 pian.push(hear("pno"))
+3 ~ -l 10 pian[i].play(r(2)) @ 500
+
+1 ~ pian = [] 
+2 ~ -l 10 pian.push(hear("pno"))
+3 ~ pian.each("play(600)") @ 500
+
+1 ~ [] 
+2 ~ -l 10 1 push(hear("pno"))
+3 ~ 1 each("play(600)") @ 500
+
+1 ~ []
+2 ~ 1 push(hear("piano")) @ 0 10
+3 ~ 1 play(r(1,2)) @ 0 10 @ 500
+
+
+would you ever do -l lineNum code....?
+
+1 ~ explore("montana")
+2 ~ 1 info() -l ...
+
+
+
+
+
+
+so.....
+
+
+1 ~ piano = []
+2 ~ -l 10 piano[i] = hear("pno")
+3 ~ 1 each("play(600)") @ 500
+
+
+
+
+-1 wraps a loop around the code
+for (var i=0;i<10;i++) {
+	piano[i] = hear("pno"))
+}
+
+-1 wraps a loop around the code
+every 500ms:
+for (var i=0;i<10;i++) {
+	piano[i].play(r(1,2))
+}
+
+loops cannot be used accurately with: gesture, markov, bounce
+*/
 
 
 

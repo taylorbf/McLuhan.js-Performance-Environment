@@ -636,7 +636,13 @@ Medium.prototype.all = function(method) {
 }
 
 // uses params instead of x y so you could set y without setting x, or vice versa
-Medium.prototype.size = function(params) {
+Medium.prototype.size = function(params,y) {
+	if (typeof params == "number") {
+		params = {
+			x: params,
+			y: y
+		}
+	}
 	for (var i = 0; i<this.element.length; i++) {
 		this.element[i].style.width = params.w ? params.w+"px" : this.defaultSize.w+"px";
 		this.element[i].style.height = params.h ? params.h+"px" : this.defaultSize.h+"px";

@@ -19,9 +19,7 @@ var Translate = {
 
       if (code.split(" ")[0] == "-l") {
         var loop = code.split(" ")[1]
-        console.log(loop)
         code = code.slice(code.indexOf(code.split(" ")[2]))
-        console.log(code)
       }
 
       //code is now: 14 move(100,100)
@@ -43,8 +41,6 @@ var Translate = {
       if (loop) {
         code = "for (var i=0;i<"+loop+";i++) { " + code + " }"
       }
-
-      console.log(code)
 
     	return {
         code: code, // eventually an array?
