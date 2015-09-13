@@ -2,7 +2,11 @@ var Translate = {
 	last: {},
 	toCode: function translate(command) {
 
+      //incoming command might be: 
+      //-l 10 14 move(100,100) @ 1000
+
     	var output = "";
+      var loop = false
 
       var parsed = command.split(" @ ")
       var code = parsed[0]
@@ -10,24 +14,37 @@ var Translate = {
         var beat = parsed[1]
       }
 
+      //code is now: -l 10 14 move(100,100)
+      //beat is now: 1000
+
       if (code.split(" ")[0] == "-l") {
-        var loop = code.split(" ")[0]
+        var loop = code.split(" ")[1]
+        console.log(loop)
         code = code.slice(code.indexOf(code.split(" ")[2]))
         console.log(code)
       }
+
+      //code is now: 14 move(100,100)
+      //beat is now: 1000
+      //loop is now: 10
 
       if (code.split(" ")[0] == parseInt(code.split(" ")[0])) {
         var reference = parseInt(code.split(" ")[0])
         code = code.slice(code.indexOf(" ")+1)
       }
 
-     // interval = "interval(1000,function() { eval( code ) })"
+      //code is now: move(100,100)
+      //reference is now: 14
+      //beat is now: 1000
+      //loop is now: 10
 
-      //var tag = command.slice(command.indexOf("|")-1,command.length)
+      // add an condition for | or &?
+       
+      if (loop) {
+        code = "for (var i=0;i<"+loop+";i++) { " + code + " }"
+      }
 
-      //var codes = code.split(" | ")
-
-     // output = code
+      console.log(code)
 
     	return {
         code: code, // eventually an array?

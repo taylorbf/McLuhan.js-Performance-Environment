@@ -3,7 +3,7 @@
   <head>
   <meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-  <script type="text/javascript" src="http://cdn.tonejs.org/latest/Tone.min.js"></script>
+  <script type="text/javascript" src="js/Tone.min.js"></script>
 	<script src="js/bt.js"></script>
 	<script src="js/lc-playlist-textinput.js"></script>
 	<script src="js/translator3.js"></script>
@@ -96,7 +96,7 @@
 
        	} catch(e) {
 
-       		console.log("bad command", e);
+       		console.log("EVAL ERROR", e);
 
        	}
 
@@ -164,8 +164,9 @@
 			} else {
 				
 				local.intervals["line"+data.index] = interval(data.duration,function(data) {
+					console.log(this)
 					this.ping(data)
-				}.bind(this,data))
+				}.bind(playlist,data))
 
 				// happens distantly
 				data.gencode = createGens(data.index,data.code)
@@ -502,7 +503,7 @@ for (var i=0;i<10;i++) {
 	piano[i].play(r(1,2))
 }
 
-
+loops cannot be used accurately with: gesture, markov, bounce
 */
 
 
