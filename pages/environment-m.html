@@ -17,6 +17,7 @@
     <script src="./jcubic/js/jquery.mousewheel-min.js"></script>
     <script src="./jcubic/js/jquery.terminal-min.js"></script>
 		<script src="js/jquery-ui.js"></script>
+		 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
   </head>
   <body>
 
@@ -157,10 +158,11 @@
 						eval(data.gencode)
 					}
 				} else {
-				//	with (eval(data.wall)) {
-					//	console.log(this)
+					with (eval(data.wall)) {
+						console.log("no beat!")
+						console.log("with the "+this+" wall")
 						m.variables[data.index] = eval(data.gencode)
-				//	}
+					}
 				}
 				
 			//IF A BEAT		
