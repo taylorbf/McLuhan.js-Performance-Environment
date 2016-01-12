@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Pearl River (2013)</title>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="js/jquery.js"></script>
+		<script src="js/tune.js"></script>
+		<script src="js/Tone.js"></script>
+		<script src="js/boiler.js"></script>
+		<script src="js/cords.js"></script>
+	</head>
+	<body onkeydown="handleKeys(event)" onmousemove="movesilentpearl(event)" style="margin:0;padding:0;min-width:740px;width:100%;height:100%;overflow:hidden;cursor:default;user-select:none">
+		
+		<div style="text-align:left;color:#777;font-size:12pt;font-family:gill sans;padding:5px;background-color:#eee">
+			cords
+			<span style="color:#bbb;font-size:12pt">(for laptop ensemble)</span>
+			<span id="uservis"></span>
+			<span style="float:right;color:#bbb;">ben taylor (2016)</span>
+		</div>
+
+		<canvas id="harp" style="width:900px;height:500px;border:solid 0px #eee;margin:0px auto 0px;display:block;width:100%" onmousemove="wrap(event)" onmouseup="link(event)" onmousedown="grab(event)"></canvas>
+
+
+		<div style="background-color:#fff;width:100%;height:200px;">
+
+		<!--
+				move to instructions window	
+				<div style="font-size:11pt;text-align:center;float:right;width:300px">
+				• connect one dot to another<br>
+				• organize by chat<br>
+				• each player produces sound<br>
+				• always project website & chat in performance
+			</div> -->
+
+			<div style="overflow:hidden;height:140px;width:400px;margin:0 auto;border:solid 0px #fff;display:block">
+				<input id="chatinput" onkeypress="submitChat(event)" placeholder="chat here" type="text" style="display:block;border:none;border-bottom:solid 0px #aaa;width:388px;outline:1px #aaa;font-size:9pt;padding:5px;background-color:#f3f3f3;color:#444"></input>
+				<div id="chatmessages" style="font-size:10pt;height:50px;text-align:left;padding:5px;"></div>
+			</div>
+
+		</div>
+		
+				
+	</body>
+</html>
