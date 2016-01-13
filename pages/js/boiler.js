@@ -2,30 +2,30 @@
 
 
 $(function() {
-/* Put connection address here */
-var socket = io();
+	/* Put connection address here */
+	var socket = io();
 
 
-// chat data
-socket.on('updatedata', function (type, data) {
-	if (type=="chat") {
+	// chat data
+	socket.on('updatedata', function (type, data) {
+		if (type=="chat") {
+			postToChat(data);
+		}
+	});
+
+	socket.on('updatepearlchat', function (type, data) {
 		postToChat(data);
-	}
-});
+	});
 
-socket.on('updatepearlchat', function (type, data) {
-	postToChat(data);
-});
+	socket.on('updateusers', function (users) {
+		console.log($("#usertally").html())
+		$("#usertally").html("connected: " + users)
+	});
 
-socket.on('updateusers', function (users) {
-	console.log($("#usertally").html())
-	$("#usertally").html("connected: " + users)
-});
-
-socket.on('discotally', function (disco) {
-	console.log(disco)
-	$("#discotally").html("disconnections: " + disco)
-});
+	socket.on('discotally', function (disco) {
+		console.log(disco)
+		$("#discotally").html("disconnections: " + disco)
+	});
 
 })
 

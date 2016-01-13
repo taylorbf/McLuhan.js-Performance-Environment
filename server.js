@@ -57,8 +57,14 @@ io.sockets.on('connection', function (socket) {
  	two parameters: type and data  */
 
 	socket.on('senddata', function (type, data) {
-		/* return update data */
+		/* broadcast data */
 		io.sockets.emit('updatedata', type, data);
+	});
+
+
+	socket.on('presence', function (data) {
+		/* return update data */
+		io.sockets.emit('updatepresence', data);
 	});
 
 });

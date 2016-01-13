@@ -6,7 +6,6 @@
 	<meta name="viewport" content="width=device-width">
 	<script src="/socket.io/socket.io.js"></script>
    <script src="./jcubic/js/jquery-1.7.1.min.js"></script>
-	<script src="js/boiler.js"></script>
 	<script src="js/bt.js"></script>
 	<script src="js/lc-playlist-textinput.js"></script>
 	<script src="js/translator3.js"></script>
@@ -25,7 +24,7 @@
 
 	<div id="main">
 
-  	<canvas id="presence" style="position:absolute;top:0px"></canvas>
+  	<!--<canvas id="presence" style="position:absolute;top:0px"></canvas> -->
 
 		<div id="playlist"></div>
 
@@ -43,84 +42,131 @@
 			<div id="discotally"></div>
 		</div>
 
-		<div id="presence" style="border:solid 2px black;width:142px;margin-left:10px;padding:0px;height:100px;float:left;box-sizing:border-box"></div>
+		<canvas id="presence" style="border:solid 2px black;width:142px;margin-left:10px;padding:0px;height:100px;float:left;box-sizing:border-box"></canvas>
 
 	</div>
 
 	<script>
 
-			m.variables = []
-			
-			/*m = {
-				variables: []
-			} */
 
-			
 
-		  var current = {
-    		wall: "",
-    		media: "",
-    		type: "",
-    		params: ""
-    	}
 
-    	var black = {test: "thing"}
+			var socket = io();
 
-    	var local = {
-    		context: "black",
-    		walls: [],
-    		nextWall: function() {
-    			var colori = local.walls.indexOf(local.context)
-    			colori++
-    			if (colori >= local.walls.length) {
-    				colori = 0
-    			}
-    			return local.walls[colori];
-    		},
-    		intervals: {}
-    	}
+			// chat data
+			socket.on('updatedata', function (type, data) {
+				if (type=="entry") {
+					
+				}
+			});
 
-			$('#terminal').terminal(function(command) {
-           	
-     //  	try {
+			socket.on('updateusers', function (users) {
+				console.log($("#usertally").html())
+				$("#usertally").html("connected: " + users)
+			});
 
-       		var info = Translate.toCode(command)
-       		playlist.add(command, info, local.context)
+			socket.on('discotally', function (disco) {
+				console.log(disco)
+				$("#discotally").html("disconnections: " + disco)
+			});
 
-     /*  	} catch(e) {
 
-       		console.log("EVAL ERROR", e);
 
-       	} */
 
-       	return false;
-           	
-	    }, {
-        completion: ["add"],
-        greetings: "",
-        prompt: "~ ",
-        keypress: function(e) {
-        	// ~
-        	if (e.which==126) {
-        		var nextcolor = rainbow[colorcount.tick()]
-        		//distant.walls[nextcolor] = new wall("line")
-        		distant.createWall(nextcolor);
-        		local.context = nextcolor
-        		local.walls.push(nextcolor)
-        		$("#terminal").terminal().set_command("")
-        		$("#terminal .cmd").css("color", local.context)
-        		return false;
-        	}
-        	// `
-        	if (e.which==96) {
-        		local.context = local.nextWall();
-        		//$("#terminal").terminal().set_command("")
-        		$("#terminal .cmd").css("color", local.context)
-        		return false;
-        	}
-        //  socket.emit('typing',$("#terminal .cmd span")[1].innerHTML)
-        }
-	    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+		m.variables = []
+		
+		/*m = {
+			variables: []
+		} */
+
+		
+
+	  var current = {
+  		wall: "",
+  		media: "",
+  		type: "",
+  		params: ""
+  	}
+
+  	var black = {test: "thing"}
+
+  	var local = {
+  		context: "black",
+  		walls: [],
+  		nextWall: function() {
+  			var colori = local.walls.indexOf(local.context)
+  			colori++
+  			if (colori >= local.walls.length) {
+  				colori = 0
+  			}
+  			return local.walls[colori];
+  		},
+  		intervals: {}
+  	}
+
+		$('#terminal').terminal(function(command) {
+         	
+   
+			// WAS evalling code locally
+      	var info = Translate.toCode(command)
+     		playlist.add(command, info, local.context)
+     	//playlist.add(command, local.context)
+
+      // now send it to socket
+    /*  socket.emit("senddata", "entry",{
+      		command: command,
+      		code: info,
+      		wall: local.context
+      }) */
+  
+
+     	return false;
+         	
+    }, {
+      completion: ["add"],
+      greetings: "",
+      prompt: "~ ",
+      keypress: function(e) {
+      	// ~   (shift ~, NOT cmd shift ~)
+      	if (e.which==126) {
+      		var nextcolor = rainbow[colorcount.tick()]
+      		//distant.walls[nextcolor] = new wall("line")
+  //SWAP    		
+  //distant.createWall(nextcolor);
+  //new:
+  				socket.emit('senddata','createwall',nextcolor)
+  				//
+      		local.context = nextcolor
+      		local.walls.push(nextcolor)
+      		$("#terminal").terminal().set_command("")
+      		$("#terminal .cmd").css("color", local.context)
+      		return false;
+
+      	// `	
+      	} else if (e.which==96) {
+      		local.context = local.nextWall();
+      		//$("#terminal").terminal().set_command("")
+      		$("#terminal .cmd").css("color", local.context)
+      		return false;
+
+      	} else {
+      		socket.emit("senddata", "typing", $("#terminal .cmd span")[1].innerHTML + String.fromCharCode(e.which))
+      	}
+      }
+    });
 
 		var rainbow = ["red", "orange", "green", "blue", "purple" ]
 
@@ -132,16 +178,24 @@
 		/* INSTANCES */
 
 		var playlist = new LCPlaylist("playlist", function(data) {
-			
-			// data.index, data.command, data.event
-			// data.duration, data.reference
 		
+		// data.index, data.command, data.event
+		// data.duration, data.reference
+		// 
+		console.log(data)
+		
+		// now send it to socket
+    socket.emit("senddata", "entry", data)
+
 
 			//IF NO BEAT
 			if (!data.duration) {
 
 				//happens distantly
-				data.gencode = createGens(data.index,data.code)
+				//SWAP
+				//new:
+  				
+		/*		data.gencode = createGens(data.index,data.code)
 				if (data.reference) {
 					with (m.variables[data.reference]) {
 						eval(data.gencode)
@@ -152,7 +206,7 @@
 						console.log("with the "+this+" wall")
 						m.variables[data.index] = eval(data.gencode)
 					}
-				}
+				} */
 				
 			//IF A BEAT		
 			} else {
@@ -162,6 +216,9 @@
 				}.bind(playlist,data))
 
 				// happens distantly
+				// //SWAP
+				/*
+				
 				data.gencode = createGens(data.index,data.code)
 				distant.intervals["line"+data.index] = interval(data.duration,function(data) {
 						// distant
@@ -178,8 +235,10 @@
 						}
 				}.bind(this,data))
 				
+				*/
+				
 			}
-	
+		
 
 		}.bind(window))
 
@@ -374,6 +433,7 @@
 //wander(0,10) could mean wander by step (1? 0.1?) between 0 and 10
 
 
+	
 
 
 

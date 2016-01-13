@@ -13,37 +13,36 @@
 	<script src="js/mcluhan.js"></script>
 	<!-- cannot use .min because scambles global 'm' variable -->
 	<link href='http://fonts.googleapis.com/css?family=Anonymous+Pro:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/client.css">
 		<script src="js/jquery-ui.js"></script>
 		 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
   </head>
   <body>
 
-	<h1>The Last Cloud</h1>
 
 	<div id="shell">
 		<div class="guides">
 
-			<h1>CASSETTE</h1>
+			<!--<button onclick="m.static.begin()">Begin</button>-->
 
-			<button onclick="m.static.begin()">Begin</button>
+			<canvas id="presence" style="position:absolute;top:0px;left:0px;border:solid 1px #158;"></canvas>
 
-			<footer>Lovingly made with McLuhan.js</footer>
+			<div id="playlistvis" style="position:relative;height:100%;background-color:white;opacity:0.7">
+				
+				<div id="code-entries" style="position:absolute;bottom:22px;font-size:12px;line-height:13px;text-align:left;border:solid 0px blue;height:auto;padding:5px"></div>
+
+				<div id="code-typing" style="position:absolute;bottom:0px;font-size:12px;text-align:left;border-top:solid 1px #000;padding:5px;width:100%;height:12px"></div>
+
+			</div>
+
+			<!-- <footer>&copy; 2016 Ben Taylor</footer> -->
 
 		</div>
 	</div>
 
 	<div id="main">
 
-  	<canvas id="presence" style="position:absolute;top:0px;left:0px;border:solid 1px #158;"></canvas>
-
-		<div id="playlistvis" style="position:relative;height:100%">
-			
-			<div id="code-entries" style="position:absolute;bottom:22px;font-size:12px;line-height:13px;text-align:left;border:solid 0px blue;height:auto;padding:5px"></div>
-
-			<div id="code-typing" style="position:absolute;bottom:0px;font-size:12px;text-align:left;border-top:solid 1px #333;padding:5px;width:100%;height:12px"></div>
-
-		</div>
+  	
 
 	</div>
 
@@ -53,9 +52,10 @@
 
 				$(function() {
 
+					// will become m.client.setup
 					m.static.setup({
 						w: 400,
-						h: 400,
+						h: 300,
 						x: 0.5,
 						y: 0.5,
 						bg: "#19d",
@@ -76,8 +76,12 @@
 					if (type=="entry") {
 						$("#code-entries").append("<br>"+data.command)
 						$("#code-typing").html("")
+						evalIncomingEntry(data)
+						console.log(data.code)
 					} else if (type=="typing") {
 						$("#code-typing").html(data)
+					} else if (type=="createwall") {
+						walls[data] = new wall("line")
 					}
 
 				});
@@ -103,6 +107,8 @@
 	rcvPresence.context = rcvPresence.canvas.getContext('2d');
 	rcvPresence.update = function(data) {
     //this.context.clearRect(0,0,this.canvas.width,this.canvas.height)
+    this.context.fillStyle = "#000"
+    this.context.fillRect(0,0,this.canvas.width,this.canvas.height)
 		var dim = this.canvas.height / data.length
     var w = this.canvas.width
     var h = this.canvas.height
@@ -165,98 +171,51 @@
     		intervals: {}
     	}
 
-			/*
-
-       		var info = Translate.toCode(command)
-       		playlist.add(command, info, local.context)
-
-
-     			// code for creating walls etc
-        	// ~
-        	if (e.which==126) {
-        		var nextcolor = rainbow[colorcount.tick()]
-        		//distant.walls[nextcolor] = new wall("line")
-        		distant.createWall(nextcolor);
-        		local.context = nextcolor
-        		local.walls.push(nextcolor)
-        		$("#terminal").terminal().set_command("")
-        		$("#terminal .cmd").css("color", local.context)
-        		return false;
-        	}
-        	// `
-        	if (e.which==96) {
-        		local.context = local.nextWall();
-        		//$("#terminal").terminal().set_command("")
-        		$("#terminal .cmd").css("color", local.context)
-        		return false;
-        	}
-        
-
-		*/
-
+		
 		var walls = []
 
 
+		function evalIncomingEntry(data) {
 
-
-		/* CODE EVALLING
-
-		var playlist = new LCPlaylist("playlist", function(data) {
-			
-			// data.index, data.command, data.event
-			// data.duration, data.reference
-		
-
+			console.log("evalling")
 			//IF NO BEAT
 			if (!data.duration) {
 
-				//happens distantly
+				console.log("no beat")
+
 				data.gencode = createGens(data.index,data.code)
 				if (data.reference) {
 					with (m.variables[data.reference]) {
+						console.log("evalling with reference")
 						eval(data.gencode)
 					}
 				} else {
-					with (eval(data.wall)) {
-						console.log("no beat!")
-						console.log("with the "+this+" wall")
+					with (eval(walls[data.wall])) {
+						console.log("evalling with wall", data.wall)
 						m.variables[data.index] = eval(data.gencode)
 					}
 				}
 				
 			//IF A BEAT		
 			} else {
+				console.log("a beat")
 				
-				local.intervals["line"+data.index] = interval(data.duration,function(data) {
-					this.ping(data)
-				}.bind(playlist,data))
-
-				// happens distantly
 				data.gencode = createGens(data.index,data.code)
 				distant.intervals["line"+data.index] = interval(data.duration,function(data) {
-						// distant
 						if (data.reference) {
 							with (m.variables[data.reference]) {
-								//happens distantly
 								eval(data.gencode)
 							}
 						} else {
-							with (eval(data.wall)) {
-								console.log(data.wall)
+							with (eval(walls[data.wall])) {
 								m.variables[data.index] = eval(data.gencode)
 							}
 						}
 				}.bind(this,data))
-				//poemvis.add(data)
 				
 			}
-	
-
-		}.bind(window))
-
-		*/
-
-
+		
+		}
 
 
 	    /* Ben Library */
