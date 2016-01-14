@@ -49,19 +49,33 @@
 
 	<script>
 
+				var mediatotal = 0
+				var medialoaded = 0
 
 				$(function() {
 
+					NProgress.start()
+
 					// will become m.client.setup
-					m.static.setup({
+					m.client.setup({
 						w: 400,
 						h: 300,
 						x: 0.5,
 						y: 0.5,
-						bg: "#19d",
-						text: "#fff",
+						bg: "#eee",
+						text: "#333",
 						type: "static"
 					})
+
+					m.mediapaths = [ "images/ios7icon-01.png" ]
+					for (var i=0;i<m.mediapaths.length;i++) {
+						m.mediapaths[i] = {
+							path: m.mediapaths[i],
+							image: new Image()
+						}
+						m.mediapaths[i].image.src = m.mediapaths[i].path
+					}
+					console.log(m.mediapaths)
 
 				})
 
@@ -90,6 +104,106 @@
 				socket.on('updatepresence', function (data) {
 					rcvPresence.update(data)
 				});
+
+				// receives the paths to media to preload
+				socket.on('mediapaths', function (type, data) {
+					
+					console.log(type,data)
+					//console.log("====", m.media.video[i])
+
+					if (type=="images") {
+						m.media.images = data
+						mediatotal += m.media.images.length
+						for (var i=0;i<m.media.images.length;i++) {
+							console.log("load: "+m.media.images[i])
+							m.media.images[i] = {
+								path: m.media.images[i],
+								data: new Image()
+							}
+							m.media.images[i].data.onload = function(data) {
+								console.log(data)
+								medialoaded++
+								NProgress.set(medialoaded/mediatotal)
+								if (medialoaded/mediatotal>=0.9) {
+									NProgress.done()
+									$('#splash').fadeOut()
+								}
+							}
+							m.media.images[i].data.src = m.media[type][i].path
+						}
+					} else if (type=="video") {
+						m.media.video = data
+						mediatotal += m.media.video.length
+						for (var i=0;i<m.media.video.length;i++) {
+							console.log("load: "+m.media.video[i])
+							m.media.video[i] = {
+								path: m.media.video[i],
+								data: document.createElement("video")
+							}
+							//console.log("====", m.media.video[i])
+							m.media.video[i].data.addEventListener('canplaythrough',function(data) {
+								console.log(data)
+								medialoaded++
+								NProgress.set(medialoaded/mediatotal)
+								if (medialoaded/mediatotal>=0.9) {
+									NProgress.done()
+									$('#splash').fadeOut()
+								}
+							})
+							m.media.video[i].data.src = m.media[type][i].path
+						}
+					} else if (type=="audio") {
+						m.media.audio = data
+						mediatotal += m.media.audio.length
+						for (var i=0;i<m.media.audio.length;i++) {
+							console.log("load: "+m.media.audio[i])
+							m.media.audio[i] = {
+								path: m.media.audio[i],
+								data: new Audio()
+							}
+							m.media.audio[i].data.addEventListener('canplaythrough', function(data) {
+								console.log(data)
+								medialoaded++
+								NProgress.set(medialoaded/mediatotal)
+								if (medialoaded/mediatotal>=0.9) {
+									NProgress.done()
+									$('#splash').fadeOut()
+								}
+							})
+							m.media.audio[i].data.src = m.media[type][i].path
+						}
+					}
+
+
+
+			/*		var mediadic = {
+						images: "img",
+						video: "video",
+						audio: "audio"
+					}
+
+					
+					//console.log("loading " + m.media.images.length + " media")
+			/*		mediatotal += m.media[type].length
+					for (var i=0;i<m.media[type].length;i++) {
+						m.media[type][i] = {
+							path: m.media[type][i],
+							data: document.createElement(mediadic[type])
+						}
+						m.media[type][i].data.onload = function(data) {
+							console.log(data)
+							medialoaded++
+							NProgress.set(medialoaded/mediatotal)
+							if (medialoaded/mediatotal==1) {
+								NProgress.done()
+								$('#splash').fadeOut()
+							}
+						}
+						m.media[type][i].data.src = m.media[type][i].path
+					}
+					*/
+				})
+
 
 
 

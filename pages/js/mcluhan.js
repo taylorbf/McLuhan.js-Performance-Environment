@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var Manager = require('./lib/core/manager');
-var math = require('./lib/utils/math');
+//var math = require('./lib/utils/math');
 var extend = require('extend');
 require('nexusui');
 window._ = require("underscore")
@@ -206,7 +206,7 @@ window.SmartMatrix = function(cols,rows) {
 }
 
 
-},{"./bower_components/glitch-canvas/dist/glitch-canvas":2,"./lib/core/manager":3,"./lib/media":9,"./lib/utils/bt":20,"./lib/utils/math":21,"extend":103,"google-images":104,"nexusui":192,"nightmare":229,"tone":250,"underscore":251}],2:[function(require,module,exports){
+},{"./bower_components/glitch-canvas/dist/glitch-canvas":2,"./lib/core/manager":3,"./lib/media":10,"./lib/utils/bt":21,"extend":103,"google-images":104,"nexusui":192,"nightmare":229,"tone":250,"underscore":251}],2:[function(require,module,exports){
 //! glitch-canvas by snorpey, MIT License
 (function(window, factory) {
     if (typeof define === "function" && define.amd) {
@@ -409,9 +409,10 @@ window.SmartMatrix = function(cols,rows) {
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
 window.Tone = require('tone').Tone
-var math = require('../utils/math')
+//var math = require('../utils/math')
 var extend = require('extend');
 var StaticProject = require('../guides/static')
+var ClientProject = require('../guides/client')
 
 /** 
   @title McLuhan JS API
@@ -433,11 +434,14 @@ var spacer = false;
 
 var Manager = module.exports = function() {
 
-  /** @type {Number} */
+  // windows in this wall
   this.spaceLimit = 8;
 
-  //space to discern and define the area of screen that will be used
-  // including offset, etc
+  /**
+   * Dimensions of the screen area to be used for the performance. Default 800x600.
+   * @type {Object} 
+   * @memberOf Manager
+   */
   this.stage = {
     w: 800,
     h: 600
@@ -452,7 +456,7 @@ var Manager = module.exports = function() {
   // May use eventually
   // EventEmitter.apply(this)
   
-  extend(this,math)
+  //extend(this,math)
 
   //console.log(googleit('bee'))
 
@@ -461,10 +465,7 @@ var Manager = module.exports = function() {
 util.inherits(Manager, EventEmitter)
 
 
-/**
- * @method
- * @description  initialize and open all browser windows to use
- */
+// deprecated
 Manager.prototype.init = function() {
   //deprecated
   for (var i=0;i<this.spaceLimit;i++) {
@@ -472,7 +473,10 @@ Manager.prototype.init = function() {
   }
 }
 
-
+/**
+ * Initialize and open all browser windows to use
+ * @param { integer } [limit] How many total windows will be used
+ */
 Manager.prototype.deck = function(limit) {
   this.spaceLimit = limit
   windex = 0;
@@ -489,6 +493,9 @@ Manager.prototype.pretimeline = function() {
   this.timeline(this.time)
 }
 
+/**
+ * *static mode only* Start the event timeline.
+ */
 Manager.prototype.start = function() {
   this.timer = setInterval(this.pretimeline.bind(this),100)
 }
@@ -508,16 +515,24 @@ Manager.prototype.add = function(type, arr, params) {
   return i;
 }
 
+//deprecated i think
 Manager.prototype.film = function(src,params) {
     !window.films ? window.films = new Array() : null;
     var i = this.add("film",films,params)
     src ? films[i].load(src) : false;
 }
 
+/*
+ * Add a new window to the deck. Not recommended. Use m.deck() instead.
+ * @param { object } [params] key value pairs of params such as x/y/w/h
+ */
 Manager.prototype.makeSpace = function(params) {
     var i = this.add("window",_spaces,params)
 }
 
+/*
+ * Deprecated? What does this do?
+ */
 Manager.prototype.peer = function(x,y,w,h) {
   if (windex >= _spaces.length) {
     windex = 0;
@@ -533,6 +548,7 @@ Manager.prototype.peer = function(x,y,w,h) {
   return _spaces[windex-1]
 }
 
+// deprecated?
 Manager.prototype.pare = function(size) {
   size = size ? size : 1;
   for (var i=0;i<size;i++) {
@@ -540,7 +556,11 @@ Manager.prototype.pare = function(size) {
   }
 }
 
-
+/* This is not really used anymore...
+ * Add a new Wall to the performance. Deprecated?
+ * @param { integer } [num] How many windows in the wall
+ * @param { object } [config] Unknown config info....
+ */
 Manager.prototype.makeWall = function(num,config) {
   var wall = new Array()
   for (var i=0;i<num;i++) {
@@ -556,6 +576,7 @@ Manager.prototype.makeWall = function(num,config) {
 
 
 Manager.prototype.static = new StaticProject()
+Manager.prototype.client = new ClientProject()
 
 
 
@@ -563,6 +584,14 @@ Manager.prototype.static = new StaticProject()
 
 /* GOOGLE THINGS */
 
+// should this be moved to be a Wall method or a global function?
+// or should there be a component with all of these and other new aesthetic functions as methods?
+
+/** 
+ * Google image search and use the results in a callback func. Should this be made into adding it was a photo with wall.see()?
+ * @param { string } [word] Word to search for
+ * @param { function } [cb] callback to use the data
+ */
 Manager.prototype.googleimage = function(keyword,callback) {
 
   //currently searches for png. might want jpg later...
@@ -589,7 +618,7 @@ Manager.prototype.googleimage = function(keyword,callback) {
 
 
 
-},{"../guides/static":5,"../media":9,"../utils/math":21,"events":72,"extend":103,"tone":250,"util":102}],4:[function(require,module,exports){
+},{"../guides/client":5,"../guides/static":6,"../media":10,"events":72,"extend":103,"tone":250,"util":102}],4:[function(require,module,exports){
 
 // Template for all DOM-based items (video, audio, divs, embeds)
 /**
@@ -603,10 +632,10 @@ var Medium = module.exports = function(params) {
 	// handle parameters
 	this.params = params ? params : new Object()
 
-	// define space
+	// define spaces
 	this.spaces = this.params.spaces ? this.params.spaces : [0];
 
-	// make element
+	// make elements
 	this.element = [];
 	for (var i = 0; i<this.spaces.length; i++) {
 		this.element[i] = document.createElement(this.type)
@@ -620,7 +649,7 @@ var Medium = module.exports = function(params) {
 }
 
 /**
- * Set a property of all window elements in this media element's wall
+ * Set a property on this media element in all windows
  * @param {String} property key
  * @param {Unknown} value
  */
@@ -629,6 +658,12 @@ Medium.prototype.setAll = function(prop,val) {
 		this.element[i][prop] = val;
 	}
 }
+
+/**
+ * Call a method on this media element in all windows
+ * @param {String} method  name
+ */
+
 Medium.prototype.all = function(method) {
 	for (var i = 0; i<this.element.length; i++) {
 		this.element[i][method]()
@@ -636,23 +671,29 @@ Medium.prototype.all = function(method) {
 }
 
 // uses params instead of x y so you could set y without setting x, or vice versa
-Medium.prototype.size = function(params,y) {
+/**
+ * Resize this media element
+ * @param {number} w  width in px
+ * @param {number} h  height in px
+ */
+Medium.prototype.size = function(params,h) {
 	if (typeof params == "number") {
 		params = {
-			x: params,
-			y: y
+			w: params,
+			h: h
 		}
 	}
 	for (var i = 0; i<this.element.length; i++) {
 		this.element[i].style.width = params.w ? params.w+"px" : this.defaultSize.w+"px";
 		this.element[i].style.height = params.h ? params.h+"px" : this.defaultSize.h+"px";
 	}
-	/*this.params.w ? this.element.style.width = this.params.w+"px" : false;
-	this.params.width ? this.element.style.width = this.params.width+"px" : false;
-	this.params.h ? this.element.style.width = this.params.h+"px" : false;
-	this.params.height ? this.element.style.width = this.params.height+"px" : false;*/
 }
 
+/**
+ * Move this element
+ * @param {number} x  x position in px
+ * @param {number} y  y position in px
+ */
 Medium.prototype.move = function(params,y) {
 	if (typeof params == "number") {
 		params = {
@@ -667,32 +708,163 @@ Medium.prototype.move = function(params,y) {
 	}
 }
 
-Medium.prototype.kill = function(params) {
-//	console.log("-----------------")
-//	console.log(this.spaces)
+/**
+ * Remove this element and destroy all references to it
+ */
+Medium.prototype.kill = function() {
 	for (var i = 0; i<this.element.length; i++) {
-	//	console.log(this.spaces[i])
-	//	this.spaces[i].element.document.body.removeChild(this.element[i])
 		this.element[i].parentNode.removeChild(this.element[i])
 	}
 	m.media.splice(m.media.indexOf(this))
 }
+
+/**
+ * Set the element's opacity
+ * @param {number} level  opacity level
+ */
 Medium.prototype.fade = function(level) {
 	for (var i = 0; i<this.element.length; i++) {
 		this.element[i].style.opacity = level;
 	}
 }
+
+/**
+ * Make the element disappear, but do not remove it. A/V files will keep playing and making sound.
+ */
 Medium.prototype.hide = function() {
 	for (var i = 0; i<this.element.length; i++) {
 		this.element[i].style.visibility = "hidden";
 	}
 }
+
+/**
+ * If the element is hidden, show it.
+ */
 Medium.prototype.show = function(level) {
 	for (var i = 0; i<this.element.length; i++) {
 		this.element[i].style.visibility = "visible";
 	}
 }
 },{}],5:[function(require,module,exports){
+
+
+var ClientProject = module.exports = function() {
+
+	this.showbguide = true;
+	this.smoothguide = 0;
+	window.NProgress = require('nprogress')
+
+	this.wwid = window.screen.availWidth;
+	this.whgt = window.screen.availHeight;
+	
+}
+
+ClientProject.prototype.setup = function() {
+
+	var htmlstr = '<div class="sguide" style="display:none">'
+				+ 'Please move your browser to the middle of your screen.'
+				+ '<div id="sgarrow" style="font-size:70px;margin-top:40px">&#10148;</div>'
+				+ '</div>'
+				+ '<div class="bguide">'
+				+ 'Please resize your browser to the size of this box.'
+				+ '</div>'
+
+	$(".guides").append(htmlstr)
+
+	var htmlstr = '<div id="splash">'
+			 	+ '<span>M</span>'
+				+ '</div>'
+
+	$("body").append(htmlstr)
+
+
+	//NProgress.start();
+	//NProgress.inc();
+
+
+	$("<link/>", {
+	   rel: "stylesheet",
+	   type: "text/css",
+	   href: "../node_modules/nprogress/nprogress.css"
+	}).appendTo("head");
+
+	projectwid = $(".guides").width()
+	projecthgt = $(".guides").height()
+
+	window.addEventListener("resize",this.checkSize.bind(this))
+
+	this.checkSize()
+	/*
+	setTimeout("NProgress.set(0.39)", 2000);
+	setTimeout("NProgress.set(0.99)", 4000);
+	setTimeout(NProgress.done, 6000);
+	setTimeout("$('#splash').fadeOut()", 6000); */
+
+	window.addEventListener("beforeunload", function() {
+		m.deck(m.spaceLimit);
+	});
+}
+
+ClientProject.prototype.checkSize = function() {
+	var winwid = window.innerWidth;
+	var winhgt = window.innerHeight;
+	if (winwid < projectwid + 10 && winwid > projectwid - 10 && winhgt < projecthgt + 10 && winhgt > projecthgt - 10) {
+
+		if (this.showbguide) {
+			this.showbguide = false;
+			$(".bguide").fadeOut(this.smoothguide)
+			$(".sguide").fadeIn(0)
+			this.watchWindow();
+		}
+	} else {
+		this.smoothguide = 500;
+	}
+}
+
+ClientProject.prototype.watchWindow = function() {
+	this.sguide = setInterval(this.pingWindow.bind(this), 100)
+}
+
+
+ClientProject.prototype.pingWindow = function() {
+	var winx = window.screenLeft;
+	var winy = window.screenTop;
+	var winwid2 = window.outerWidth;
+	var winhgt2 = window.outerHeight;
+
+	var distx = winx + (winwid2/2) - (this.wwid/2)
+	var disty = winy + (winhgt2/2) - (this.whgt/2)
+
+	var polar = toPolar(distx,disty)
+	var degrees = Math.round((polar.angle/(Math.PI*2)) * 360) + 180;
+	//var size = (Math.round(polar.radius)/8)+30
+
+	$("#sgarrow").css("-ms-transform", "rotate("+degrees+"deg)")
+	$("#sgarrow").css("-webkit-transform", "rotate("+degrees+"deg)")
+	$("#sgarrow").css("transform", "rotate("+degrees+"deg)")
+	//$("#sgarrow").css("font-size", size+"px")
+
+	if (Math.abs(distx) < 20 && Math.abs(disty) < 20 ) {
+		$(".sguide").fadeOut(this.smoothguide)
+		clearInterval(this.sguide)
+	} else {
+		this.smoothguide = 500
+	}
+
+}
+
+ClientProject.prototype.begin = function() {
+
+	$("#shell").fadeOut(500)
+	$("body").css("background-color","white")
+
+	m.start(0,1000);
+
+}		
+
+	
+
+},{"nprogress":249}],6:[function(require,module,exports){
 
 
 var StaticProject = module.exports = function() {
@@ -782,7 +954,7 @@ StaticProject.prototype.pingWindow = function() {
 	var distx = winx + (winwid2/2) - (this.wwid/2)
 	var disty = winy + (winhgt2/2) - (this.whgt/2)
 
-	var polar = m.toPolar(distx,disty)
+	var polar = toPolar(distx,disty)
 	var degrees = Math.round((polar.angle/(Math.PI*2)) * 360) + 180;
 	//var size = (Math.round(polar.radius)/8)+30
 
@@ -811,7 +983,7 @@ StaticProject.prototype.begin = function() {
 
 	
 
-},{"nprogress":249}],6:[function(require,module,exports){
+},{"nprogress":249}],7:[function(require,module,exports){
 var util = require('util');
 var Medium = require('../core/medium')
 
@@ -953,7 +1125,7 @@ Cassette.prototype.speed = function(rate) {
 }
 
 
-},{"../core/medium":4,"util":102}],7:[function(require,module,exports){
+},{"../core/medium":4,"util":102}],8:[function(require,module,exports){
 var util = require('util');
 var Medium = require('../core/medium')
 
@@ -1107,7 +1279,7 @@ Film.prototype.tick = function() {
 
 
 
-},{"../core/medium":4,"util":102}],8:[function(require,module,exports){
+},{"../core/medium":4,"util":102}],9:[function(require,module,exports){
 var util = require('util');
 var Medium = require('../core/medium')
 
@@ -1145,6 +1317,11 @@ var Hack = module.exports = function(params) {
 
 util.inherits(Hack, Medium);
 
+
+/** 
+ * Load a URL.
+ * @param { string } [address] URL to load. No http:// necessary.
+ */
 Hack.prototype.load = function(src) {
 
 	if (src.indexOf("http")==0) {
@@ -1165,7 +1342,11 @@ Hack.prototype.load = function(src) {
 
 }
 
-
+/** 
+ * Scroll the webpage (not working yet).
+ * @param { number } [x] X scroll.
+ * @param { number } [y] Y scroll.
+ */
 // cannot scroll across origins
 // can be circumvented by embedding the iframe in a div and scrolling the div.
 Hack.prototype.scroll = function() {
@@ -1173,13 +1354,15 @@ Hack.prototype.scroll = function() {
 
 }
 
-// cannot scroll across origins
-// can be circumvented by embedding the iframe in a div and scrolling the div.
+/** 
+ * Zoom in on the website. (maybe not working yet)
+ * @param { number } [level] Zoom scroll (e.g. 1 is normal. 0.5 is zoomed out, 2 is zoomed in).
+ */
 Hack.prototype.zoom = function(level) {
 
 	for (var i=0;i<this.spaces.length;i++) {
 		this.element[i].style.zoom = level
-	}	
+	}	 
 
 	/* 
 	zoom: 0.15;
@@ -1194,7 +1377,7 @@ Hack.prototype.zoom = function(level) {
 }
 
 
-},{"../core/medium":4,"util":102}],9:[function(require,module,exports){
+},{"../core/medium":4,"util":102}],10:[function(require,module,exports){
 module.exports = {
   cassette: require('./cassette'),
   film: require('./film'),
@@ -1210,7 +1393,7 @@ module.exports = {
   window: require('./window'),
   wall: require('./wall')
 }
-},{"./cassette":6,"./film":7,"./hack":8,"./lattice":10,"./log":11,"./map":12,"./paper":13,"./photo":14,"./presence":15,"./textmessage":16,"./voice":17,"./wall":18,"./window":19}],10:[function(require,module,exports){
+},{"./cassette":7,"./film":8,"./hack":9,"./lattice":11,"./log":12,"./map":13,"./paper":14,"./photo":15,"./presence":16,"./textmessage":17,"./voice":18,"./wall":19,"./window":20}],11:[function(require,module,exports){
 var util = require('util');
 var Medium = require('../core/medium')
 
@@ -1308,15 +1491,27 @@ Lattice.prototype.draw = function(src) {
 
 }
 
+/** 
+ * .
+ */
 Lattice.prototype.play = function() {
 	this.instrument[0].notes[this.place.z][this.place.x][this.place.y].play()
 }
+/** 
+ * .
+ */
 Lattice.prototype.wander = function(speed) {
 	this.int = setInterval(this.nextxyz.bind(this),speed)
 }
+/** 
+ * .
+ */
 Lattice.prototype.stop = function() {
 	clearInterval(this.int)
 }
+/** 
+ * .
+ */
 Lattice.prototype.nextxyz = function() {
 	var dir = random(3)
 	if (dir==0) {
@@ -1334,18 +1529,27 @@ Lattice.prototype.nextxyz = function() {
 	this.place.z = this.place.z<0 ? 1 : this.place.z;
 	this.play()
 }
+/** 
+ * .
+ */
 Lattice.prototype.nextx = function() {
 	this.place.x++
 	this.place.x = this.place.x>=this.dimension.x ? 0 : this.place.x;
 	this.place.x = this.place.x<0 ? this.dimension.x : this.place.x;
 	this.play()
 }
+/** 
+ * .
+ */
 Lattice.prototype.nexty = function() {
 	this.place.y++
 	this.place.y = this.place.y>=this.dimension.y ? 0 : this.place.y;
 	this.place.y = this.place.y<0 ? this.dimension.y : this.place.y;
 	this.play()
 }
+/** 
+ * .
+ */
 Lattice.prototype.nextz = function() {
 	this.place.z++
 	this.place.z = this.place.z>=this.dimension.z ? 0 : this.place.z;
@@ -1424,7 +1628,7 @@ Lattice.prototype.note = function(z,x,y,context,instrument,lattice) {
 }
 
 
-},{"../core/medium":4,"util":102}],11:[function(require,module,exports){
+},{"../core/medium":4,"util":102}],12:[function(require,module,exports){
 var util = require('util');
 var Medium = require('../core/medium')
 
@@ -1461,6 +1665,10 @@ var Log = module.exports = function(params) {
 
 util.inherits(Log, Medium);
 
+
+/** 
+ * .
+ */
 Log.prototype.write = function(text) {
 	for (var i=0;i<this.element.length;i++) {
 		this.element[i].innerHTML += "<br>" + text
@@ -1469,7 +1677,7 @@ Log.prototype.write = function(text) {
 }
 
 
-},{"../core/medium":4,"util":102}],12:[function(require,module,exports){
+},{"../core/medium":4,"util":102}],13:[function(require,module,exports){
 var util = require('util');
 var Medium = require('../core/medium')
 
@@ -1538,6 +1746,10 @@ var Map = module.exports = function(params) {
 
 util.inherits(Map, Medium);
 
+
+/** 
+ * .
+ */
 Map.prototype.search = function(loc) {
 
   this.geocoder.geocode( { 'address': loc}, function(results, status) {
@@ -1549,6 +1761,9 @@ Map.prototype.search = function(loc) {
 
 }
 
+/** 
+ * .
+ */
 Map.prototype.goto = function(loc) {
 	if (loc) {
 		this.location = loc
@@ -1558,6 +1773,10 @@ Map.prototype.goto = function(loc) {
     }
 }
 
+
+/** 
+ * .
+ */
 Map.prototype.stray = function(x,y) {
 	//console.log(this.map[0].zoom)
 	//console.log(this.widget)
@@ -1575,7 +1794,11 @@ Map.prototype.stray = function(x,y) {
     }
 }
 
+
 /* directions stuff */
+/** 
+ * .
+ */
 Map.prototype.route = function(start, end) {
   start = start ? start : "Charlottesville, VA"
   end = end ? end : "Missoula, MT"
@@ -1593,6 +1816,9 @@ Map.prototype.route = function(start, end) {
   }.bind(this));
 }
 
+/** 
+ * .
+ */
 Map.prototype.zoom = function(level) {
 	level +=3 ;
 	//console.log ("zoom to "+level)
@@ -1601,6 +1827,9 @@ Map.prototype.zoom = function(level) {
 	}
 }
 
+/** 
+ * .
+ */
 Map.prototype.marker = function() {
 
   // if no argument, goes to this.location
@@ -1628,6 +1857,9 @@ Map.prototype.marker = function() {
 }
 
 
+/** 
+ * .
+ */
 Map.prototype.info = function(content) {
 
   var contentString = content ? content : '<div style="color:black;width:100px;height:100px;background-color:black;display:block">888</div>';
@@ -1646,7 +1878,7 @@ Map.prototype.info = function(content) {
 
 
 
-},{"../core/medium":4,"util":102}],13:[function(require,module,exports){
+},{"../core/medium":4,"util":102}],14:[function(require,module,exports){
 var util = require('util');
 var Medium = require('../core/medium')
 
@@ -1679,6 +1911,9 @@ var Paper = module.exports = function(params) {
 
 util.inherits(Paper, Medium);
 
+/** 
+ * .
+ */
 Paper.prototype.read = function(text) {
 	if (journal[text]) {
 		this.text = journal[text];
@@ -1693,6 +1928,9 @@ Paper.prototype.read = function(text) {
 /* eventually move this to happen at start up for all files in
 /media/text folder, and to make them stored in journals object
 with filname as object key */
+/** 
+ * .
+ */
 Paper.prototype.readFile = function(file,callback) {
 	file = file ? file : "hello"
 	this.text
@@ -1704,20 +1942,26 @@ Paper.prototype.readFile = function(file,callback) {
 	    bc(data);
 	}.bind(this), 'text');
 }
-
+/** 
+ * .
+ */
 Paper.prototype.write = function() {
 	for (var i=0;i<this.element.length;i++) {
 		this.element[i].innerHTML = this.text
 	}
 	return this;
 }
-
+/** 
+ * .
+ */
 Paper.prototype.and = function() {
 	for (var i=0;i<this.element.length;i++) {
 		this.element[i].innerHTML = this.elements[i].innerHTML + this.text
 	}
 }
-
+/** 
+ * .
+ */
 Paper.prototype.writeAcross = function() {
 	for (var i=0;i<this.element.length;i++) {
 		this.element[i].className = "fullScreen"
@@ -1729,12 +1973,16 @@ Paper.prototype.writeAcross = function() {
 		}
 	}
 }
-
+/** 
+ * .
+ */
 Paper.prototype.flip = function(time) {
 	time ? this.time = time : null;
 	this.flipint = setInterval(this.flipOne.bind(this), time)
 }
-
+/** 
+ * .
+ */
 Paper.prototype.flipOne = function() {
 	this.element[this.flipSpace].innerHTML = this.words[this.flipWord];
 	this.flipSpace++;
@@ -1746,12 +1994,16 @@ Paper.prototype.flipOne = function() {
 		this.flipWord=0;
 	}
 }
-
+/** 
+ * .
+ */
 Paper.prototype.unflip = function(file) {
 	clearInterval(this.flipint);
 }
 
-
+/** 
+ * .
+ */
 Paper.prototype.wash = function(time) {
 	time ? this.time = time : null;
 	this.washWord = 0;
@@ -1763,7 +2015,9 @@ Paper.prototype.wash = function(time) {
 	}
 	this.washint = setInterval(this.washOne.bind(this), time)
 }
-
+/** 
+ * .
+ */
 Paper.prototype.washOne = function() {
 	for (var i=0;i<this.element.length;i++) {
 		if (!this.strobe) {
@@ -1784,13 +2038,15 @@ Paper.prototype.washOne = function() {
 		//this.unwash()
 	}
 }
-
+/** 
+ * .
+ */
 Paper.prototype.unwash = function(file) {
 	clearInterval(this.washint);
 }
 
 
-},{"../core/medium":4,"util":102}],14:[function(require,module,exports){
+},{"../core/medium":4,"util":102}],15:[function(require,module,exports){
 var util = require('util');
 var Medium = require('../core/medium')
 
@@ -1864,6 +2120,9 @@ because transforming existing transformations is interesting, apparently
 
  */
 
+/** 
+ * .
+ */
 Photo.prototype.load = function(src) {
 
 	this.master.width = this.master.width;
@@ -1914,13 +2173,18 @@ Photo.prototype.load = function(src) {
 	return this;
 }
 
-
+/** 
+ * .
+ */
 Photo.prototype.propogateMaster = function() {
 	for (var i=0;i<this.context.length;i++) {
 		this.context[i].drawImage(this.master, this.zoomstate.x, this.zoomstate.y,this.zoomstate.level*this.width,this.zoomstate.level*this.height,0,0,this.width,this.height );
 	}
 }
 
+/** 
+ * .
+ */
 Photo.prototype.glitch = function(file,callback) {
 	this.data = this.mastercontext.getImageData( 0, 0, this.width, this.height );
 
@@ -1937,6 +2201,9 @@ Photo.prototype.glitch = function(file,callback) {
 		
 }
 
+/** 
+ * .
+ */
 Photo.prototype.zoom = function(params) {
 	if (params.level) {
 		this.zoomstate.level = params.level
@@ -1955,7 +2222,7 @@ Photo.prototype.zoom = function(params) {
 	} */
 
 }
-},{"../core/medium":4,"util":102}],15:[function(require,module,exports){
+},{"../core/medium":4,"util":102}],16:[function(require,module,exports){
 var util = require('util');
 
 /**
@@ -2067,7 +2334,7 @@ Presence.prototype.stop = function(rate) {
 	clearInterval(this.interval)
 }
 
-},{"util":102}],16:[function(require,module,exports){
+},{"util":102}],17:[function(require,module,exports){
 var util = require('util');
 var Medium = require('../core/medium')
 
@@ -2103,6 +2370,9 @@ var TextMessage = module.exports = function(params) {
 
 util.inherits(TextMessage, Medium);
 
+/** 
+ * .
+ */
 TextMessage.prototype.text = function(msg,skiplog) {
 
 	for (var i=0;i<this.element.length;i++) {
@@ -2132,6 +2402,9 @@ TextMessage.prototype.text = function(msg,skiplog) {
 
 }
 
+/** 
+ * .
+ */
 TextMessage.prototype.scroll = function(msg) {
 
 	this.scrolling = true;
@@ -2139,6 +2412,9 @@ TextMessage.prototype.scroll = function(msg) {
 	
 }
 
+/** 
+ * .
+ */
 TextMessage.prototype.oneScroll = function() {
 
 	this.histIndex = cycle(this.histIndex,0,this.history.length)
@@ -2213,7 +2489,7 @@ TextMessage.prototype.writeAcross = function() {
 
 
 
-},{"../core/medium":4,"util":102}],17:[function(require,module,exports){
+},{"../core/medium":4,"util":102}],18:[function(require,module,exports){
 var util = require('util');
 
 /**
@@ -2245,6 +2521,9 @@ var Voice = module.exports = function(params) {
 
 }
 
+/** 
+ * .
+ */
 Voice.prototype.say = function(phrase, params) {
 	this.text = phrase;
 	this.speed = 175;
@@ -2261,22 +2540,34 @@ Voice.prototype.say = function(phrase, params) {
 	it occurs in speakClient.js */
 }
 
+/** 
+ * .
+ */
 Voice.prototype.load = function(src) {
 	src ? this.setAll("src","media/"+src+".mp3") : false;
 	this.all("play");
 	return this;
 }
 
+/** 
+ * .
+ */
 Voice.prototype.play = function(rate) {
 	this.rate = rate ? rate : this.rate;
 	this.all("play");
 	this.speed(this.rate)
 }
 
+/** 
+ *
+ * .
+ */
 Voice.prototype.stop = function() {
 	this.all("pause");
 }
-
+/** 
+ * .
+ */
 Voice.prototype.loop = function(on) {
 	if (on===false || on===0) {
 		this.setAll("loop",false);
@@ -2285,7 +2576,9 @@ Voice.prototype.loop = function(on) {
 	}
 }
 
-
+/** 
+ * .
+ */
 Voice.prototype.jumpTo = function(start) {
 	start = start ? start : this.start;
 	this.setAll("currentTime",start);
@@ -2321,7 +2614,7 @@ Voice.prototype.speed = function(rate) {
 }
 
 
-},{"util":102}],18:[function(require,module,exports){
+},{"util":102}],19:[function(require,module,exports){
 var util = require('util');
 var units = require("../media")
 
@@ -2874,7 +3167,7 @@ Wall.prototype.bg = function() {
 
 
 
-},{"../media":9,"util":102}],19:[function(require,module,exports){
+},{"../media":10,"util":102}],20:[function(require,module,exports){
 var util = require('util');
 
 /**
@@ -2901,6 +3194,9 @@ var Window = module.exports = function(params) {
 	
 }
 
+/** 
+ * .
+ */
 Window.prototype.show = function(params) {
 
 	this.element.close();
@@ -2932,6 +3228,9 @@ Window.prototype.show = function(params) {
 
 }
 
+/** 
+ * .
+ */
 Window.prototype.hide = function() {
 	with (this.element) {
 		resizeTo(100,100)
@@ -2942,19 +3241,32 @@ Window.prototype.hide = function() {
 	this.visible = false;
 }
 
+/** 
+ * .
+ */
 Window.prototype.load = function(src) {
 	src ? this.element.src = src : false;
 }
 
+/**
+ *  
+ * .
+ */
 Window.prototype.scroll = function(x,y) {
 	this.element.scroll.x = x
 	this.element.scroll.x = y
 }
 
+/** 
+ * .
+ */
 Window.prototype.kill = function() {
 	this.element.close()
 }
 
+/** 
+ * .
+ */
 Window.prototype.empty = function() {
 	this.element.document.body.innerHTML = "";
 }
@@ -2964,6 +3276,9 @@ Window.prototype.testDraw = function() {
 	this.context.fillRect(0,0,100,100)
 }
 
+/** 
+ * .
+ */
 Window.prototype.scroll = function(x,y,time) {
 	if (!time) {
 		this.element.scrollTo(x,y)
@@ -2972,21 +3287,31 @@ Window.prototype.scroll = function(x,y,time) {
 	}
 }
 
+/** 
+ * .
+ */
 Window.prototype.xray = function(time) {
 	this.scroll(this.element.screenX-m.stage.x,this.element.screenY-m.stage.y,time)
 }
 
+/** 
+ * .
+ */
 Window.prototype.scramble = function(time) {
 	var w = this.element.document.body.clientWidth
 	var h = this.element.document.body.clientHeight
 	this.scroll(random(w),random(h),time)
 }
 
-
+/** 
+ * .
+ */
 Window.prototype.refresh = function() {
 }
 
-
+/** 
+ * .
+ */
 Window.prototype.move = function(x,y,time,callback) {
 	if (time && time > 99) {
 		callback = callback ? callback : function() { }
@@ -3026,7 +3351,9 @@ Window.prototype.move = function(x,y,time,callback) {
 */
 
 }
-
+/** 
+ * .
+ */
 Window.prototype.size = function(w,h,time) {
 	if (time && time > 99) {
 		callback = callback ? callback : function() { }
@@ -3087,16 +3414,13 @@ Window.prototype.moveseq = function(x,y,time,callback) {
 
 
 
-},{"util":102}],20:[function(require,module,exports){
+},{"util":102}],21:[function(require,module,exports){
 
 
-/** @method toPolar 
-    Receives cartesian coordinates and returns polar coordinates as an object with 'radius' and 'angle' properties.
+/** @method  toPolar
+    @description Receives cartesian coordinates and returns polar coordinates as an object with 'radius' and 'angle' properties.
     @param {float} [x] 
     @param {float} [y] 
-    ```js
-    var ImOnACircle = nx.toPolar({ x: 20, y: 50 }})
-    ```
 */
 window.toPolar = function(x,y) {
   var r = Math.sqrt(x*x + y*y);
@@ -3108,8 +3432,8 @@ window.toPolar = function(x,y) {
   return {radius: r, angle: theta};
 }
 
-/** @method toCartesian 
-    Receives polar coordinates and returns cartesian coordinates as an object with 'x' and 'y' properties.
+/** @method  toCartesian
+    @description Receives polar coordinates and returns cartesian coordinates as an object with 'x' and 'y' properties.
     @param {float} [radius] 
     @param {float} [angle] 
 */
@@ -3120,29 +3444,20 @@ window.toCartesian = function(radius, angle){
 }
 
 
-/** @method clip 
-    Limits a number to within low and high values.
+/** @method  clip
+    @description Limits a number to within low and high values.
     @param {float} [input value] 
     @param {float} [low limit] 
-    @param {float} [high limit] 
-    ```js
-    nx.clip(5,0,10) // returns 5
-    nx.clip(15,0,10) // returns 10
-    nx.clip(-1,0,10) // returns 0
-    ```
+    @param {float} [high limit]
 */
 window.clip = function(value, low, high) {
   return Math.min(high, Math.max(low, value));
 }
 
-/** @method prune 
-    Limits a float to within a certain number of decimal places
+/** @method prune
+    @description Limits a float to within a certain number of decimal places
     @param {float} [input value] 
     @param {integer} [max decimal places] 
-    ```js
-    nx.prine(1.2345, 3) // returns 1.234
-    nx.prune(1.2345, 1) // returns 1.2
-    ```
 */
 
 window.prune = function(data, scale) {
@@ -3160,7 +3475,7 @@ window.prune = function(data, scale) {
 
 
 /** @method scale 
-    Scales an input number to a new range of numbers
+    @description Scales an input number to a new range of numbers
     @param {float} [input value] 
     @param {float} [low1]  input range (low)
     @param {float} [high1] input range (high)
@@ -3176,17 +3491,16 @@ window.scale = function(inNum, inMin, inMax, outMin, outMax) {
 }
 
 /** @method invert 
-    Equivalent to nx.scale(input,0,1,1,0). Inverts a normalized (0-1) number. 
+    @description Equivalent to nx.scale(input,0,1,1,0). Inverts a normalized (0-1) number. 
     @param {float} [input value]  
-    ```js
-    nx.invert(0.25) // returns 0.75
-    nx.invert(0) // returns 1
-    ```
+    
 */
 window.invert = function (inNum) {
   return scale(inNum, 1, 0, 0, 1);
 }
 
+/* not to be confused with bouncei in live coding api
+ * this is more like testing if a ball has bounced within a box
 window.bounce = function(posIn, borderMin, borderMax, delta) {
   if (posIn > borderMin && posIn < borderMax) {
     return delta;
@@ -3195,15 +3509,13 @@ window.bounce = function(posIn, borderMin, borderMax, delta) {
   } else if (posIn >= borderMax) {
     return Math.abs(delta) * (-1);
   }
-}
+} */
 
 
 /** @method mtof 
-    MIDI to frequency conversion. Returns frequency in Hz.
+    @description MIDI to frequency conversion. Returns frequency in Hz.
     @param {float} [MIDI] MIDI value to convert
-    ```js
-    nx.mtof(69) // returns 440
-    ```
+    
 */
 window.mtof = function(midi) {
   return Math.pow(2, ((midi-69)/12)) * 440;
@@ -3211,12 +3523,9 @@ window.mtof = function(midi) {
 
 
 /** @method random 
-    Returns a random integer between 0 and a given scale parameter.
+    @description Returns a random integer between 0 and a given scale parameter.
     @param {float} [scale] Upper limit of random range.
-    ```js
-    nx.random(10) // returns a random number from 0 to 9.
-    nx.random(10,20) // returns a random number from 10 to 19.
-    ```
+    
 */
 window.random = function(scale,max) {
 	if (max) {
@@ -3226,30 +3535,24 @@ window.random = function(scale,max) {
 	}
 }
 
-
+/** @method interp 
+    @description Interpolate between two numbers, using 0-1 as input. 
+    @param {float} [lookup]  0-1 location between values  
+    @param {float} [point1]  value to interpolate from (0) 
+    @param {float} [point2]  value to interpolate to (1)   
+*/
 window.interp = function(loc,min,max) {
   return loc * (max - min) + min;  
 }
 
+/** @method randomColor 
+    @description SHOULD BE RENAMED/SHORTENED Get a random color value   
+*/
 window.randomColor = function() {
   return "rgb(" + random(255) + "," + random(255) + "," + random(255) + ")";
 }
 
 
-window.isInside = function(clickedNode,currObject) {
-  if (clickedNode.x > currObject.x && clickedNode.x < (currObject.x+currObject.w) && clickedNode.y > currObject.y && clickedNode.y < (currObject.y+currObject.h)) {
-    return true;
-  } else {
-    return false; 
-  }
-}
-
-
-
-/*
- interval with controllable speed / interval time
-	bt.interval()
-*/
 
 window.VariableSpeedInterval = function(rate,func) {
 	this.rate = rate
@@ -3292,6 +3595,13 @@ window.VariableSpeedInterval = function(rate,func) {
 	this.start();
 }
 
+
+/**
+ * @method interval 
+ * @description  interval with controllable speed / interval time
+ * @param {number} [rate] 
+ * @param {function} [callback]
+ */
 window.interval = function(rate,func) {
 	var _int = new VariableSpeedInterval(rate,func)
 	return _int;
@@ -3310,16 +3620,15 @@ window.interval = function(rate,func) {
 */
 
 
-
-/*
-random function that executes (returns new num) each time
-	this should probably be global
-*/
-
-
+/**
+ * @method rand 
+ * @description  random function that executes (returns new num) each time
+ * @param {number} [scale] 
+ */
 window.rand = function(scale) {
 	return random.bind(null,scale)
 }
+
 /* use like this:
 
 a = new Wall()
@@ -3336,122 +3645,6 @@ a.moveTo(rand(WIDTH),rand(HEIGHT))
 array forEach
 
 */
-},{}],21:[function(require,module,exports){
-/**
- * @class utils tes
- * @description (IN TRANSIT) shared utility functions
- */
-
-
-
-/** @method toPolar test1
-    Receives cartesian coordinates and returns polar coordinates as an object with 'radius' and 'angle' properties.
-    @param {float} [x] 
-    @param {float} [y] 
-*/
-exports.toPolar = function(x,y) {
-  var r = Math.sqrt(x*x + y*y);
-
-  var theta = Math.atan2(y,x);
-  if (theta < 0.) {
-    theta = theta + (2 * Math.PI);
-  }
-  return {radius: r, angle: theta};
-}
-
-/** @method toCartesian 
-    Receives polar coordinates and returns cartesian coordinates as an object with 'x' and 'y' properties.
-    @param {float} [radius] 
-    @param {float} [angle] 
-*/
-exports.toCartesian = function(radius, angle){
-  var cos = Math.cos(angle);
-  var sin = Math.sin(angle);
-  return {x: radius*cos, y: radius*sin*-1};
-}
-
-
-/** @method clip 
-    Limits a number to within low and high values.
-    @param {float} [input value] 
-    @param {float} [low limit] 
-    @param {float} [high limit] 
-*/
-exports.clip = function(value, low, high) {
-  return Math.min(high, Math.max(low, value));
-}
-
-/** @method prune 
-    Limits a float to within a certain number of decimal places
-    @param {float} [input value] 
-    @param {integer} [max decimal places] 
-*/
-
-exports.prune = function(data, scale) {
-  if (typeof data === "number") {
-    data = parseFloat(data.toFixed(scale));
-  } else if (data instanceof Array) {
-    for (var i=0;i<data.length;i++) {
-      if (typeof data[i]=="number") {
-        data[i] = parseFloat(data[i].toFixed(scale));
-      }
-    }
-  }
-  return data;
-}
-
-/** @method scale 
-    Scales an input number to a new range of numbers
-    @param {float} [input value] 
-    @param {float} [low1]  input range (low)
-    @param {float} [high1] input range (high)
-    @param {float} [low2] output range (low)
-    @param {float} [high2] output range (high)
-*/
-exports.scale = function(inNum, inMin, inMax, outMin, outMax) {
-  return (((inNum - inMin) * (outMax - outMin)) / (inMax - inMin)) + outMin;  
-}
-
-/** @method invert 
-    Equivalent to nx.scale(input,0,1,1,0). Inverts a normalized (0-1) number. 
-    @param {float} [input value]  
-*/
-exports.invert = function (inNum) {
-  return exports.scale(inNum, 1, 0, 0, 1);
-}
-
-exports.bounce = function(posIn, borderMin, borderMax, delta) {
-  if (posIn > borderMin && posIn < borderMax) {
-    return delta;
-  } else if (posIn <= borderMin) {
-    return Math.abs(delta); 
-  } else if (posIn >= borderMax) {
-    return Math.abs(delta) * (-1);
-  }
-}
-
-
-/** @method mtof 
-    MIDI to frequency conversion. Returns frequency in Hz.
-    @param {float} [MIDI] MIDI value to convert
-*/
-exports.mtof = function(midi) {
-  return Math.pow(2, ((midi-69)/12)) * 440;
-}
-
-
-/** @method random 
-    Returns a random integer between 0 a given scale parameter.
-    @param {float} [scale] Upper limit of random range.
-*/
-exports.random = function(scale) {
-  return Math.floor(Math.random() * scale);
-}
-
-
-exports.interp = function(loc,min,max) {
-  return loc * (max - min) + min;  
-}
 },{}],22:[function(require,module,exports){
 
 },{}],23:[function(require,module,exports){

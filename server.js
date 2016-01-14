@@ -36,6 +36,10 @@ var disconnections = 0
 // listening for events
 io.sockets.on('connection', function (socket) {
 
+	socket.emit("mediapaths","video",mediapaths.video)
+	socket.emit("mediapaths","audio",mediapaths.audio)
+	socket.emit("mediapaths","images",mediapaths.images)
+
 	// generate user identifiers
 	userindex++
 	var name = "user"+userindex;
@@ -68,3 +72,53 @@ io.sockets.on('connection', function (socket) {
 	});
 
 });
+
+
+
+// retrieve media paths
+
+var fs = require("fs")
+var mediapaths = {}
+
+
+fs.readdir('pages/media/video/', function(err, files) {
+  if (err) throw err;
+  console.log(files)
+  for (var i=0;i<files.length;i++) {	
+  	if (files[i][0] == ".") {
+  		files.splice(i,1)
+  		i--
+  	} else {
+  		files[i] = '/media/video/'+ files[i]
+  	}
+  }
+  mediapaths.video = files
+})
+
+fs.readdir('pages/media/audio/', function(err, files) {
+  if (err) throw err;
+  for (var i=0;i<files.length;i++) {
+  	if (files[i][0] == ".") {
+  		files.splice(i,1)
+  		i--
+  	} else {
+  		files[i] = '/media/audio/'+ files[i]
+  	}
+  }
+  console.log(files)
+  mediapaths.audio = files
+})
+
+fs.readdir('pages/media/images/', function(err, files) {
+  if (err) throw err;
+  console.log(files)
+  for (var i=0;i<files.length;i++) {
+  	if (files[i][0] == ".") {
+  		files.splice(i,1)
+  		i--
+  	} else {
+  		files[i] = '/media/images/'+ files[i]
+  	}
+  }
+  mediapaths.images = files
+})
