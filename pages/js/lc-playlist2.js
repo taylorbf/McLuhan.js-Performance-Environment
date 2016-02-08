@@ -147,8 +147,11 @@ LCPlaylist.prototype.cut = function(index,piece) {
 			this.container.removeChild(piece)
 			local.intervals["line"+index].stop()
 			local.intervals["line"+index] = null
-			distant.intervals["line"+index].stop()
-			distant.intervals["line"+index] = null
+			//distant.intervals["line"+index].stop()
+			//distant.intervals["line"+index] = null
+			if (socket) {
+				socket.emit("senddata", "removeentry", {"index": index})
+			}
 
 		}
 	}

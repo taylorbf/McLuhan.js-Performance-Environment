@@ -5,5 +5,25 @@
 	"stage": {
 		"w": 700,
 		"h": 500
+	},
+	"embeds": {
+		"wland1": "https://vine.co/v/iJXFnXlMvZM/embed/simple"
+	},
+	"patterns": {
+		"flower": [
+			{
+				"x": 0.4,
+				"y": 0,
+				"w": 0.2,
+				"h": 1
+			},
+			{
+				"x": 0.25,
+				"y": 0,
+				"w": 0.5,
+				"h": 0.3
+			}
+		]
 	}
+
 }

@@ -70,6 +70,13 @@
 				$("#discotally").html("disconnections: " + disco)
 			});
 
+			socket.on('settings', function (settings) {
+				m.settings = settings
+				for (var key in settings.patterns) {
+					m.patterns[key] = m.settings.patterns[key]
+				}
+			});
+
 
 
 

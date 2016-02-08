@@ -38,7 +38,9 @@ io.sockets.on('connection', function (socket) {
 
 	socket.emit("mediapaths","video",mediapaths.video)
 	socket.emit("mediapaths","audio",mediapaths.audio)
-	socket.emit("mediapaths","images",mediapaths.images)
+  socket.emit("mediapaths","images",mediapaths.images)
+
+  socket.emit("settings",settings)
 
 	// generate user identifiers
 	userindex++
@@ -122,3 +124,29 @@ fs.readdir('pages/media/images/', function(err, files) {
   }
   mediapaths.images = files
 })
+
+
+fs.readdir('pages/media/images/', function(err, files) {
+  if (err) throw err;
+  console.log(files)
+  for (var i=0;i<files.length;i++) {
+    if (files[i][0] == ".") {
+      files.splice(i,1)
+      i--
+    } else {
+      files[i] = '/media/images/'+ files[i]
+    }
+  }
+  mediapaths.images = files
+})
+
+
+var settings = false;
+
+fs.readFile('settings.json', 'utf8', function (err,data) {
+  if (err) {
+    return console.log(err);
+  }
+  console.log(data);
+  settings = JSON.parse(data)
+});
