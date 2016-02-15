@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width">
 	<script src="/socket.io/socket.io.js"></script>
   <script src="./jcubic/js/jquery-1.7.1.min.js"></script>
+  <script src="speakClient.js"></script>
   <!-- vine link -->
   <script src="https://platform.vine.co/static/scripts/embed.js"></script>
   <!-- my libs -->
@@ -129,7 +130,8 @@
 								data: new Image()
 							}
 							m.media.images[i].data.onload = function(data) {
-								console.log(data)
+								
+								console.log("loaded:", medialoaded)
 								medialoaded++
 								NProgress.set(medialoaded/mediatotal)
 								if (medialoaded/mediatotal>=0.9) {
@@ -150,7 +152,8 @@
 							}
 							//console.log("====", m.media.video[i])
 							m.media.video[i].data.addEventListener('canplaythrough',function(data) {
-								console.log(data)
+								
+								console.log(medialoaded/mediatotal)
 								medialoaded++
 								NProgress.set(medialoaded/mediatotal)
 								if (medialoaded/mediatotal>=0.9) {
@@ -173,6 +176,7 @@
 								console.log(data)
 								medialoaded++
 								NProgress.set(medialoaded/mediatotal)
+								console.log(medialoaded/mediatotal)
 								if (medialoaded/mediatotal>=0.9) {
 									NProgress.done()
 									$('#splash').fadeOut()
@@ -320,7 +324,13 @@
 		function removeEntry(data) {
 			console.log("removeEntry called")
 			//clearInterval(distant.intervals["line"+data.index])
-			distant.intervals["line"+data.index].stop()
+			if (distant.intervals["line"+data.index]) {
+				distant.intervals["line"+data.index].stop()
+			}
+			if (data.newmedia) {
+				m.variables[data.index].kill()
+			}
+
 		}
 
 		function changeEntry(data) {
@@ -371,7 +381,7 @@
 
     	
     	var createGens = function(index,code) {
-    		var gennames = ["bounce","gesture","markov"]
+    		var gennames = ["bounce","gesture","markov","pick"]
     		distant.gens["line"+index] = []
     		for (var i=0;i<code.length;i++) {
     			for (var j=0;j<gennames.length;j++) {
@@ -440,6 +450,20 @@
 				}
 			}
 
+
+
+
+    	/* PICK*/
+
+			function Pick() {
+
+				this.choices = arguments
+
+				this.tick = function() {
+					return this.choices[random(this.choices.length)]
+				}
+
+			}
 
 
 

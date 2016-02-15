@@ -41,6 +41,8 @@ LCPlaylist.prototype.add = function(command, info, color) {
 	piece.id = "fragment"+this.lineIndex
 	this.container.appendChild(piece)
 
+
+
 	var text = document.createElement("input")
 	text.type = "text"
 	text.value = this.lineIndex + " ~ " + command;
@@ -73,8 +75,16 @@ LCPlaylist.prototype.add = function(command, info, color) {
 		command: command,
 		code: info.code,
 		reference: info.reference,
-		duration: info.beat // duration is now a string to be evaluated later
+		duration: info.beat, // duration is now a string to be evaluated later
+		newmedia: false
 	}
+
+	//should be for any media-making method: hear, see, watch, etc.
+	if (info.code.indexOf("hear")==0) {
+		piece.className += " newmedia"
+		newline.newmedia = true;
+	}
+
 /*	newline.interval = interval(info.beat,function(newline) {
 			//with (eval(newline.color)) {
 				eval(newline.code) // distant, most likely....
@@ -106,6 +116,8 @@ LCPlaylist.prototype.add = function(command, info, color) {
 		var index = this.playlist[0].name
 		this.cut(index,document.getElementById("fragment"+index))
 	}
+
+	this.parent.scrollTop = 10000;
 
 	//executes playlist callback
 	this.callback(data);
@@ -153,15 +165,25 @@ LCPlaylist.prototype.tick = function() {
 LCPlaylist.prototype.cut = function(index) {
 	for (var i=0;i<this.playlist.length;i++) {
 		if (this.playlist[i].index == index) {
-			this.playlist.splice(i,1)
 			this.container.removeChild(document.getElementById("fragment"+index))
-			local.intervals["line"+index].stop()
-			local.intervals["line"+index] = null
-			//distant.intervals["line"+index].stop()
-			//distant.intervals["line"+index] = null
-			if (socket) {
-				socket.emit("senddata", "removeentry", {"index": index})
+			if (local.intervals["line"+index]) {
+				local.intervals["line"+index].stop()
+				local.intervals["line"+index] = null
+				//distant.intervals["line"+index].stop()
+				//distant.intervals["line"+index] = null
+				//
+							
 			}
+
+			if (socket) {
+				var data = {"index": index, "newmedia": false}
+				if (this.playlist[i].newmedia) {
+					data.newmedia = true
+				}
+				socket.emit("senddata", "removeentry", data)
+			}
+
+			this.playlist.splice(i,1)
 
 		}
 	}

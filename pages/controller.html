@@ -362,6 +362,20 @@
 			}
 
 
+			/* PICK*/
+
+			function Pick() {
+
+				this.choices = arguments
+
+				this.tick = function() {
+					return this.choices[random(this.choices.length)]
+				}
+
+			}
+
+
+
 
 
 
