@@ -1,0 +1,142 @@
+
+=========
+MOMENTS
+
+"WONDERLAND"
+pictures of Boston blue line Wonderland stop
+getting on subway, watching subway windows fly by
+sound is mac startup sound, over and over, filtered, delayed
+
+
+"TEXT POEM"
+poem in text messages
+html-gl it as water drips or pixelated
+
+
+"NOW"
+	one word ("now"?) in old splattered typewriter text on small white white window
+	it vibrates with small sounds
+	and a siri voice saying it, but filtered through lowpass
+	then a text msg window opens up, says a few small texts of poetry
+		then goes berzerk texting rapidly
+		a sound for each text
+	the text sounds are made rapidly -- with each text
+		then are filtered into a pitch
+		then a phaser modulates their volume to form a beat
+		then this all happens again in a second window, to create a polyrhythm
+	cuts to a video -- of outside, nature
+
+
+CHOPPED LIEDER
+one wide quicktime player with voice, but then skipping through it to make song
+Inspiration from german lieder 
+drone underneath for harmony
+
+DANCER
+A dancer silhouette in one window
+	 that bumps and moves browser?
+	or just a pixelated dancer?
+	dancer's pixels play notes
+	in combination with a quicktime drone happening underneath
+
+RAIN
+raining world with scrollers (old website)
+	silent
+	or except scrollbars which should make some quiet audio event on hit
+
+PROUST POEM
+proust poem but with new text relative to this work!
+
+MAGIC
+magic trick -- a quicktime being cut in half
+images of a browser being cut in half
+
+YOUTUBE HARMONY
+A youtube voice with home-done web audio giving it interesting harmony
+	(need to get youtube red for this?)
+
+PIANO SILENCE
+Moments of silence
+Moments of piano
+
+CANDLE
+Nighttime words, fullscreen black window or set of windows, one candle .mov (home recorded) in center, i.e. the feeling of lights out w/ candle.
+
+ONE WORD
+brian harnetty's one-word around multiple windows
+
+SUN
+custom website that is loaded:
+normal webpage that transforms a div into a div into a sun and another div into land and then the sun moves over the sky and faster and faster, some text about time passing
+sound mimics it: noise filtered into a note that pans
+
+LILYPOND
+Generate dozens of images of very complex scores using lilypond, flash them on the webpage one by one.
+	don't play them -- only bursts of noise when each hits the page
+	pixelate them and then turn them into noise (because all black and white) when cycled through really fast
+
+HEARTBEAT
+Beginning:
+video/gif of a sketched heart beating
+code scrolling behind it (code of actual page?)
+both stutter into color -- heart in color drawing, code in syntax highlighted, still scrolling
+what code? (code of the website itself or the js library, on loop?)
+
+ALINA SNOW
+fur alina spiegel im spiegel at end?
+	loaded via youtube?
+	scrollsight of video of city walkers in snow in slow mo?	fades to the whiteness of an empty browser?
+
+FLOWER
+a browser growing and blooming into color as a flower 
+	this must be pre-programmed somehow
+	maybe as a wall pattern?
+	then could have video (with audio) inside the flower -- video of a flower? life!
+
+DREAMING
+Dreaming of browsers
+or browsing as dreaming
+in animated font
+2-3 windows of faces at bottom with pixelated faces or videos in slow framerate
+
+DESIGN FICTION
+some flashing words like in Nam's class (design fiction)
+
+DELL ROAD
+dell/mac "on" sound spectralmorphed into birds, then back, 
+then into sound of wind, 
+then video of driving down a road
+
+DESKTOP AUDIO
+video screen capture of 3 different audio player (itunes clones) on my desktop, all playing different piano notes on shuffle or in a row. some piano, some white noise, some natural sounds. 
+
+SKIP
+moment of fast, energetic skipping of a quicktime player
+
+LOWLANDS
+lowlands
+video of her singing
+synced with html5 audio player of guitar
+
+SILENT SKIP
+skipping a quicktime player full of silence -- purely visual
+
+MAPPING LIFE
+mapping everywhere i've lived
+drop an info marker
+some sort of text in there -- what?
+
+. ?
+there is always - water, dusk, life, time, a path, 
+there is never - 
+
+PHONE RING
+sound of a phone ring through a delay
+
+PHONE SCREENS
+iphone screenshot webpage of "no government"
+
+RECURSIVE BROWSING
+screen capture of me browsing to a video of a screen capture of me browsing etc etc etc -- about 20 seconds of this creating a revursiveness
+
+

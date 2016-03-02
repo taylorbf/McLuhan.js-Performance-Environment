@@ -302,7 +302,8 @@
 				
 			//IF A BEAT		
 			} else {
-				console.log("a beat")
+				console.log("a beat + right place")
+				console.log(data.duration)
 				
 				data.gencode = createGens(data.index,data.code)
 				distant.intervals["line"+data.index] = interval(data.duration,function(data) {

@@ -167,6 +167,7 @@ window.VariableSpeedInterval = function(rate,func) {
 	this.event = func ? func : function() { };
 	this.pulse = function() {
 		if (this.on) {
+      console.log(this.rate)
 			this.time.last = new Date().getTime()
 			this.event();
 			//var delay = force ? force : this.rate

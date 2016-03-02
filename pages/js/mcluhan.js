@@ -879,6 +879,7 @@ Medium.prototype.setAll = function(prop,val) {
 	for (var i = 0; i<this.element.length; i++) {
 		this.element[i][prop] = val;
 	}
+	return this
 }
 
 /**
@@ -890,6 +891,7 @@ Medium.prototype.all = function(method) {
 	for (var i = 0; i<this.element.length; i++) {
 		this.element[i][method]()
 	}
+	return this
 }
 
 // uses params instead of x y so you could set y without setting x, or vice versa
@@ -909,6 +911,7 @@ Medium.prototype.size = function(params,h) {
 		this.element[i].style.width = params.w ? params.w+"px" : this.defaultSize.w+"px";
 		this.element[i].style.height = params.h ? params.h+"px" : this.defaultSize.h+"px";
 	}
+	return this
 }
 
 /**
@@ -928,6 +931,7 @@ Medium.prototype.move = function(params,y) {
 		params.x ? this.element[i].style.left = params.x+"px" : false;
 		params.y ? this.element[i].style.top = params.y+"px" : false;
 	}
+	return this;
 }
 
 /**
@@ -948,6 +952,7 @@ Medium.prototype.fade = function(level) {
 	for (var i = 0; i<this.element.length; i++) {
 		this.element[i].style.opacity = level;
 	}
+	return this;
 }
 
 /**
@@ -957,6 +962,7 @@ Medium.prototype.hide = function() {
 	for (var i = 0; i<this.element.length; i++) {
 		this.element[i].style.visibility = "hidden";
 	}
+	return this
 }
 
 /**
@@ -966,6 +972,15 @@ Medium.prototype.show = function(level) {
 	for (var i = 0; i<this.element.length; i++) {
 		this.element[i].style.visibility = "visible";
 	}
+	return this
+}
+
+/**
+ * If the element is hidden, show it.
+ */
+Medium.prototype.bomb = function(dur) {
+	setTimeout( this.kill.bind(this), dur ? dur : 1000)
+	return this
 }
 },{}],5:[function(require,module,exports){
 
@@ -1359,17 +1374,12 @@ var Medium = require('../core/medium')
  * @return {Cassette}
  */
 
-/* IF TIME: ONE CENTRAL VIDEO ELEMENT.
-USE CANVASES TO DRAW IT INTO EACH WINDOW.
-BETTER FOR SYNCING AND FOR IMAGE PROCESSING.
-*/
-
 var Film = module.exports = function(params) {
 
-	this.defaultSize = { w: 900 }
+	this.defaultSize = { w: 800, h: 800 }
 
-	this.src = false;
-	this.type = "video"
+	//this.src = false;
+	this.type = "canvas"
 
 	//separate item constructor "Medium" with properties for placement, animation, remove, make dom element, styling element based on json
 	Medium.call(this, params);
@@ -1380,11 +1390,59 @@ var Film = module.exports = function(params) {
 	this.interval = false;
 	this.rate = 1;
 
-	this.setAll("controls", false);
-	this.setAll("volume", 0);
-	this.loop();
 
-	this.zoe = new SmartMatrix(10,10);
+	// prime canvases
+
+	this.context = []
+
+	for (var i = 0; i<this.spaces.length; i++) {
+		this.context.push(this.element[i].getContext("2d"))
+	}
+
+
+	this.zoomstate = {
+		x: 0,
+		y: 0,
+		level: 1
+	}
+
+	// create master video element
+	this.video = this.spaces[0].element.document.createElement("video")
+
+	this.video.addEventListener('play', this.draw.bind(this),false)
+
+
+
+	/* create hidden canvas */
+
+	this.master = this.spaces[0].element.document.createElement("canvas")
+	this.master.style.display = "none"
+	this.spaces[0].element.document.body.appendChild(this.master)
+	this.mastercontext = this.master.getContext("2d")
+
+
+
+	this.video.width = this.master.width = this.width = this.defaultSize.w
+	this.video.height = this.master.height = this.height = this.defaultSize.h
+	this.video.style.width = this.master.style.width = this.width+"px"
+	this.video.style.height = this.master.style.height = this.height+"800px"
+
+
+	for (var i=0;i<this.context.length;i++) {
+			this.element[i].width = this.width
+			this.element[i].height = this.height
+			this.element[i].style.width = this.width
+			this.element[i].style.height = this.height
+	}
+
+	this.video.volume = 0
+	this.loop()
+
+	this.zoe = new SmartMatrix(10,10)
+
+	this.pixelation = 30
+	this.pixelated = false
+
 
 }
 
@@ -1395,8 +1453,8 @@ util.inherits(Film, Medium);
 *	@param {String} src name of .mp4 file in /media folder. For example, .load("waves") will load "/media/waves.mp4"
 */
 Film.prototype.load = function(src) {
-	src ? this.setAll("src","media/video/"+src+".mp4") : false;
-	this.all("play")
+	src ? this.video.src = "media/video/"+src+".mp4" : false;
+	this.play()
 }
 
 /**
@@ -1405,7 +1463,7 @@ Film.prototype.load = function(src) {
  */
 Film.prototype.play = function(rate) {
 	this.rate = rate ? rate : this.rate
-	this.all("play")
+	this.video.play()
 	this.speed(this.rate)
 }
 
@@ -1413,17 +1471,81 @@ Film.prototype.play = function(rate) {
  * Pause video
  */
 Film.prototype.stop = function() {
-	this.all("pause")
+	this.video.pause()
 }
 
+/** 
+ * .
+ */
+Film.prototype.propogateMaster = function() {
+	for (var i=0;i<this.context.length;i++) {
+		//this.context[i].drawImage(this.master, this.zoomstate.x, this.zoomstate.y,this.zoomstate.level*this.width,this.zoomstate.level*this.height,0,0,this.width,this.height );
+		this.context[i].drawImage(this.master, 0, 0, this.width,this.height );
+	}
+}
 
+Film.prototype.draw = function() {
+  if (this.video.paused || this.video.ended) return false;
+  //this.mastercontext.drawImage(this.video,0,0,this.master.width,this.master.height);
+ 	this.mastercontext.drawImage(this.video,0,0,this.width,this.width * this.video.videoHeight/this.video.videoWidth);
+ 	console.log(this.width * this.video.videoWidth/this.video.videoHeight)
+ 	if (this.grayscale) {
+
+ 	}
+ 	if (this.pixelated) {
+ 		this.pixelate()
+ 	}
+ 	this.propogateMaster()
+  setTimeout(this.draw.bind(this),20)
+}
+
+Film.prototype.pixelate = function() {
+
+	if (this.pixelation < 10) {
+		this.pixelation = 10
+	}
+
+  var sourceWidth = this.video.width
+  var sourceHeight = this.video.height
+  var destX = this.master.width / 2 - sourceWidth / 2
+  var destY = this.master.height / 2 - sourceHeight / 2
+
+	var sourceX = destX
+  var sourceY = destY
+
+  var imageData = this.mastercontext.getImageData(sourceX, sourceY, sourceWidth, sourceHeight);
+  var data = imageData.data;
+
+  for(var y = 0; y < sourceHeight; y += this.pixelation) {
+    for(var x = 0; x < sourceWidth; x += this.pixelation) {
+      var red = data[((sourceWidth * y) + x) * 4];
+      var green = data[((sourceWidth * y) + x) * 4 + 1];
+      var blue = data[((sourceWidth * y) + x) * 4 + 2];
+
+      for(var n = 0; n < this.pixelation; n++) {
+        for(var m = 0; m < this.pixelation; m++) {
+          if(x + m < sourceWidth) {
+            data[((sourceWidth * (y + n)) + (x + m)) * 4] = red;
+            data[((sourceWidth * (y + n)) + (x + m)) * 4 + 1] = green;
+            data[((sourceWidth * (y + n)) + (x + m)) * 4 + 2] = blue;
+          }
+        }
+      }
+    }
+  }
+
+  // overwrite original image
+  this.mastercontext.putImageData(imageData, destX, destY)
+
+}
 
 /**
  * Loop video
  */
 Film.prototype.loop = function(on) {
-	this.start = 0.0001
-	this.element[0].addEventListener('ended',this.boundJump)
+	this.video.loop = true;
+	//this.start = 0.0001
+	//this.element[0].addEventListener('ended',this.boundJump)
 }
 
 
@@ -1431,7 +1553,8 @@ Film.prototype.loop = function(on) {
  * Unloop video
  */
 Film.prototype.unloop = function(on) {
-	this.element[0].removeEventListener('ended',this.boundJump);
+	//this.element[0].removeEventListener('ended',this.boundJump);
+	this.video.loop = false
 }
 
 /**
@@ -1439,9 +1562,9 @@ Film.prototype.unloop = function(on) {
  * @param  {integer} start New start time of video, in seconds
  */
 Film.prototype.jumpTo = function(start) {
-	start = start ? start : this.start;
-	this.setAll("currentTime",start);
-	this.all("play");
+	start = start ? start : this.start
+	this.video.currentTime = start
+	this.video.play()
 }
 
 
@@ -1465,11 +1588,11 @@ Film.prototype.skip = function(start,stop) {
  * Stop skipping the video
  */
 Film.prototype.unskip = function() {
-	this.skipping = false;
-	this.start = false;
+	this.skipping = false
+	this.start = false
 	this.stop = false
-	clearInterval(this.interval);
-	this.interval = false;
+	clearInterval(this.interval)
+	this.interval = false
 }
 
 /**
@@ -1478,8 +1601,24 @@ Film.prototype.unskip = function() {
  */
 Film.prototype.speed = function(rate) {
 	if (rate) {
-		this.setAll("playbackRate",rate);
+		this.video.playbackRate = rate;
 		this.rate = rate;
+	}
+}
+
+/**
+ * Zoom in
+ * @param  {float} level Zoom level
+ */
+Film.prototype.zoom = function(level,x,y) {
+	if (level) {
+		this.zoomstate.level = level
+	}
+	if (x) {
+		this.zoomstate.x = x
+	}
+	if (y) {
+		this.zoomstate.y = y
 	}
 }
 
@@ -1487,7 +1626,6 @@ Film.prototype.speed = function(rate) {
  * Turn on film-strip frame visualization
  */
 Film.prototype.ticker = function() {
-	console.log(this)
 	this.ticking = true;
 	this.tick()
 }
@@ -3097,8 +3235,8 @@ Wall.prototype.watch = function(src) {
  * @param  {String}	source filename (w/o file extension, i.e. "piano" not "piano.mp3"
  * @return {Cassette}
  */
-Wall.prototype.hear = function(src) {
-	var _m = new cassette({ spaces: this.elements });
+Wall.prototype.hear = function(src,x,y) {
+	var _m = new cassette({ spaces: this.elements, x: x ? x : 0, y: y? y : 0 });
 	_m.wall = this;
 	_m.load(src)
 	return _m;
@@ -3851,11 +3989,12 @@ window.VariableSpeedInterval = function(rate,func) {
 	this.on = true;
 	this.event = func ? func : function() { };
 	this.pulse = function() {
+    console.log(this.rate)
 		if (this.on) {
 			this.time.last = new Date().getTime()
 			this.event();
 			//var delay = force ? force : this.rate
-			this.timeout = setTimeout(this.pulse.bind(this),this.rate)
+			this.timeout = setTimeout(this.pulse.bind(this),eval(this.rate))
 		}
 	}
 	this.stop = function() {

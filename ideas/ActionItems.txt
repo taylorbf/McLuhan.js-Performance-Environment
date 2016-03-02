@@ -1,0 +1,52 @@
+Next steps
+==========
+
+
+// can't find: load dreaming font page and create it.
+create code for ONE WORD section.
+	-- // needs: random timing
+	-- // location for each audio player (.move)
+	// -- needs: bomb() for media prototype
+make controller refresh cause the clients to refresh ... ?
+	or have a button that refresh's clients?
+create bird video and test pixelation
+make recursive browsing video
+turn computer loading sounds into indiv mp3 files
+assemble lilypond images and crunch them
+spruce up client codevis and move to client.html
+make starting shape (around the center)
+get presence working
+get parsedb connected... ?
+
+bugs:
+audio not skipping correctly? what time scale is the input?
+
+
+
+
+get url of netart rain world video and try it in mcluhan
+figure out phone ring api tutorial and put in custom website with easy api
+
+
+
+Library edits:
+Make sounds when windows open
+give write() arguments: x, y, color (black or white)
+// Add web audio tools
+// add vine function in boite
+// *could* create a video to canvas processor so that could 	
+			// pixelate videos! or have i done this?
+perhaps need a second type of audio element which is non-visual which lets you do pitch changing?
+
+// make da json!
+	pattern extender
+	vine and media links -- a keyword for each URL
+	
+
+
+Known issues:
+// Gifs do not show because image is rendered to canvas...
+	need a separate gif loader?
+wall.empty() should kill any media in the wall.
+	also should be chainable. empty().hear().skip()
+

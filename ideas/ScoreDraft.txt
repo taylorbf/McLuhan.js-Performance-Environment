@@ -1,0 +1,22 @@
+
+============
+Text score
+============
+
+1 ~ gif("heartbeat")
+2 ~ log().load("client.html")
+3 ~ empty().hear("         ").skip( , )
+
+
+
+one word:
+(need a drone underneath... sine?)
+5 ~ hear("piano"+random(5)).move(random(700),random(400)).bomb(4000) @ random(4000)
+6 ~ echo.fb(0.7)
+7 ~ echo.time(.5)
+
+
+
+lilypond:
+1 ~ see("lily1")
+2 ~ 1 load("lily"+random(0,10)) @ 100

@@ -87,6 +87,26 @@ show siri screen?
 21 ~ echo.fb(0.8)
 
 
+## video
+
+10 ~ watch("mouse1")
+
+11 ~ 10 zoom(.5,random(500),random(500)) @ 1000
+
+------
+
+1 ~ watch("mouse1")
+
+2 ~ 1 pixelate()
+
+3 ~ 1 pixelation = random(100) @ 100
+
+4 ~ 1 pixelation-- @ 100
+
+maybe string together so already pixelated when first shown.
+
+
+
 
 
 ## maps
@@ -132,6 +152,25 @@ Others..
 text
 sms
 voice
+
+
+
+
+### Vine embed script
+
+<
+iframe src="https://vine.co/v/iJXFnXlMvZM/embed/simple" width="600" height="600" frameborder="0"></iframe><script src="https://platform.vine.co/static/scripts/embed.js"></script>
+
+### Youtube Videos
+
+Birds: https://www.youtube.com/watch?v=dTbuujQqWmk
+
+Candle: https://www.youtube.com/watch?v=97do2s8fGgg
+
+snow: https://www.youtube.com/watch?v=qhH_AbKoDiE
+
+flower1: https://www.youtube.com/watch?v=4j_qzYZGQig
+
 
 
 

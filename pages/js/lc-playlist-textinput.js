@@ -27,6 +27,8 @@ var LCPlaylist = function(parentID, cb) {
 
 	this.nexttitle = false;
 
+	this.highlighted = ["hear", "watch", "say", "write", "gif", "hack", "log", "explore", "see", "sms" ]
+
 }
 
 LCPlaylist.prototype.add = function(command, info, color) {
@@ -79,8 +81,7 @@ LCPlaylist.prototype.add = function(command, info, color) {
 		newmedia: false
 	}
 
-	//should be for any media-making method: hear, see, watch, etc.
-	if (info.code.indexOf("hear")==0) {
+	if (this.highlighted.indexOf(info.code.split("(")[0])>=0) {
 		piece.className += " newmedia"
 		newline.newmedia = true;
 	}
