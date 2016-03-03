@@ -2587,6 +2587,42 @@ var Photo = module.exports = function(params) {
 	document.body.appendChild(this.master)
 	this.mastercontext = this.master.getContext("2d")
 
+	/* create image in background */
+	this.image = new Image()
+
+	this.image.onload = function() {
+		this.width = this.image.width;
+		this.height = this.image.height
+
+		this.master.width = this.width;
+		this.master.height = this.height;
+		this.master.style.width = this.width;
+		this.master.style.height = this.height;
+		this.mastercontext.drawImage(this.image,0,0)
+
+		for (var i=0;i<this.context.length;i++) {
+			this.element[i].width = this.width;
+			this.element[i].height = this.height;
+			this.element[i].style.width = this.width;
+			this.element[i].style.height = this.height;
+		}
+		if (this.pixelated) {
+			this._pixelate()
+		}
+		this.propogateMaster();
+
+		//this.data = this.context[0].getImageData( 0, 0, this.width, this.height );
+		// dealing with image data
+		/*this.data = {
+			original: this.context[0].getImageData( 0, 0, this.width, this.height ),
+			current: 0
+		}*/
+
+
+	}.bind(this)
+
+	this.pixelated = false
+	this.pixelation = 30
 
 }
 
@@ -2626,33 +2662,10 @@ Photo.prototype.load = function(src) {
 
 	this.master.width = this.master.width;
 
-	this.image = new Image()
-	this.image.onload = function() {
-		this.width = this.image.width;
-		this.height = this.image.height
-
-		this.master.width = this.width;
-		this.master.height = this.height;
-		this.master.style.width = this.width;
-		this.master.style.height = this.height;
-		this.mastercontext.drawImage(this.image,0,0)
-
-		for (var i=0;i<this.context.length;i++) {
-			this.element[i].width = this.width;
-			this.element[i].height = this.height;
-			this.element[i].style.width = this.width;
-			this.element[i].style.height = this.height;
-		}
-		this.propogateMaster();
-
-		//this.data = this.context[0].getImageData( 0, 0, this.width, this.height );
-		// dealing with image data
-		/*this.data = {
-			original: this.context[0].getImageData( 0, 0, this.width, this.height ),
-			current: 0
-		}*/
-
-	}.bind(this)
+	this.image.onerror = function () {
+   console.error("Cannot load image");
+   //do something else...
+	}
 
 	if (src.indexOf("http")==0) {
 		this.image.src = src
@@ -2664,7 +2677,11 @@ Photo.prototype.load = function(src) {
 		} else {
 			this.image.src = "media/images/"+src+".jpg"
 		}
-		
+
+		if (this.image.complete) {
+			console.log("complete so onload happening again")
+	    this.image.onload()
+	  }
 		
 		
 	}
@@ -2679,6 +2696,8 @@ Photo.prototype.propogateMaster = function() {
 	for (var i=0;i<this.context.length;i++) {
 		this.context[i].drawImage(this.master, this.zoomstate.x, this.zoomstate.y,this.zoomstate.level*this.width,this.zoomstate.level*this.height,0,0,this.width,this.height );
 	}
+
+	console.log("propogated")
 }
 
 /** 
@@ -2721,6 +2740,61 @@ Photo.prototype.zoom = function(params) {
 	} */
 
 }
+
+
+Photo.prototype.pixelate = function(degree) {
+
+	this.pixelated = true
+
+	if (degree) {
+		this.pixelation = degree
+	}
+
+	this._pixelate()
+	this.propogateMaster()
+
+}
+
+Photo.prototype._pixelate = function() {
+
+	if (this.pixelation < 10) {
+		this.pixelation = 10
+	}
+
+  var sourceWidth = this.image.width
+  var sourceHeight = this.image.height
+  var destX = this.master.width / 2 - sourceWidth / 2
+  var destY = this.master.height / 2 - sourceHeight / 2
+
+	var sourceX = destX
+  var sourceY = destY
+
+  var imageData = this.mastercontext.getImageData(sourceX, sourceY, sourceWidth, sourceHeight);
+  var data = imageData.data;
+
+  for(var y = 0; y < sourceHeight; y += this.pixelation) {
+    for(var x = 0; x < sourceWidth; x += this.pixelation) {
+      var red = data[((sourceWidth * y) + x) * 4];
+      var green = data[((sourceWidth * y) + x) * 4 + 1];
+      var blue = data[((sourceWidth * y) + x) * 4 + 2];
+
+      for(var n = 0; n < this.pixelation; n++) {
+        for(var m = 0; m < this.pixelation; m++) {
+          if(x + m < sourceWidth) {
+            data[((sourceWidth * (y + n)) + (x + m)) * 4] = red;
+            data[((sourceWidth * (y + n)) + (x + m)) * 4 + 1] = green;
+            data[((sourceWidth * (y + n)) + (x + m)) * 4 + 2] = blue;
+          }
+        }
+      }
+    }
+  }
+
+  // overwrite original image
+  this.mastercontext.putImageData(imageData, destX, destY)
+
+}
+
 },{"../core/medium":4,"util":104}],17:[function(require,module,exports){
 var util = require('util');
 

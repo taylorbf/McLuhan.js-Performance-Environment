@@ -18,5 +18,5 @@ one word:
 
 
 lilypond:
-1 ~ see("lily1")
-2 ~ 1 load("lily"+random(0,10)) @ 100
+1 ~ see("score-2.png")
+2 ~ 1 load("score-"+random(0,10)+".png") @ 50

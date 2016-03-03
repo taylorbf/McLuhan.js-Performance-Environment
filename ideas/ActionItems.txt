@@ -1,21 +1,50 @@
 Next steps
 ==========
 
+#playlistvis {
+	background-color:transparent;
+	opacity:1;
+	border:solid 0px black;
+}
 
+#code-typing {
+	border-top:none
+	height:22px
+	box-sizing:border-box
+}
+
+#presence {
+	border:none
+	height:300px
+	width:400px
+}
+
+.guides {
+	background-color:white
+}
+
+#shell {
+	background-color:white
+}
+
+
+// pixelate images.
+get presence working
+spruce up client codevis and move to client.html
+make starting shape (around the presence)
 // can't find: load dreaming font page and create it.
-create code for ONE WORD section.
+// create code for ONE WORD section.
 	-- // needs: random timing
 	-- // location for each audio player (.move)
 	// -- needs: bomb() for media prototype
 make controller refresh cause the clients to refresh ... ?
 	or have a button that refresh's clients?
 create bird video and test pixelation
-make recursive browsing video
+// make recursive browsing video
 turn computer loading sounds into indiv mp3 files
-assemble lilypond images and crunch them
-spruce up client codevis and move to client.html
-make starting shape (around the center)
-get presence working
+// assemble lilypond images and crunch them
+make controller text input area editable
+
 get parsedb connected... ?
 
 bugs:

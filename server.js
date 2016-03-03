@@ -126,21 +126,6 @@ fs.readdir('pages/media/images/', function(err, files) {
 })
 
 
-fs.readdir('pages/media/images/', function(err, files) {
-  if (err) throw err;
-  console.log(files)
-  for (var i=0;i<files.length;i++) {
-    if (files[i][0] == ".") {
-      files.splice(i,1)
-      i--
-    } else {
-      files[i] = '/media/images/'+ files[i]
-    }
-  }
-  mediapaths.images = files
-})
-
-
 var settings = false;
 
 fs.readFile('settings.json', 'utf8', function (err,data) {

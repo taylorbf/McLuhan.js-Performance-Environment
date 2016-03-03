@@ -55,6 +55,7 @@
 
 				var mediatotal = 0
 				var medialoaded = 0
+				m.mediapaths = []
 
 				$(function() {
 
@@ -71,7 +72,7 @@
 						type: "static"
 					})
 
-					m.mediapaths = [ "images/ios7icon-01.png" ]
+					/* m.mediapaths = [ "images/ios7icon-01.png" ]
 					for (var i=0;i<m.mediapaths.length;i++) {
 						m.mediapaths[i] = {
 							path: m.mediapaths[i],
@@ -80,6 +81,7 @@
 						m.mediapaths[i].image.src = m.mediapaths[i].path
 					}
 					console.log(m.mediapaths)
+					*/
 
 
 
@@ -121,15 +123,15 @@
 				socket.on('mediapaths', function (type, data) {
 
 					if (type=="images") {
-						m.media.images = data
-						mediatotal += m.media.images.length
-						for (var i=0;i<m.media.images.length;i++) {
-							console.log("load: "+m.media.images[i])
-							m.media.images[i] = {
-								path: m.media.images[i],
+						m.mediapaths.images = data
+						mediatotal += m.mediapaths.images.length
+						for (var i=0;i<m.mediapaths.images.length;i++) {
+							console.log("load: "+m.mediapaths.images[i])
+							m.mediapaths.images[i] = {
+								path: m.mediapaths.images[i],
 								data: new Image()
 							}
-							m.media.images[i].data.onload = function(data) {
+							m.mediapaths.images[i].data.onload = function(data) {
 								
 								console.log("loaded:", medialoaded)
 								medialoaded++
@@ -139,19 +141,19 @@
 									$('#splash').fadeOut()
 								}
 							}
-							m.media.images[i].data.src = m.media[type][i].path
+							m.mediapaths.images[i].data.src = m.mediapaths[type][i].path
 						}
 					} else if (type=="video") {
-						m.media.video = data
-						mediatotal += m.media.video.length
-						for (var i=0;i<m.media.video.length;i++) {
-							console.log("load: "+m.media.video[i])
-							m.media.video[i] = {
-								path: m.media.video[i],
+						m.mediapaths.video = data
+						mediatotal += m.mediapaths.video.length
+						for (var i=0;i<m.mediapaths.video.length;i++) {
+							console.log("load: "+m.mediapaths.video[i])
+							m.mediapaths.video[i] = {
+								path: m.mediapaths.video[i],
 								data: document.createElement("video")
 							}
 							//console.log("====", m.media.video[i])
-							m.media.video[i].data.addEventListener('canplaythrough',function(data) {
+							m.mediapaths.video[i].data.addEventListener('canplaythrough',function(data) {
 								
 								console.log(medialoaded/mediatotal)
 								medialoaded++
@@ -161,18 +163,18 @@
 									$('#splash').fadeOut()
 								}
 							})
-							m.media.video[i].data.src = m.media[type][i].path
+							m.mediapaths.video[i].data.src = m.mediapaths[type][i].path
 						}
 					} else if (type=="audio") {
-						m.media.audio = data
-						mediatotal += m.media.audio.length
-						for (var i=0;i<m.media.audio.length;i++) {
-							console.log("load: "+m.media.audio[i])
-							m.media.audio[i] = {
-								path: m.media.audio[i],
+						m.mediapaths.audio = data
+						mediatotal += m.mediapaths.audio.length
+						for (var i=0;i<m.mediapaths.audio.length;i++) {
+							console.log("load: "+m.mediapaths.audio[i])
+							m.mediapaths.audio[i] = {
+								path: m.mediapaths.audio[i],
 								data: new Audio()
 							}
-							m.media.audio[i].data.addEventListener('canplaythrough', function(data) {
+							m.mediapaths.audio[i].data.addEventListener('canplaythrough', function(data) {
 								console.log(data)
 								medialoaded++
 								NProgress.set(medialoaded/mediatotal)
@@ -182,7 +184,7 @@
 									$('#splash').fadeOut()
 								}
 							})
-							m.media.audio[i].data.src = m.media[type][i].path
+							m.mediapaths.audio[i].data.src = m.mediapaths[type][i].path
 						}
 					}
 
@@ -228,7 +230,8 @@
 		      this.context.fillStyle = "#fff"
         } */ 
         /* basic grayscale */
-        this.context.fillStyle = "#" + data[i][j] + data[i][j] + data[i][j]
+        var colornum = data[i][j]*20 + 50
+        this.context.fillStyle = "rgb(" + colornum + "," + colornum + "," + colornum + ")"
         this.context.fillRect(placex,placey,dim,dim)
         /* text
         this.context.fillStyle = "#000"

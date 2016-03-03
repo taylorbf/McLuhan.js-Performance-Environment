@@ -38,11 +38,17 @@
 	<div style="width:502px;margin:15px auto;border:solid 0px red;overflow:auto">
 
 		<div id="uservis" style="border:solid 2px black;width:350px;margin:0px;padding:10px;height:100px;float:left;box-sizing:border-box">
-			<div id="usertally">waa</div>
+			<div id="usertally">not connected</div>
 			<div id="discotally"></div>
 		</div>
 
 		<canvas id="presence" style="border:solid 2px black;width:142px;margin-left:10px;padding:0px;height:100px;float:left;box-sizing:border-box"></canvas>
+
+	<!--	<canvas nx="toggle" id="presencetog" style="border:solid 1px black"></canvas> -->
+		
+		<button onclick="localpresence = new presence()">start presence</button>
+		
+		<button onclick="localpresence.kill()">stop presence</button>
 
 	</div>
 
@@ -82,7 +88,13 @@
 
 
 
+			nx.onload = function() {
 
+				presencetog.on('*',function() {
+					localpresence = new presence()
+				})
+
+			}
 
 
 
