@@ -453,8 +453,8 @@ var Manager = module.exports = function() {
    * @memberOf Manager
    */
   this.stage = {
-    w: 800,
-    h: 600
+    w: 900,
+    h: 700
     //my screen is 800 x 1280
   }
 
@@ -901,6 +901,54 @@ Medium.prototype.all = function(method) {
  * @param {number} h  height in px
  */
 Medium.prototype.size = function(params,h) {
+
+	console.log("original size called")
+
+	/*console.log(this.video)
+	if (this.video) {
+		console.log("sizing video")
+		if (typeof params == "number") {
+			params = {
+				w: params,
+				h: h
+			}
+		}
+		console.log(h)
+		if (!h) {
+			params.h = params.w*this.video.videoHeight/this.video.videoWidth
+			console.log(params.h)
+		}
+		this.video.style.width = params.w ? params.w+"px" : this.defaultSize.w+"px";
+		this.video.style.height = params.h ? params.h+"px" : this.defaultSize.h+"px";
+	} else if (this.image) {
+		console.log("sizing image")
+		if (typeof params == "number") {
+			params = {
+				w: params,
+				h: h
+			}
+		}
+		console.log(h)
+		if (!h) {
+			params.h = params.w*this.image.imageHeight/this.image.imageWidth
+			console.log(params.h)
+		}
+		this.image.style.width = params.w ? params.w+"px" : this.defaultSize.w+"px";
+		this.image.style.height = params.h ? params.h+"px" : this.defaultSize.h+"px";
+	} else {
+		if (typeof params == "number") {
+			params = {
+				w: params,
+				h: h
+			}
+		}
+		for (var i = 0; i<this.element.length; i++) {
+			this.element[i].style.width = params.w ? params.w+"px" : this.defaultSize.w+"px";
+			this.element[i].style.height = params.h ? params.h+"px" : this.defaultSize.h+"px";
+		}
+	}
+	return this */
+
 	if (typeof params == "number") {
 		params = {
 			w: params,
@@ -941,7 +989,16 @@ Medium.prototype.kill = function() {
 	for (var i = 0; i<this.element.length; i++) {
 		this.element[i].parentNode.removeChild(this.element[i])
 	}
+	this._destroy()
 	m.media.splice(m.media.indexOf(this))
+}
+
+/**
+ * Empty function to be overwritten within each element if necessary
+ * Called by .kill()
+ */
+Medium.prototype._destroy = function() {
+	
 }
 
 /**
@@ -1376,7 +1433,7 @@ var Medium = require('../core/medium')
 
 var Film = module.exports = function(params) {
 
-	this.defaultSize = { w: 800, h: 800 }
+	this.defaultSize = { w: 900, h: 900 }
 
 	//this.src = false;
 	this.type = "canvas"
@@ -1480,15 +1537,16 @@ Film.prototype.stop = function() {
 Film.prototype.propogateMaster = function() {
 	for (var i=0;i<this.context.length;i++) {
 		//this.context[i].drawImage(this.master, this.zoomstate.x, this.zoomstate.y,this.zoomstate.level*this.width,this.zoomstate.level*this.height,0,0,this.width,this.height );
-		this.context[i].drawImage(this.master, 0, 0, this.width,this.height );
+		this.context[i].drawImage(this.master, 0, 0, this.master.width,this.master.height );
 	}
 }
 
 Film.prototype.draw = function() {
   if (this.video.paused || this.video.ended) return false;
+  if (!this.video) return false;
   //this.mastercontext.drawImage(this.video,0,0,this.master.width,this.master.height);
  	this.mastercontext.drawImage(this.video,0,0,this.width,this.width * this.video.videoHeight/this.video.videoWidth);
- 	console.log(this.width * this.video.videoWidth/this.video.videoHeight)
+ 	console.log("----", this.width, "-----")
  	if (this.grayscale) {
 
  	}
@@ -1499,7 +1557,13 @@ Film.prototype.draw = function() {
   setTimeout(this.draw.bind(this),20)
 }
 
-Film.prototype.pixelate = function() {
+Film.prototype.pixelate = function(degree) {
+
+	this.pixelated = true;
+
+	if (degree && degree > 0) {
+		this.pixelation = degree
+	}
 
 	if (this.pixelation < 10) {
 		this.pixelation = 10
@@ -1646,13 +1710,56 @@ Film.prototype.tick = function() {
 		var h = 70
 		var x = this.zoe.col * w
 		var y = this.zoe.row * h
-		console.log(x)
 		for (var i=0;i<this.spaces.length;i++) {
 			this.spaces[i].element.context.drawImage(this.element[i],x,y,w,h)
 		}
 		this.zoe.advance();
 		setTimeout(this.tick.bind(this),20)
 	}
+}
+
+Film.prototype.size = function(params,h) {
+
+	console.log(this.video)
+	if (this.video) {
+		console.log("sizing video")
+		if (typeof params == "number") {
+			params = {
+				w: params,
+				h: h
+			}
+		}
+		console.log(h)
+		if (!h) {
+			params.h = params.w*this.video.videoHeight/this.video.videoWidth
+			console.log(params.h)
+		}
+		this.video.width = this.width = params.w
+		this.video.height = this.height = params.h
+
+		this.video.style.width = params.w ? params.w+"px" : this.defaultSize.w+"px";
+		this.video.style.height = params.h ? params.h+"px" : this.defaultSize.h+"px";
+	} else {
+		console.log("sizin the second way")
+		if (typeof params == "number") {
+			params = {
+				w: params,
+				h: h
+			}
+		}
+		for (var i = 0; i<this.element.length; i++) {
+			this.element[i].style.width = params.w ? params.w+"px" : this.defaultSize.w+"px";
+			this.element[i].style.height = params.h ? params.h+"px" : this.defaultSize.h+"px";
+		}
+	}
+	return this
+}
+
+
+Film.prototype._destroy = function() {
+	this.stop()
+	//remove video element.. ? 
+	//remove master canvas.. ? 
 }
 
 
@@ -2279,10 +2386,12 @@ Map.prototype.goto = function(loc) {
 Map.prototype.stray = function(x,y) {
 	//console.log(this.map[0].zoom)
 	//console.log(this.widget)
-	var scale = Math.floor(Math.pow(19/this.map[0].zoom,3))/2
-	var relloc = {
-		lat: this.location.A + y * scale,
-		lng: this.location.F + x * scale
+	if (x && y) {
+		var scale = Math.floor(Math.pow(19/this.map[0].zoom,3))/2
+		var relloc = {
+			lat: this.location.A + y * scale,
+			lng: this.location.F + x * scale
+		}
 	}
 
 //	this.relloc = new google.maps.Geocoder();
@@ -2298,21 +2407,50 @@ Map.prototype.stray = function(x,y) {
 /** 
  * .
  */
-Map.prototype.route = function(start, end) {
-  start = start ? start : "Charlottesville, VA"
-  end = end ? end : "Missoula, MT"
-  var request = {
-      origin:start,
-      destination:end,
-      travelMode: google.maps.TravelMode.DRIVING
-  };
-  this.directionsService.route(request, function(response, status) {
-    if (status == google.maps.DirectionsStatus.OK) {
-		for (var i=0;i<this.directionsDisplay.length;i++) {
-			this.directionsDisplay[i].setDirections(response);
+Map.prototype.route = function() {
+
+	var routes = {
+		"youth": ["charlottesville, va","gambier, oh","missoula, mt","portland, or", "oakland, ca", "somerville, ma", "state college, pa", "baton rouge, la", "nashville, tn"]
+	}
+	var start, end;
+	console.log(arguments)
+	if (arguments.length > 0) {
+
+
+		console.log(arguments[0])
+		if (routes[arguments[0]]) {
+			arguments = routes[arguments[0]]
 		}
-    }
-  }.bind(this));
+		console.log(arguments)
+
+		start = arguments[0]
+		end = arguments[arguments.length-1]
+
+	  var request = {
+	      origin:start,
+	      destination:end,
+	      travelMode: google.maps.TravelMode.DRIVING
+	  };
+
+		if (arguments.length > 2) {
+			var waypoints = []
+			for (var i=1;i<arguments.length-1;i++) {
+				waypoints.push({
+	      	location: arguments[i],
+	      	stopover: true
+				})
+			}
+	  	request.waypoints = waypoints
+		}
+
+	  this.directionsService.route(request, function(response, status) {
+	    if (status == google.maps.DirectionsStatus.OK) {
+			for (var i=0;i<this.directionsDisplay.length;i++) {
+				this.directionsDisplay[i].setDirections(response);
+			}
+	    }
+	  }.bind(this));
+	}
 }
 
 /** 
@@ -2559,7 +2697,7 @@ var Medium = require('../core/medium')
  */
 var Photo = module.exports = function(params) {
 
-	this.defaultSize = { w: 800 }
+	this.defaultSize = { w: 900, h: 900 }
 	this.type = "canvas";
 
 	//separate item constructor "Medium" with properties for placement, animation, remove, make dom element, styling element based on json
@@ -2591,25 +2729,40 @@ var Photo = module.exports = function(params) {
 	this.image = new Image()
 
 	this.image.onload = function() {
-		this.width = this.image.width;
+		if (this.image.height > this.image.width) {
+
+			this._sizeAll(this.image.width)
+		} else {
+			console.log("second one")
+			console.log(this.defaultSize)
+			//var w = this.defaultSize.w * this.image.height/this.image.width
+			var w = this.defaultSize.w*this.image.naturalWidth/this.image.naturalHeight
+			console.log(w)
+			this._sizeAll(w)
+		}
+		
+	/*	this.width = this.image.width;
 		this.height = this.image.height
 
 		this.master.width = this.width;
 		this.master.height = this.height;
 		this.master.style.width = this.width;
-		this.master.style.height = this.height;
+		this.master.style.height = this.height; */
 		this.mastercontext.drawImage(this.image,0,0)
 
-		for (var i=0;i<this.context.length;i++) {
+		/*for (var i=0;i<this.context.length;i++) {
 			this.element[i].width = this.width;
 			this.element[i].height = this.height;
 			this.element[i].style.width = this.width;
 			this.element[i].style.height = this.height;
-		}
+		}*/
 		if (this.pixelated) {
 			this._pixelate()
 		}
-		this.propogateMaster();
+
+		//this.height = this.width*this.image.naturalHeight/this.image.naturalWidth
+		this.size(this.width,this.height)
+		this.propogateMaster()
 
 		//this.data = this.context[0].getImageData( 0, 0, this.width, this.height );
 		// dealing with image data
@@ -2623,6 +2776,7 @@ var Photo = module.exports = function(params) {
 
 	this.pixelated = false
 	this.pixelation = 30
+
 
 }
 
@@ -2696,7 +2850,6 @@ Photo.prototype.propogateMaster = function() {
 	for (var i=0;i<this.context.length;i++) {
 		this.context[i].drawImage(this.master, this.zoomstate.x, this.zoomstate.y,this.zoomstate.level*this.width,this.zoomstate.level*this.height,0,0,this.width,this.height );
 	}
-
 	console.log("propogated")
 }
 
@@ -2795,6 +2948,76 @@ Photo.prototype._pixelate = function() {
 
 }
 
+
+
+Photo.prototype.size = function(params,h) {
+
+	if (this.image) {
+		console.log("sizing video")
+		if (typeof params == "number") {
+			params = {
+				w: params,
+				h: h
+			}
+		}
+		console.log(params)
+		this._sizeAll(params.w,params.h)
+//		if (!h) {
+//			params.h = params.w*this.image.naturalHeight/this.image.naturalWidth
+//		}
+/*		this.image.width = this.width = params.w
+		this.image.height = this.height = params.h
+
+		this.image.style.width = params.w ? params.w+"px" : this.defaultSize.w+"px";
+		this.image.style.height = params.h ? params.h+"px" : this.defaultSize.h+"px";
+	*/
+
+		this.draw()
+	} else {
+		if (typeof params == "number") {
+			params = {
+				w: params,
+				h: h
+			}
+		}
+		for (var i = 0; i<this.element.length; i++) {
+			this.element[i].style.width = params.w ? params.w+"px" : this.defaultSize.w+"px";
+			this.element[i].style.height = params.h ? params.h+"px" : this.defaultSize.h+"px";
+		}
+	}
+	return this
+}
+
+
+Photo.prototype._destroy = function() {
+	//remove image element.. ? 
+	//remove master canvas.. ? 
+}
+
+Photo.prototype.draw = function() {
+	this.mastercontext.drawImage(this.image,0,0,this.image.width,this.image.height)
+	if (this.pixelated) {
+		this._pixelate()
+	}
+	this.propogateMaster()
+}
+
+Photo.prototype._sizeAll = function(w,h) {
+	if (!h) {
+		h = w*this.image.naturalHeight/this.image.naturalWidth	
+	}
+	this.master.width = this.image.width = this.width = Math.round(w)
+	this.master.height = this.image.height = this.height = Math.round(h)
+
+	for (var i = 0; i<this.element.length; i++) {
+		this.element[i].width = Math.round(w)
+		this.element[i].height = Math.round(h)
+		this.element[i].style.width = Math.round(w)+"px"
+		this.element[i].style.height = Math.round(h)+"px"
+	}
+}
+
+
 },{"../core/medium":4,"util":104}],17:[function(require,module,exports){
 var util = require('util');
 
@@ -2847,9 +3070,10 @@ var Presence = module.exports = function(params) {
 	
 	if (navigator.getUserMedia) {
 	  navigator.getUserMedia({audio: false, video: true}, function(stream) {
-	        this.video.src = window.URL.createObjectURL(stream);
-			this.localMediaStream = stream;
-			this.start();
+	      this.video.src = window.URL.createObjectURL(stream);
+				this.localMediaStream = stream;
+				this.start();
+				this.stream = stream
 	  }.bind(this),function(e) { console.log(e)}.bind(this));
 	}
 
@@ -2904,8 +3128,19 @@ Presence.prototype.start = function(src) {
 }
 
 Presence.prototype.stop = function(rate) {
+	console.log("stopping")
+	console.log(this.interval)
 	clearInterval(this.interval)
+	var track = this.stream.getTracks()[0]
+	console.log(track)
+	track.stop()
 }
+
+Presence.prototype.kill = function() {
+	this.stop()
+}
+
+// does not extend medium!
 
 },{"util":104}],18:[function(require,module,exports){
 var util = require('util');
@@ -3520,8 +3755,12 @@ Wall.prototype.trans = function(x,y,time) {
 Wall.prototype.shape = function(pattern,time) {
 	var patt = m.patterns[pattern];
 	for (var i=0;i<this.elements.length;i++) {
-		this.elements[i].size(patt[i%patt.length].w*m.stage.w,patt[i%patt.length].h*m.stage.h,0)
-		this.elements[i].move(patt[i%patt.length].x*m.stage.w+m.stage.x,patt[i%patt.length].y*m.stage.h+m.stage.y,time)
+		var w = eval(patt[i%patt.length].w)
+		var h = eval(patt[i%patt.length].h)
+		var x = eval(patt[i%patt.length].x)
+		var y = eval(patt[i%patt.length].y)
+		this.elements[i].size(w*m.stage.w,h*m.stage.h,0)
+		this.elements[i].move(x*m.stage.w+m.stage.x,y*m.stage.h+m.stage.y,time)
 	}
 
 

@@ -1,37 +1,51 @@
 Next steps
 ==========
 
-#playlistvis {
-	background-color:transparent;
-	opacity:1;
-	border:solid 0px black;
-}
-
-#code-typing {
-	border-top:none
-	height:22px
-	box-sizing:border-box
-}
-
-#presence {
-	border:none
-	height:300px
-	width:400px
-}
-
-.guides {
-	background-color:white
-}
-
-#shell {
-	background-color:white
-}
-
 
 // pixelate images.
-get presence working
-spruce up client codevis and move to client.html
-make starting shape (around the presence)
+// get presence working
+		resized to fit(?)
+// spruce up client codevis and move to client.html
+
+// increase stage size
+// make starting shape (around the presence)
+// turn computer loading sounds into indiv mp3 files
+// create bird video and test pixelation
+pixelation function not working
+	look at: 
+		// pixelate, 
+		size for image canvas 
+		//	-- needs auto height for image
+			//-- want it to fill screen totally?
+			//-- doesn't resize .. ?
+
+			// need to use video.width and video.height when drawing
+// presence.kill()
+
+create map multi-point directions text file
+create design fiction rapid-fire section w/ noise
+	add noise (tick?) to log
+create video rapidfire slideshow of lily images?
+
+	// images and videos -- when resizing width (only 1 argument), auto-adjust hieght
+
+connect audio to browser placement when window opens or moves
+	create general purpose sine wave (or one in each window?)
+
+examine text overlays --
+	visible
+	legible
+	well-placed
+
+helper funcs: alt("hide()","show()")
+or...
+hide() || show()
+pick("hide()","show()")
+
+NOTE: use letter numbers only with new media ... ???? that way you will not often get to 100, and the rest of the time it doesn't matter....
+
+note: using pixelated videos w/ pixelated presence is too much... use text for presence?
+
 // can't find: load dreaming font page and create it.
 // create code for ONE WORD section.
 	-- // needs: random timing
@@ -39,9 +53,9 @@ make starting shape (around the presence)
 	// -- needs: bomb() for media prototype
 make controller refresh cause the clients to refresh ... ?
 	or have a button that refresh's clients?
-create bird video and test pixelation
+
 // make recursive browsing video
-turn computer loading sounds into indiv mp3 files
+
 // assemble lilypond images and crunch them
 make controller text input area editable
 

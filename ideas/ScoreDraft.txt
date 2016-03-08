@@ -3,6 +3,7 @@
 Text score
 ============
 
+  ~ shape("frame") (or is this default?)
 1 ~ gif("heartbeat")
 2 ~ log().load("client.html")
 3 ~ empty().hear("         ").skip( , )
@@ -16,7 +17,25 @@ one word:
 7 ~ echo.time(.5)
 
 
+bird video:
+N ~ watch("birds").size(900)
+~ N pixelate(40)
+// looks great in frame mode
+
+
 
 lilypond:
 1 ~ see("score-2.png")
 2 ~ 1 load("score-"+random(0,10)+".png") @ 50
+
+
+wonderland & mac startup
+N ~ hear("mac")
+~ N skip(1,2)
+~ echo.time(0.3)
+~ echo.fb(0.8)
+~ bp.q(5,10)
+~ bp.freq(350,1500,20)
+~ N unskip()
+// wait for 3 repetitions
+~ N kill()
