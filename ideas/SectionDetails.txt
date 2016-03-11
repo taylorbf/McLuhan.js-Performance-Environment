@@ -120,6 +120,7 @@ synced with html5 audio player of guitar
 
 SILENT SKIP
 skipping a quicktime player full of silence -- purely visual
+need a word text to accompany it that indicates this is intentional ("there is always silence")
 
 MAPPING LIFE
 mapping everywhere i've lived
@@ -131,9 +132,10 @@ there is always - water, dusk, life, time, a path,
 there is never - 
 
 PHONE RING
-sound of a phone ring through a delay
+sound of a phone ring, then pitch shifted down, through a delay
 
 PHONE SCREENS
+phone screen icons, wandering to different configurations and pairings
 iphone screenshot webpage of "no government"
 
 RECURSIVE BROWSING

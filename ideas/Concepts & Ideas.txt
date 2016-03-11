@@ -1,4 +1,14 @@
 
+
+WINDOWS:
+remember to experiment with .scroll(), .move(), .size(), etc.
+	these are majorly interesting capabilities, more original than just video and audio playback.
+
+TEXTS
+there is always - water, dusk, time, noise, silence, growth, color, motion, light
+there is never - purity, lack, order, darkness, 
+
+
 MUSIC IDEAS
 Some old max patches to find good sounds:
 	Detuned horn rainbow2 using prepared.aiff

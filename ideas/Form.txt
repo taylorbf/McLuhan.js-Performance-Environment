@@ -1,7 +1,8 @@
 Last Cloud Compositional Form
 ============
 
-
+Need to add
+must add wiki in here!
 
 0'
 HEARTBEAT
@@ -14,7 +15,7 @@ MAPPING LIFE w/ ONE WORD
 2'
 Some text about living
 DELL ROAD
-life
+life:: contrasting videos of tech & nature, or wiki art/life
 FLOWER
 3'
 => LILYPOND
@@ -31,7 +32,7 @@ Video of carrying phone walking outside, looking at phone
 ALINA SNOW (same environment as past vid)
 7'
 NOW
-WONDERLAND w/ LOWLANDS
+WONDERLAND w/ LOWLANDS then boot sound
 8'
 END
 

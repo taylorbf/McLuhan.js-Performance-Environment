@@ -14,7 +14,7 @@ Next steps
 pixelation function not working
 	look at: 
 		// pixelate, 
-		size for image canvas 
+		// size for image canvas 
 		//	-- needs auto height for image
 			//-- want it to fill screen totally?
 			//-- doesn't resize .. ?
@@ -22,27 +22,43 @@ pixelation function not working
 			// need to use video.width and video.height when drawing
 // presence.kill()
 
-create map multi-point directions text file
-create design fiction rapid-fire section w/ noise
-	add noise (tick?) to log
-create video rapidfire slideshow of lily images?
+// create map multi-point directions
+	-- add into settings.json
 
-	// images and videos -- when resizing width (only 1 argument), auto-adjust hieght
+=============
+uuuup next...
+=============
+
+// create video rapidfire slideshow of lily images?
+
+Revisit TEXT media
+// reexamine text overlays
+	- randomize placement (via separate function) -- middle, 	corner
+	- turn wash and flip into own functions controlled by @, rather than creating own intervals withing wash function
+	- wash seems to skip a letter if at 300 ms?
+
+	implement && and ||
+
+
+create design fiction rapid-fire section 
+	w/ noise on each play ... but that may be separate
+	1 strobe && noise.vol(0.8,0,100) @ 100
+
+add a sound (tick?) to log -- separate!
 
 connect audio to browser placement when window opens or moves
 	create general purpose sine wave (or one in each window?)
-
-examine text overlays --
-	visible
-	legible
-	well-placed
+	create general purpose noise generator in main window
 
 helper funcs: alt("hide()","show()")
 or...
 hide() || show()
 pick("hide()","show()")
 
-NOTE: use letter numbers only with new media ... ???? that way you will not often get to 100, and the rest of the time it doesn't matter....
+what about doing two things at once? 
+1 tick() && 2 vol(1,0,1)
+
+NOTE: use new line numbers only with new media ... ???? that way you will not often get to 100, and the rest of the time it doesn't matter....
 
 note: using pixelated videos w/ pixelated presence is too much... use text for presence?
 
