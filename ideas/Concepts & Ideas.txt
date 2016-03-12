@@ -4,12 +4,16 @@ WINDOWS:
 remember to experiment with .scroll(), .move(), .size(), etc.
 	these are majorly interesting capabilities, more original than just video and audio playback.
 
+	grid of catherine videos...
+
 TEXTS
-there is always - water, dusk, time, noise, silence, growth, color, motion, light
+there is always - water, dusk, time, noise, silence, growth, color, motion (cath dance?), light
 there is never - purity, lack, order, darkness, 
 
 
 MUSIC IDEAS
+****Funnel all audio through skype and re-record it. Use those skype recordings as your audio material *****
+
 Some old max patches to find good sounds:
 	Detuned horn rainbow2 using prepared.aiff
 	probably dreams (new drum seq matrixctrl from TAing edgar's class)
@@ -19,7 +23,6 @@ include reflected dreams audio file from studio one
 possible sound samples to use: 
 benoit 
 http://pitchfork.com/reviews/albums/20304-sonnet/
-Funnel all audio through skype and re-record it. Use those skype recordings as your audio material
 	funnel fur alina through skype?
 digital sounds like mac turn on sound, gmail chat noise, facebook noise, computer error noise, phone sounds / rings?, text noise
 indian flute drone https://www.youtube.com/watch?v=xvWXCKygxJQ
@@ -64,8 +67,5 @@ focus on a bit of text changing font
 	w/ familiar divs turning into raindrops in a window. this can last for 1 minute.
 
 
-
-
-video of stepping onto a bus, a bus driver, "this is my life / wanting to help people and not knowing how"
 
 

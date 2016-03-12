@@ -198,14 +198,13 @@
 
 		var playlist = new LCPlaylist("playlist", function(data) {
 		
-		// data.index, data.command, data.event
-		// data.duration, data.reference
-		// 
-		console.log(data)
-		
-		// now send it to socket
-    socket.emit("senddata", "entry", data)
-
+			// data.index, data.command, data.event
+			// data.duration, data.reference
+			// 
+			console.log(data)
+			
+			// now send it to socket
+	    socket.emit("senddata", "entry", data)
 
 			//IF NO BEAT
 			if (!data.duration) {

@@ -46,6 +46,8 @@ create design fiction rapid-fire section
 
 add a sound (tick?) to log -- separate!
 
+morph dell sound (or phone sounds?) into birds then back then into wind
+
 connect audio to browser placement when window opens or moves
 	create general purpose sine wave (or one in each window?)
 	create general purpose noise generator in main window

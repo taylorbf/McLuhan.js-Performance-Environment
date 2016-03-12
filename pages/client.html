@@ -283,10 +283,40 @@
 
 		function evalIncomingEntry(data) {
 
+			//here exists:
+			//
+			console.log(data)
+
+			var data = createCodeGroups(data)
+
+
+			//data.gencode = createGens(data.index,data.code)
+			
+			distant.gens["line"+data.index] = []
+			for (var i=0;i<data.groups.length;i++) {
+				for (var j=0;j<data.groups[i].length;j++) {
+					data.groups[i][j].gencode = createGens(data.index,data.groups[i][j].code)
+				}
+			}
+			console.log("data.gencode",data.gencode)
+			console.log("data.code",data.code)
+
 			//IF NO BEAT
 			if (!data.duration) {
 
-				data.gencode = createGens(data.index,data.code)
+				chooseAndEval(data)
+
+			} else {
+
+				distant.intervals["line"+data.index] = interval(data.duration,function(data) {
+
+						chooseAndEval(data)
+
+				}.bind(this,data))
+
+			}
+
+/*
 				if (data.reference) {
 					// evalling with reference
 					with (m.variables[data.reference]) {
@@ -306,10 +336,6 @@
 				
 			//IF A BEAT		
 			} else {
-				console.log("a beat + right place")
-				console.log(data.duration)
-				
-				data.gencode = createGens(data.index,data.code)
 				distant.intervals["line"+data.index] = interval(data.duration,function(data) {
 						if (data.reference) {
 							with (m.variables[data.reference]) {
@@ -324,6 +350,8 @@
 				
 			}
 		
+*/
+
 		}
 
 		function removeEntry(data) {
@@ -345,70 +373,167 @@
 			distant.intervals["line"+data.index].ms(data.delay)
 
 		}
+		/* plan:
+				 in createcodegroups, split by || and &&
+				 store a reference for each, too!
+				 in creategens, do not set the gens to []
+				 do that in the createcodegroups func first
+				 then run a 'create gens' on each item in the new code array
+				 reformat if statement to fit....
+				 		if (duration)
+				 			for ()...
+				 				if (reference)
+
+				 	only try to store if newmedia is true
+			*/
+
+		function createCodeGroups(data) {
+
+			var command = data.code
+
+			var alts = command.split(" || ")
+			data.groups = []
+
+			for (var i=0;i<alts.length;i++) {
+				var group = alts[i].split(" && ")
+
+				console.log(group)
+
+				var pairs = []
+
+				for (var j=0;j<group.length;j++) {
+					console.log(j)
+					console.log(group[j])
+					var codeitem = {reference: false, code: false}
+					var firstword = group[j].split(" ")[0]
+					if (firstword==parseInt(firstword)) {
+						codeitem.reference = firstword
+						codeitem.code = group[j].slice(group[j].indexOf(" ")+1)
+					} else {
+						codeitem.code = group[j]
+					}
+					if (i==0 && j==0) {
+						codeitem.reference = data.reference
+					}
+					pairs.push(codeitem)
+				}
+				
+				data.groups.push( pairs )
+			}
+
+			return data
+
+		}
 
 
-	    /* Ben Library */
+		function chooseAndEval(data) {
 
-	    var Counter = function(limit) {
-	    	this.max = 0;
-	    	this.current = -1;
-	    	this.tick = function() {
-	    		this.current++;
-	    		if (this.current>=this.limit) {
-	    			this.current = 0;
-	    		}
-	    		return this.current;
-	    	}
-	    	this.downtick = function() {
-	    		this.current--;
-	    		if (this.current <= this.limit) {
-	    			this.current = this.limit-1;
-	    		}
-	    		return this.current;
-	    	}
-	    }
-
-	   // var colorcount = new Counter(rainbow.length);
+			console.log("chooseAndEval")
 
 
+			var chosen = data.groups[random(data.groups.length)]
+
+			console.log("chosen")
+			console.log(chosen)
+
+			for (var i=0;i<chosen.length;i++) {
+
+				var fragment = chosen[i]
+
+				console.log("fragment")
+				console.log(fragment)
+
+				if (data.reference) {
+					// evalling with reference
+					with (m.variables[fragment.reference]) {
+						eval(fragment.gencode)
+					}
+				} else {
+					// evalling with wall"
+					if (walls[data.wall]) {
+						with (eval(walls[data.wall])) {
+							m.variables[data.index] = eval(fragment.gencode)
+						}
+					} else {
+						// no wall, just try as is
+						m.variables[data.index] = eval(fragment.gencode)
+					}
+				}
+
+			}
+
+		}
 
 
-	    /* distant */
 
-    	var distant = {
-    		walls: {},
-    		createWall: function(nextcolor) {
-    			window[nextcolor] = new wall("line")
-    		},
-    		intervals: {},
-    		gens: {}
-    	}
 
-    	
-    	var createGens = function(index,code) {
-    		var gennames = ["bounce","gesture","markov","pick"]
-    		distant.gens["line"+index] = []
-    		for (var i=0;i<code.length;i++) {
-    			for (var j=0;j<gennames.length;j++) {
-    				if (code.slice(i).indexOf(gennames[j]+"(")==0) {
-    					var end = code.slice(i).indexOf(")")+i+1
-    					var linekey = "line"+index
-    					distant.gens[linekey].push({
-    						orig: code.slice(i,end), 
-    						type: gennames[j],
-    						start: i,
-    						end: end
-    					})
-    					var genIndex = distant.gens[linekey].length - 1
-    					code = code.replace(distant.gens[linekey][genIndex].orig,'distant.gens["'+linekey+'"]['+genIndex+'].generator.tick()')
-    				}
-    			}
+
+
+
+
+
+    /* Ben Library */
+
+    var Counter = function(limit) {
+    	this.max = 0;
+    	this.current = -1;
+    	this.tick = function() {
+    		this.current++;
+    		if (this.current>=this.limit) {
+    			this.current = 0;
     		}
-    		for (var i=0;i<distant.gens["line"+index].length;i++) {
-    			distant.gens["line"+index][i].generator = eval("new " + distant.gens["line"+index][i].orig[0].toUpperCase() + distant.gens["line"+index][i].orig.slice(1))
-    		}
-    		return code
+    		return this.current;
     	}
+    	this.downtick = function() {
+    		this.current--;
+    		if (this.current <= this.limit) {
+    			this.current = this.limit-1;
+    		}
+    		return this.current;
+    	}
+    }
+
+   // var colorcount = new Counter(rainbow.length);
+
+
+
+
+    /* distant */
+
+  	var distant = {
+  		walls: {},
+  		createWall: function(nextcolor) {
+  			window[nextcolor] = new wall("line")
+  		},
+  		intervals: {},
+  		gens: {}
+  	}
+
+  	
+  	var createGens = function(index,code) {
+  		var gennames = ["bounce","gesture","markov","pick"]
+  		// distant.gens["line"+index] = []
+  		for (var i=0;i<code.length;i++) {
+  			for (var j=0;j<gennames.length;j++) {
+  				if (code.slice(i).indexOf(gennames[j]+"(")==0) {
+  					var end = code.slice(i).indexOf(")")+i+1
+  					var linekey = "line"+index
+  					distant.gens[linekey].push({
+  						orig: code.slice(i,end), 
+  						type: gennames[j],
+  						start: i,
+  						end: end
+  					})
+  					var genIndex = distant.gens[linekey].length - 1
+  					code = code.replace(distant.gens[linekey][genIndex].orig,'distant.gens["'+linekey+'"]['+genIndex+'].generator.tick()')
+  				}
+  			}
+  		}
+  		for (var i=0;i<distant.gens["line"+index].length;i++) {
+  			distant.gens["line"+index][i].generator = eval("new " + distant.gens["line"+index][i].orig[0].toUpperCase() + distant.gens["line"+index][i].orig.slice(1))
+  		}
+  		return code
+  	}
 
 
 

@@ -2597,7 +2597,7 @@ Paper.prototype.readFile = function(file,callback) {
 /** 
  * .
  */
-Paper.prototype.write = function() {
+Paper.prototype.rewrite = function() {
 	for (var i=0;i<this.element.length;i++) {
 		this.element[i].innerHTML = this.text
 		this.element[i].style.margin = "25px"
