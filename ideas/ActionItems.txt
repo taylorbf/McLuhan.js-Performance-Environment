@@ -37,21 +37,25 @@ Revisit TEXT media
 	- turn wash and flip into own functions controlled by @, rather than creating own intervals withing wash function
 	- wash seems to skip a letter if at 300 ms?
 
-	implement && and ||
+//	implement && and ||
 
 
 create design fiction rapid-fire section 
 	w/ noise on each play ... but that may be separate
-	1 strobe && noise.vol(0.8,0,100) @ 100
+	1 next() && noise.vol(0.8,0,100) @ 100
 
 add a sound (tick?) to log -- separate!
+1 tick() && 2 jumpTo(0)
+(assuming 1 is a write() and 2 is an audio file of a tick)
 
-morph dell sound (or phone sounds?) into birds then back then into wind
+
+//morph dell sound (or phone sounds?) into birds then back then into wind
 
 connect audio to browser placement when window opens or moves
 	create general purpose sine wave (or one in each window?)
 	create general purpose noise generator in main window
 
+/*
 helper funcs: alt("hide()","show()")
 or...
 hide() || show()
@@ -60,9 +64,13 @@ pick("hide()","show()")
 what about doing two things at once? 
 1 tick() && 2 vol(1,0,1)
 
+*/
+
 NOTE: use new line numbers only with new media ... ???? that way you will not often get to 100, and the rest of the time it doesn't matter....
 
-note: using pixelated videos w/ pixelated presence is too much... use text for presence?
+note: using pixelated videos w/ pixelated presence is too much... use text for presence? or emojis? or...
+
+smaller presence
 
 // can't find: load dreaming font page and create it.
 // create code for ONE WORD section.

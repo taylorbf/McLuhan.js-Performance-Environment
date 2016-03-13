@@ -133,6 +133,8 @@ there is never -
 
 PHONE RING
 sound of a phone ring, then pitch shifted down, through a delay
+or
+dialtone enters with sounds of keypressing above it, then all pitch shifted down and some other sample enters over top in harmony
 
 PHONE SCREENS
 phone screen icons, wandering to different configurations and pairings

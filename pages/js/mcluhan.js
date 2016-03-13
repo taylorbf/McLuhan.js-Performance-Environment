@@ -573,6 +573,10 @@ var Manager = module.exports = function() {
   //this.pitch.ugen.connect(this.bp.ugen)
 
 
+
+  this.windowSines = []
+  this.windowSineIndex = 0
+
 }
 
 util.inherits(Manager, EventEmitter)
@@ -3489,11 +3493,13 @@ var Wall = module.exports = function(setting,limit) {
  */
 Wall.prototype.show = function() {
 
+	console.log("show called")
+
 	for (var i=0;i<this.elements.length;i++) {
 		//this.elements[i].show();
 		with (this.elements[i]) {
-			element.resizeTo(w,h)
-			element.moveTo(x,y)
+			size(w,h)
+			move(x,y)
 		}
 	}
 
@@ -3953,6 +3959,13 @@ var Window = module.exports = function(params) {
 	this.visible = false;
 	this.autoscroll = false;
 	this.empty()
+
+	this.vol = Tone.context.createGain()
+	this.pan = Tone.context.createStereoPanner()
+
+	this.pan.connect(this.vol)
+	this.vol.connect(m.pitch.ugen)
+
 	
 }
 
@@ -3987,6 +4000,31 @@ Window.prototype.show = function(params) {
 
 	// this.canvas and this.context
 	// are then created by the new window when loading
+	// 
+	
+	/* testing sine waves */
+	// this.sine = m.context.createOscillator()
+	// so will this osc be in the window, separate from all other fx?
+	// 		have own context here
+	// 		own panning
+	// 		auto destroyed
+	// 		not linked to other fx (verb, delay)
+	// 			ie have no control over sound then
+	// 		should these become a super quiet chord?
+	// 			OR CAN THEY! conect it to the fx... this is grea
+	// 			NOPE, different audio context, that's the prob.
+	// or be on the normal context, 
+	//		how will it be deleted? custom destroy?
+	//		Tone.polysynth? no panning
+	//		gotta do this one
+	//		create an array off of m or something
+	//		create a panning node
+	//		
+	// 
+	// 
+	// need it panned differently
+	// or will 
+	// 
 
 }
 
@@ -4111,6 +4149,35 @@ Window.prototype.move = function(x,y,time,callback) {
 		this.element.moveTo(this.element.screenX,cur)
 	}.bind(this))
 */
+
+	console.log(this.index)
+
+	if (this.index || this.index ===0) {
+	
+		m.windowSineIndex++ 
+
+		console.log("INDEX", m.windowSineIndex)
+
+		var windownum = spaces.indexOf(this)
+
+		m.windowSines[m.windowSineIndex] = Tone.context.createOscillator()
+		m.windowSines[m.windowSineIndex].connect(this.vol)
+
+		m.windowSines[m.windowSineIndex].frequency.value = Math.floor(y/100)*100 + Math.floor(x/100)*25
+		this.pan.pan.value = (x / (m.stage.w-m.stage.x)) * 2 - 1
+
+		var now = Tone.context.currentTime
+
+		m.windowSines[m.windowSineIndex].start(now + this.index/8)
+		this.vol.gain.linearRampToValueAtTime(1,now + 0.1)
+		this.vol.gain.linearRampToValueAtTime(0,now+.5)
+		m.windowSines[m.windowSineIndex].stop(Tone.context.currentTime + this.index/8 + .6)
+
+		if (m.windowSineIndex>100) {
+			m.windowSineIndex = 0
+		}
+
+	}
 
 }
 /** 
@@ -4289,7 +4356,7 @@ window.mtof = function(midi) {
     @param {float} [scale] Upper limit of random range.
     
 */
-window.random = function(scale,max) {
+window.r = window.random = function(scale,max) {
 	if (max) {
 		return Math.floor(Math.random() * (max-scale) + scale);
 	} else {
@@ -4389,8 +4456,9 @@ window.interval = function(rate,func) {
  * @param {number} [scale] 
  */
 window.rand = function(scale) {
-	return random.bind(null,scale)
+  return random.bind(null,scale)
 }
+
 
 /* use like this:
 
@@ -4402,6 +4470,15 @@ a.moveTo(rand(WIDTH),rand(HEIGHT))
 
 
 */
+
+window.pick = function() {
+
+  return arguments[random(arguments.length)]
+
+}
+
+
+
 
 /*
 ? ramp a variable, with jquery, maybe...

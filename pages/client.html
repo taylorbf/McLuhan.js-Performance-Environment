@@ -538,6 +538,100 @@
 
 
 
+  	/* Phone  -- this should all go in manager and be applied to window? */
+
+function PhoneEvent(context) {
+    this.context = m.context;
+    this.status = 0;
+
+    this.dialfreqs = {
+	    "1": {f1: 697, f2: 1209},
+	    "2": {f1: 697, f2: 1336},
+	    "3": {f1: 697, f2: 1477},
+	    "4": {f1: 770, f2: 1209},
+	    "5": {f1: 770, f2: 1336},
+	    "6": {f1: 770, f2: 1477},
+	    "7": {f1: 852, f2: 1209},
+	    "8": {f1: 852, f2: 1336},
+	    "9": {f1: 852, f2: 1477},
+	    "*": {f1: 941, f2: 1209},
+	    "0": {f1: 941, f2: 1336},
+	    "#": {f1: 941, f2: 1477}
+		}
+}
+
+PhoneEvent.prototype.setup = function(){
+    this.osc1 = Tone.context.createOscillator();
+    this.osc2 = Tone.context.createOscillator();
+    this.osc1.frequency.value = 0;
+    this.osc2.frequency.value = 0;
+
+    this.gainNode = Tone.context.createGain();
+    this.gainNode.gain.value = 0.25;
+
+    this.filter = Tone.context.createBiquadFilter();
+    this.filter.type = "lowpass";
+    this.filter.frequency = 8000;
+
+    this.osc1.connect(this.gainNode);
+    this.osc2.connect(this.gainNode);
+
+    this.gainNode.connect(this.filter);
+    this.filter.connect(Tone.context.destination);
+}
+
+PhoneEvent.prototype.start = function(freq1,freq2){
+		this.setup()
+    this.osc1.start(0)
+    this.osc2.start(0)
+    this.status = 1
+}
+
+PhoneEvent.prototype.stop = function(duration){
+    this.osc1.stop(duration || 0);
+    this.osc2.stop(duration || 0);
+    this.status = 0;
+}
+
+PhoneEvent.prototype.dialtone = function() {
+  this.start(350,440)
+}
+
+PhoneEvent.prototype.dial = function(number,duration) {
+  this.start(this.dialfreqs[number].f1,this.dialfreqs[number].f2)
+  this.stop(duration)
+}
+
+
+
+
+
+var Phone = function() {
+
+	this.dialtone = {
+		start: function() {
+			this.synth = new PhoneEvent()
+			this.synth.dialtone()
+		},
+		stop: function() {
+			this.synth.stop()
+		}
+	}
+
+	this.tones = []
+	this.toneIndex = 0
+
+}
+
+Phone.prototype.dial = function(number,duration) {
+
+	this.toneIndex++
+	this.tones[toneIndex] = new PhoneEvent()
+	this.tones[toneIndex].dial(number,duration)
+
+}
+
+phone = new Phone()
 
 
 
