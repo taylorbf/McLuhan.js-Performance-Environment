@@ -29,6 +29,18 @@ pixelation function not working
 uuuup next...
 =============
 
+
+test the phone ring!
+
+write code score for everything i can so far
+then write it for "now" section
+then choose more music to accompany
+	choose a tonic...
+
+
+
+
+
 // create video rapidfire slideshow of lily images?
 
 Revisit TEXT media
@@ -47,6 +59,7 @@ create design fiction rapid-fire section
 add a sound (tick?) to log -- separate!
 1 tick() && 2 jumpTo(0)
 (assuming 1 is a write() and 2 is an audio file of a tick)
+
 
 
 //morph dell sound (or phone sounds?) into birds then back then into wind

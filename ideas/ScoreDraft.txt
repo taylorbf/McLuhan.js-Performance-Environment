@@ -3,10 +3,19 @@
 Text score
 ============
 
-  ~ shape("frame") (or is this default?)
-1 ~ gif("heartbeat")
-2 ~ log().load("client.html")
-3 ~ empty().hear("         ").skip( , )
+even earlier:
+
+open window in "big1" mode -- should have a way to specify when wall is opened.
+
+~
+1 ~ show() || hide() @ 200
+2 ~ shape("frame")
+3 ~ shape("line") 
+ ~ shape("frame")
+ ~ gif("heartbeat")
+close(1)
+ ~ log().load("client.html")
+ ~ empty().hear("         ").skip( , )
 
 
 
@@ -25,8 +34,8 @@ N ~ watch("birds").size(900)
 
 
 lilypond:
-1 ~ see("score-2.png")
-2 ~ 1 load("score-"+random(0,10)+".png") @ 50
+N ~ see("score-2.png")
+2 ~ N load("score-"+random(0,10)+".png") @ 50
 
 
 wonderland & mac startup

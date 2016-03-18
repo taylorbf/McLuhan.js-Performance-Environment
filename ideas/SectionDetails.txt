@@ -22,8 +22,6 @@ html-gl it as water drips or pixelated
 		a sound for each text
 	the text sounds are made rapidly -- with each text
 		then are filtered into a pitch
-		then a phaser modulates their volume to form a beat
-		then this all happens again in a second window, to create a polyrhythm
 	cuts to a video -- of outside, nature
 
 

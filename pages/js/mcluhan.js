@@ -1472,7 +1472,14 @@ var Film = module.exports = function(params) {
 
 	this.video.addEventListener('play', this.draw.bind(this),false)
 
-
+	this.video.onload = function() {
+		console.log("video loading")
+		if (this.width == this.defaultSize.w) {
+			console.log("changing")
+			console.log(this.width*this.video.videoHeight/this.video.videoWidth)
+			this.size(this.width*this.video.videoHeight/this.video.videoWidth)
+		}
+	}.bind(this)
 
 	/* create hidden canvas */
 
@@ -1515,6 +1522,10 @@ util.inherits(Film, Medium);
 */
 Film.prototype.load = function(src) {
 	src ? this.video.src = "media/video/"+src+".mp4" : false;
+	if (this.video.complete) {
+		console.log("complete so onload happening again")
+	  this.video.onload()
+	}
 	this.play()
 }
 
@@ -1541,6 +1552,7 @@ Film.prototype.stop = function() {
 Film.prototype.propogateMaster = function() {
 	for (var i=0;i<this.context.length;i++) {
 		//this.context[i].drawImage(this.master, this.zoomstate.x, this.zoomstate.y,this.zoomstate.level*this.width,this.zoomstate.level*this.height,0,0,this.width,this.height );
+		this.context[i].clearRect(0,0,1000,1000)
 		this.context[i].drawImage(this.master, 0, 0, this.master.width,this.master.height );
 	}
 }
@@ -1548,9 +1560,17 @@ Film.prototype.propogateMaster = function() {
 Film.prototype.draw = function() {
   if (this.video.paused || this.video.ended) return false;
   if (!this.video) return false;
+  if (this.width == this.defaultSize.w && this.video.videoWidth) {
+		if (m.stage.w/m.stage.h <= this.video.videoWidth / this.video.videoHeight) {
+			//this.size((this.video.videoWidth/this.video.videoHeight) * m.stage.h)
+			this.size(this.video.videoWidth * (m.stage.h/this.video.videoHeight)  )
+		} else {
+			this.size(this.defaultSize.w + 1)
+		}	
+	
+	}
   //this.mastercontext.drawImage(this.video,0,0,this.master.width,this.master.height);
  	this.mastercontext.drawImage(this.video,0,0,this.width,this.width * this.video.videoHeight/this.video.videoWidth);
- 	console.log("----", this.width, "-----")
  	if (this.grayscale) {
 
  	}
@@ -1724,19 +1744,15 @@ Film.prototype.tick = function() {
 
 Film.prototype.size = function(params,h) {
 
-	console.log(this.video)
 	if (this.video) {
-		console.log("sizing video")
 		if (typeof params == "number") {
 			params = {
 				w: params,
 				h: h
 			}
 		}
-		console.log(h)
 		if (!h) {
 			params.h = params.w*this.video.videoHeight/this.video.videoWidth
-			console.log(params.h)
 		}
 		this.video.width = this.width = params.w
 		this.video.height = this.height = params.h
@@ -1744,7 +1760,6 @@ Film.prototype.size = function(params,h) {
 		this.video.style.width = params.w ? params.w+"px" : this.defaultSize.w+"px";
 		this.video.style.height = params.h ? params.h+"px" : this.defaultSize.h+"px";
 	} else {
-		console.log("sizin the second way")
 		if (typeof params == "number") {
 			params = {
 				w: params,
@@ -2287,6 +2302,11 @@ Log.prototype.stop = function(path) {
 }
 
 
+Log.prototype._destroy = function() {
+	this.stop() 
+}
+
+
 },{"../core/medium":4,"util":104}],14:[function(require,module,exports){
 var util = require('util');
 var Medium = require('../core/medium')
@@ -2601,7 +2621,7 @@ Paper.prototype.readFile = function(file,callback) {
 /** 
  * .
  */
-Paper.prototype.rewrite = function() {
+Paper.prototype.edit = function() {
 	for (var i=0;i<this.element.length;i++) {
 		this.element[i].innerHTML = this.text
 		this.element[i].style.margin = "25px"
@@ -3588,7 +3608,7 @@ Wall.prototype.write = function(msg,style,arg) {
 	_m.read(msg)
 	_m.wall = this;
 	if (!style) {
-		_m.write()
+		_m.edit()
 	} else if (style=="across") {
 		_m.writeAcross()
 	} else if (style=="flip") {
