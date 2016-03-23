@@ -3,11 +3,11 @@
 Text score
 ============
 
-even earlier:
+Opening audio gesture:
 
-open window in "big1" mode -- should have a way to specify when wall is opened.
 
-~
++ wall (big1)
+
 1 ~ show() || hide() @ 200
 2 ~ shape("frame")
 3 ~ shape("line") 
@@ -18,19 +18,110 @@ close(1)
  ~ empty().hear("         ").skip( , )
 
 
-
 one word:
-(need a drone underneath... sine?)
-5 ~ hear("piano"+random(5)).move(random(700),random(400)).bomb(4000) @ random(4000)
-6 ~ echo.fb(0.7)
-7 ~ echo.time(.5)
+~ sine.freq(100)
+~ sine.vol(0.3)
+~ hear("piano"+r(5)).move(r(700),r(400)).bomb(4000) @ r(4000)
+clear heartbeat/log
+~ echo.fb(0.7)
+~ echo.time(.5)
 
+dreaming:
++ wall (grid4low)
+~ watch("bernie")
+~ write("browsing is dreaming") (except must happen in first wall(?) )
+
+end one word
+watch("browsing")
+
+mapping life:
+N ~ explore("america")
+~ N route("youth")
+
+NEED AUDIO FOR MAP SECTION
+
+~ write("i have lived across america")
+
+
+dell road:
+~ hear("boot")
 
 bird video:
 N ~ watch("birds").size(900)
 ~ N pixelate(40)
 // looks great in frame mode
 
+~ watch("road")
+
+
+
+life:
+N ~ hack("en.wikipedia.org/wiki/life")
+~ N load("en.wikipedia.org/wiki/"+alt("life","art"))
+
+// or -- ~ wiki("life")
+
+
+design fiction:
+N ~ write("poem")
+~ N flash() @ 130   //wash
+
+
+candle:
+~ watch("candle")
+~ hear("silence")
+~ write("there is always silence")
+
+
+proust:
+~ hack("proust poem")
+
+text poem:
+N ~ sms("word1")
+~ N.add("word2")
+~ N.add("word3")
+~ N.add("word4")
+~ N.rapid() @ 50
+//(or could make this funny...)
+
+
+phone:
+N ~ see("ios")   // need to change file to jpg
+~ scramble() @ 50
+~ phone.dialtone.start()
+~ shape(pick("frame", ..., ...)) @ 700 
+
+hack("nogovernment")
+
+now:
+see("now")
+siri("now") @ 500
+echo.fb(0.7)
+bp.freq(100,5)
+N ~ sms("now")
+~ N tick() @ 100
+bp.q(70,10)
+kick() @ random(10)*200
+
+
+wonderland & mac startup
+watch("wonder1")
+N ~ hear("mac")
+~ N skip(1,2)
+~ echo.time(0.3)
+~ echo.fb(0.8)
+load("wonder2")
+~ bp.q(5,10)
+~ bp.freq(350,1500,20)
+~ N unskip()
+// wait for 3 repetitions
+~ N kill()
+load("wonder3")
+
+
+
+=====
+possibly out?
 
 
 lilypond:
@@ -38,13 +129,3 @@ N ~ see("score-2.png")
 2 ~ N load("score-"+random(0,10)+".png") @ 50
 
 
-wonderland & mac startup
-N ~ hear("mac")
-~ N skip(1,2)
-~ echo.time(0.3)
-~ echo.fb(0.8)
-~ bp.q(5,10)
-~ bp.freq(350,1500,20)
-~ N unskip()
-// wait for 3 repetitions
-~ N kill()

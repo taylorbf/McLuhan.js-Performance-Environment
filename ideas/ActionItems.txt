@@ -30,12 +30,29 @@ uuuup next...
 =============
 
 
-test the phone ring!
 
-write code score for everything i can so far
-then write it for "now" section
+
+// test the phone ring!
+
+// write code score for everything i can so far
+// 	fake musical selections and leave gaps as necessary
+//then write it for "now" section
+
+// ! proust poem page
+// ! no government page
+
 then choose more music to accompany
 	choose a tonic...
+	find audio files that i flubbed before
+	find more audio 
+		prepared dreams
+		old max patches
+		paulstretch.js
+
+then coordination for ongoing performance
+	refresh master = refresh audience
+	infinite or cyclic colors for walls
+
 
 
 

@@ -1,0 +1,79 @@
+Music Form
+============
+
+Need a tonicize function? blech... or in settings?
+
+	figure out different tonics
+		close enough to pitch shift?
+	displacement: G maj
+	dialtone: F maj
+	Lowlands: A maj
+
+
+need to do:
+
+
+
+	choose notes that will match displacement key
+	
+	shorten & export tick
+		how will it be played?
+	
+	pitch shift one word
+		noise reduce?...
+	
+	edit down prepared piano to be played during map section
+
+	// add noise generator for design
+
+	make silent mp3
+
+	// choose vibes for proust & phone
+
+
+
+---
+
+Windows opening up (key established)
+
+Log ticks rapid
+
+One Word (in a key -- which?)
+
+Mapping life (prepared piano & displacement)
+
+Dell Road
+
+Design fiction rapid noise
+
+Candle silence (silent skip)
+
+Proust Poem (vibes)
+
+Text poem ticks
+
+Phone - 
+	dialtone, dials, 
+	vibes or piano
+
+Video of outside / mic noise
+
+Siri saying "now"
+Text ticks again
+
+Video of outside
+
+Some tone to tide us over
+
+Lowlands voice & guitar
+	reverse boot drone underneat
+
+Dell boot into oblivion
+	(pitch shifted up 3 steps and up 10 cents )
+	sounds good in reverse too
+
+
+
+
+
+

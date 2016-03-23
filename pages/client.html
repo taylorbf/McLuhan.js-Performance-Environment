@@ -538,7 +538,22 @@
 
 
 
-  	/* Phone  -- this should all go in manager and be applied to window? */
+ /* 
+
+ PHONE  
+ -- this should all go in manager and be applied to window? 
+ 
+ API:
+
+ phone.dialtone.start()
+ phone.dialtone.stop()
+ phone.dial(1-9)
+ phone.dial(1-9,1)
+
+
+
+
+ */
 
 function PhoneEvent(context) {
     this.context = m.context;
@@ -567,29 +582,34 @@ PhoneEvent.prototype.setup = function(){
     this.osc2.frequency.value = 0;
 
     this.gainNode = Tone.context.createGain();
-    this.gainNode.gain.value = 0.25;
+    this.gainNode.gain.value = 0.75;
 
     this.filter = Tone.context.createBiquadFilter();
     this.filter.type = "lowpass";
-    this.filter.frequency = 8000;
+    this.filter.frequency.value = 8000;
 
     this.osc1.connect(this.gainNode);
     this.osc2.connect(this.gainNode);
 
     this.gainNode.connect(this.filter);
-    this.filter.connect(Tone.context.destination);
+    this.filter.connect(m.pitch.ugen);
 }
 
 PhoneEvent.prototype.start = function(freq1,freq2){
+		console.log(freq1,freq2)
 		this.setup()
+		this.osc1.frequency.value = freq1
+		this.osc2.frequency.value = freq2
     this.osc1.start(0)
     this.osc2.start(0)
     this.status = 1
 }
 
 PhoneEvent.prototype.stop = function(duration){
-    this.osc1.stop(duration || 0);
-    this.osc2.stop(duration || 0);
+		console.log("duration",duration)
+		duration = duration || 5
+    this.osc1.stop(Tone.context.currentTime + duration);
+    this.osc2.stop(Tone.context.currentTime + duration);
     this.status = 0;
 }
 
@@ -626,8 +646,8 @@ var Phone = function() {
 Phone.prototype.dial = function(number,duration) {
 
 	this.toneIndex++
-	this.tones[toneIndex] = new PhoneEvent()
-	this.tones[toneIndex].dial(number,duration)
+	this.tones[this.toneIndex] = new PhoneEvent()
+	this.tones[this.toneIndex].dial(number,duration)
 
 }
 
