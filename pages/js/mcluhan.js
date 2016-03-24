@@ -458,6 +458,8 @@ var Manager = module.exports = function() {
     //my screen is 800 x 1280
   }
 
+  this.tonic = 440
+
   this.stage.x = window.screen.width / 2 - this.stage.w / 2;
   this.stage.y = window.screen.height / 2 - this.stage.h / 2;
 
@@ -4183,7 +4185,13 @@ Window.prototype.move = function(x,y,time,callback) {
 		m.windowSines[m.windowSineIndex] = Tone.context.createOscillator()
 		m.windowSines[m.windowSineIndex].connect(this.vol)
 
-		m.windowSines[m.windowSineIndex].frequency.value = Math.floor(y/100)*100 + Math.floor(x/100)*25
+		//m.windowSines[m.windowSineIndex].frequency.value = Math.floor(y/100)*100 + Math.floor(x/100)*25
+		m.windowSines[m.windowSineIndex].frequency.value = (octave(Math.floor(y/100)-2)) * major[Math.floor(x/100) % major.length] * m.tonic
+		
+		console.log((octave(Math.floor(y/100)-2)))
+		console.log(major[Math.floor(x/100) % major.length])
+		console.log(m.tonic)
+
 		this.pan.pan.value = (x / (m.stage.w-m.stage.x)) * 2 - 1
 
 		var now = Tone.context.currentTime
@@ -4495,6 +4503,14 @@ window.pick = function() {
 
   return arguments[random(arguments.length)]
 
+}
+
+
+window.major = [1/1,9/8,5/4,4/3,3/2,5/3,15/8]
+
+
+window.octave = function(num) {
+  return Math.pow(2,num)
 }
 
 

@@ -2,27 +2,29 @@ Music Form
 ============
 
 Need a tonicize function? blech... or in settings?
+	adjusts dialtone too?
 
 	figure out different tonics
-		close enough to pitch shift?
-	displacement: G maj
-	dialtone: F maj
-	Lowlands: A maj
+	displacement: G maj  (down 3)
+	dialtone/vibes: F maj (down 1)
+	Lowlands/boot: A maj
 
 
 need to do:
 
-
-
-	choose notes that will match displacement key
+	choose browser notes that will match key of E
 	
-	shorten & export tick
+	// shorten & export tick
+		search for new one?
 		how will it be played?
+		hear("tick").stop()
+		N jumpTo(0).play() @ 100
+
+
+	// pitch shift one word
+		// noise reduce?...
 	
-	pitch shift one word
-		noise reduce?...
-	
-	edit down prepared piano to be played during map section
+	// edit down prepared piano to be played during map section
 
 	// add noise generator for design
 
@@ -73,6 +75,20 @@ Dell boot into oblivion
 	sounds good in reverse too
 
 
+
+
+------
+
+piano relationships:
+
+0: A1
+1: B1
+2: E4
+3: Gb4
+4: B5
+5: Ab6
+6: A7
+7: Eb7
 
 
 
