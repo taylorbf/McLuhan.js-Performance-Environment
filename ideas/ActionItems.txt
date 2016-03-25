@@ -25,10 +25,6 @@ pixelation function not working
 // create map multi-point directions
 	-- add into settings.json
 
-=============
-uuuup next...
-=============
-
 
 
 
@@ -41,20 +37,72 @@ uuuup next...
 // ! proust poem page
 // ! no government page
 
-then choose more music to accompany
-	choose a tonic...
-	find audio files that i flubbed before
-	find more audio 
-		prepared dreams
-		old max patches
+// then make more music to accompany
+	// choose a tonic
+		// prepared dreams
+		//old max patches
 		paulstretch.js
 
-then coordination for ongoing performance
-	refresh master = refresh audience
+=============
+uuuup next...
+=============
+
+// test music to make sure all turned out correctly
+	//run in browser too
+
+	lookin great tho!
+	"
+	i lived across america
+	finding life and art
+	life does not look like this
+	this is life
+	everywhere i go
+	there is always motion
+	there is always noise
+	there is always silence
+	there is always water
+	there is always reflection
+	there is always connection
+	there is always a dream
+	"
+
+// make client code area look better
+	//test out w/ showing in main windows
+
+//close the middle gap in "line" shape to 1-2 px
+
+// then coordination for ongoing performance
+	// refresh master = refresh audience
 	infinite or cyclic colors for walls
+	// or a command? reboot()
+
+// pixelation on video not working right on "birds"
+	// starts 100 px down
 
 
 
+change wall key code to be wall("line") -- i'm only creating it ocassionally anyway. ` can still cycle through them.
+
+connect audio to browser placement when window opens or moves
+	create general purpose sine wave (or one in each window?)
+	create general purpose noise generator in main window
+
+make controller text input area editable
+
+get parsedb connected... ?
+
+run as much of the piece as you can!
+	look at score and see whats still impossible
+	incorporate "material"
+	improv with it a bit more, too! (audio) (windows)
+
+still to do in score:
+	find first sound file to skip (E maj 7 chord? or A maj 7 guit? or la monte young chord?)
+	change random() to r() and rf()
+	make wall pattern "4low" (4 small in a row)
+	autoxray function
+	make wiki function that just hacks stuff
+	have a text area always writable to, and write in real time?
 
 
 
@@ -66,24 +114,19 @@ Revisit TEXT media
 	- turn wash and flip into own functions controlled by @, rather than creating own intervals withing wash function
 	- wash seems to skip a letter if at 300 ms?
 
-//	implement && and ||
-
-
-create design fiction rapid-fire section 
+	create design fiction rapid-fire section 
 	w/ noise on each play ... but that may be separate
 	1 next() && noise.vol(0.8,0,100) @ 100
 
-add a sound (tick?) to log -- separate!
-1 tick() && 2 jumpTo(0)
-(assuming 1 is a write() and 2 is an audio file of a tick)
+//	implement && and ||
+
+
+
+
 
 
 
 //morph dell sound (or phone sounds?) into birds then back then into wind
-
-connect audio to browser placement when window opens or moves
-	create general purpose sine wave (or one in each window?)
-	create general purpose noise generator in main window
 
 /*
 helper funcs: alt("hide()","show()")
@@ -107,15 +150,13 @@ smaller presence
 	-- // needs: random timing
 	-- // location for each audio player (.move)
 	// -- needs: bomb() for media prototype
-make controller refresh cause the clients to refresh ... ?
+// make controller refresh cause the clients to refresh ... ?
 	or have a button that refresh's clients?
 
 // make recursive browsing video
 
 // assemble lilypond images and crunch them
-make controller text input area editable
 
-get parsedb connected... ?
 
 bugs:
 audio not skipping correctly? what time scale is the input?

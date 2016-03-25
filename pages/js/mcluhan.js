@@ -766,7 +766,7 @@ Manager.prototype.patterns = {
     },
     {
       // offset so that the main window will show for intervals
-      x: 0.51,
+      x: 0.504,
       y: 0,
       w: .25,
       h: 1
@@ -1312,7 +1312,7 @@ var Cassette = module.exports = function(params) {
 	this.rate = 1;
 
 	this.setAll("controls", true);
-	this.setAll("volume", 0.5);
+	this.setAll("volume", 0.75);
 	this.loop();
 
 	/**
@@ -1420,6 +1420,18 @@ Cassette.prototype.speed = function(rate) {
 	if (rate) {
 		this.setAll("playbackRate",rate);
 		this.rate = rate;
+	}
+	return this;
+}
+
+/**
+ * Change the audio file's playback rate (does not change pitch!)
+ * @param  {float} rate Playback rate (0.25 - 4)
+ */
+Cassette.prototype.volume = function(level) {
+	if (level || level === 0) {
+		this.setAll("volume",level);
+		this.level = level;
 	}
 	return this;
 }
@@ -1595,7 +1607,7 @@ Film.prototype.pixelate = function(degree) {
 		this.pixelation = 10
 	}
 
-  var sourceWidth = this.video.width
+ /* var sourceWidth = this.video.width
   var sourceHeight = this.video.height
   var destX = this.master.width / 2 - sourceWidth / 2
   var destY = this.master.height / 2 - sourceHeight / 2
@@ -1604,6 +1616,15 @@ Film.prototype.pixelate = function(degree) {
   var sourceY = destY
 
   var imageData = this.mastercontext.getImageData(sourceX, sourceY, sourceWidth, sourceHeight);
+  
+	*/
+	var sourceWidth = this.master.width
+	var sourceHeight = this.master.height
+
+
+  var imageData = this.mastercontext.getImageData(0, 0, sourceWidth, sourceHeight);
+  
+
   var data = imageData.data;
 
   for(var y = 0; y < sourceHeight; y += this.pixelation) {
@@ -1625,7 +1646,7 @@ Film.prototype.pixelate = function(degree) {
   }
 
   // overwrite original image
-  this.mastercontext.putImageData(imageData, destX, destY)
+  this.mastercontext.putImageData(imageData, 0, 0)
 
 }
 
@@ -2256,9 +2277,7 @@ Log.prototype.write = function(text) {
  * .
  */
 Log.prototype.load = function(path) {
-	console.log(path)
 	$.get(path, function(data) {
-		console.log(data)
 		if (data) {
 			data = data.replace(/</g,"&lt;")
 			data = data.replace(/>/g,"&gt;")
@@ -2276,7 +2295,6 @@ Log.prototype.load = function(path) {
  * .
  */
 Log.prototype.tick = function() {
-	console.log(this.fulltext[this.currentLine])
 	this.write(this.fulltext[this.currentLine])
 	this.currentLine++
 	if (this.currentLine >= this.fulltext.length) {

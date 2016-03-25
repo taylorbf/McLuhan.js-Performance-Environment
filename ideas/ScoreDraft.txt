@@ -6,42 +6,48 @@ Text score
 Opening audio gesture:
 
 
-+ wall (big1)
-
-1 ~ show() || hide() @ 200
-2 ~ shape("frame")
-3 ~ shape("line") 
+1 ~ wall("big1")
+2 ~ show() || hide() @ 200
+3 ~ shape("frame")
+4 ~ shape("line") 
  ~ shape("frame")
  ~ gif("heartbeat")
-close(1)
+[x]2
  ~ log().load("client.html")
  ~ empty().hear("         ").skip( , )
-
+[x] heartbeat/log
 
 one word:
-~ sine.freq(100)
-~ sine.vol(0.3)
-~ hear("piano"+r(5)).move(r(700),r(400)).bomb(4000) @ r(4000)
-clear heartbeat/log
+~ sine.freq(100).vol(0.3)
+~ hear("piano"+r(5)).move(r(800),r(600)).bomb(4000) @ r(4000)
+~ xray()
 ~ echo.fb(0.7)
 ~ echo.time(.5)
 
+
+
 dreaming:
-+ wall (grid4low)
-~ watch("bernie")
-~ write("browsing is dreaming") (except must happen in first wall(?) )
+~ wall("4low")
+~ watch("skype")
+`
+~ hear("displacement")
+~ write("browsing is dreaming") (in first wall)
 
 end one word
-watch("browsing")
+echo.fb(0)
 
 mapping life:
+~ shape("line").xray()
 N ~ explore("america")
+~ hear("reflected")
 ~ N route("youth")
+~ write("i lived across america")
+M ~ wiki("life").fade(0.5)
+~ M load(alt("art","life")) @ 5000
+~ write("finding art and life")
 
-NEED AUDIO FOR MAP SECTION
-
-~ write("i have lived across america")
-
+~ gif("tv")
+~ write("this is not life")
 
 dell road:
 ~ hear("boot")

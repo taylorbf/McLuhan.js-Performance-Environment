@@ -95,13 +95,11 @@ show siri screen?
 
 ------
 
-1 ~ watch("mouse1")
+1 ~ watch("mouse1").pixelate()
 
-2 ~ 1 pixelate()
+2 ~ 1 pixelation = random(100) @ 100
 
-3 ~ 1 pixelation = random(100) @ 100
-
-4 ~ 1 pixelation-- @ 100
+3 ~ 1 pixelation-- @ 100
 
 maybe string together so already pixelated when first shown.
 

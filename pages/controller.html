@@ -98,6 +98,10 @@
 
 
 
+			window.onbeforeunload = function(){
+			  socket.emit("senddata", "reboot")
+			};
+
 
 
 
@@ -187,7 +191,7 @@
       }
     });
 
-		var rainbow = ["red", "orange", "green", "blue", "purple" ]
+		var rainbow = ["red", "orange", "green", "blue", "purple", "gray", "lightblue", "pink", "indigo" ]
 
 		var walls = []
 
