@@ -41,6 +41,9 @@ window.echo = m.echo;
 window.hall = m.hall;
 window.vol = m.vol;
 window.pan = m.pan;
+window.fx = m.fx;
+//window.sine = m.sine;
+//window.noise = m.noise;
 
 
 
@@ -482,14 +485,12 @@ var Manager = module.exports = function() {
  
   window.Tone = Tone
 
- /* // UGENS
-  this.player = new Tone.Player("./ambientcity.mp3")
-  Tone.Buffer.on("load",function(){
-    this.player.loop = true
-    this.player.start();
-  }.bind(this))
-*/
 
+  //fx is a gain node that all other audio media connects to
+  //this way, effects can be added or rearranged later without breaking code
+  //previously all audio media connected to m.pitch.ugen
+  //but that caused a problem if ever wanted to change the first effect from pitchshift to something else
+  this.fx = new Tone.Volume()
 
   //var pitch = new Tone.PitchShift()
   //pitch.pitch (STEPS) -- can use tune.js maybe?
@@ -570,11 +571,51 @@ var Manager = module.exports = function() {
     }
   }
 
-  this.pitch.ugen.chain(this.bp.ugen,this.echo.ugen,this.hall.ugen,this.vol.ugen,this.pan.ugen,Tone.Master)
-  //
-  //this.pitch.ugen.connect(this.bp.ugen)
+  this.fx.chain(this.pitch.ugen,this.bp.ugen,this.echo.ugen,this.hall.ugen,this.vol.ugen,this.pan.ugen,Tone.Master)
+  
 
 
+  /* create global generators */
+
+  this.sine = {
+    ugen: new Tone.Oscillator(),
+    gain: new Tone.Volume(),
+    freq: function() {
+      m.rampValue(this.ugen.frequency,arguments)
+    },
+    vol: function() {
+      m.rampValue(this.gain.volume,arguments)
+    },
+    start: function() {
+      this.ugen.start()
+    },
+    stop: function() {
+      this.ugen.stop()
+    }  
+  }
+  this.sine.ugen.chain(this.sine.gain,this.fx)
+
+
+
+  this.noise = {
+    ugen: new Tone.Noise(),
+    gain: new Tone.Volume(),
+    vol: function() {
+      m.rampValue(this.gain.volume,arguments)
+    },
+    start: function() {
+      this.ugen.start()
+    },
+    stop: function() {
+      this.ugen.stop()
+    }
+  }
+  this.noise.ugen.chain(this.noise.gain,this.fx)
+
+
+
+
+  /* window noises */
 
   this.windowSines = []
   this.windowSineIndex = 0
@@ -1322,7 +1363,7 @@ var Cassette = module.exports = function(params) {
 	this._b = new Array();
 	for (var i=0;i<this.element.length;i++) {
 		var tonesource = Tone.context.createMediaElementSource(this.element[i]);
-		tonesource.connect(m.pitch.ugen)
+		tonesource.connect(m.fx)
 		this._b.push(tonesource);
 	}
 	
@@ -3386,7 +3427,7 @@ var Voice = module.exports = function(params) {
 	}.bind(this.element,this.element))
 
     this.stream = Tone.context.createMediaElementSource(this.element)
-    this.stream.connect(m.pitch.ugen)
+    this.stream.connect(m.fx)
 
     //this.element.play()
 
@@ -4004,7 +4045,7 @@ var Window = module.exports = function(params) {
 	this.pan = Tone.context.createStereoPanner()
 
 	this.pan.connect(this.vol)
-	this.vol.connect(m.pitch.ugen)
+	this.vol.connect(m.fx)
 
 	
 }

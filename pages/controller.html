@@ -13,9 +13,6 @@
 	<script src="js/mcluhan.js"></script>
 	<link href='http://fonts.googleapis.com/css?family=Anonymous+Pro:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="css/coding.css">
-    <link href="./jcubic/css/jquery.terminal.css" rel="stylesheet"/>
-    <script src="./jcubic/js/jquery.mousewheel-min.js"></script>
-    <script src="./jcubic/js/jquery.terminal-min.js"></script>
 		<script src="js/jquery-ui.js"></script>
   </head>
   <body>
@@ -28,7 +25,36 @@
 
 		<div id="playlist"></div>
 
-		<div id="terminal" style="z-index:2;text-align:left;position:absolute;bottom:0px;width:100%"></div>
+
+		<div id="prompt">~</div>
+		<textarea id="codeinput"></textarea>
+
+		<style>
+			#prompt, #codeinput {
+				z-index:2;
+				text-align:left;
+				position:absolute;
+				bottom:0px;
+				border:solid 0px #0af;
+		    font-size:12pt;
+		    font-family: Anonymous Pro;
+		    padding: 8px 0px 8px 8px;
+		    height: 17px;
+		    outline:none;
+		    resize:none;
+		  }
+
+		  #codeinput {
+				width:93%;
+				left: 18px;
+		  }
+		  #prompt {
+				width:18px;
+				left: 0px;
+				background-color:#fff;
+				color:#333;
+		  }
+    </style>
 
 	</div>
 
@@ -140,56 +166,78 @@
   		intervals: {}
   	}
 
-		$('#terminal').terminal(function(command) {
-         	
-   
-			// WAS evalling code locally
-      	var info = Translate.toCode(command)
-     		playlist.add(command, info, local.context)
-     	//playlist.add(command, local.context)
+		var backlog = []
+		var backlogIndex = 0
 
-      // now send it to socket
-    /*  socket.emit("senddata", "entry",{
-      		command: command,
-      		code: info,
-      		wall: local.context
-      }) */
-  
+		$("#codeinput").keydown(function(e) {
+					console.log(e.which)
 
-     	return false;
-         	
-    }, {
-      completion: ["add"],
-      greetings: "",
-      prompt: "~ ",
-      keypress: function(e) {
-      	// ~   (shift ~, NOT cmd shift ~)
-      	if (e.which==126) {
-      		var nextcolor = rainbow[colorcount.tick()]
-      		//distant.walls[nextcolor] = new wall("line")
-  //SWAP    		
-  //distant.createWall(nextcolor);
-  //new:
-  				socket.emit('senddata','createwall',nextcolor)
-  				//
-      		local.context = nextcolor
-      		local.walls.push(nextcolor)
-      		$("#terminal").terminal().set_command("")
-      		$("#terminal .cmd").css("color", local.context)
-      		return false;
+				if (e.which==13) {
+					e.preventDefault()
 
-      	// `	
-      	} else if (e.which==96) {
-      		local.context = local.nextWall();
-      		//$("#terminal").terminal().set_command("")
-      		$("#terminal .cmd").css("color", local.context)
-      		return false;
+					// WAS evalling code locally
+					var command = $(this).val()
+					console.log(command)
 
-      	} else {
-      		socket.emit("senddata", "typing", $("#terminal .cmd span")[1].innerHTML + String.fromCharCode(e.which))
-      	}
-      }
-    });
+	      	var info = Translate.toCode(command)
+	     		playlist.add(command, info, local.context)
+
+	     		backlog.unshift(command)
+
+	     		$(this).val("")		  
+
+		     	return false;
+				} else if (e.which==38) {
+					//up arrow
+					e.preventDefault()
+					backlogIndex++
+					if (backlogIndex>=backlog.length) {
+						backlogIndex = 0
+					}
+					$(this).val( backlog[backlogIndex] )
+				} else if (e.which==40) {
+					//down arrow
+					e.preventDefault()
+					backlogIndex--
+					if (backlogIndex<0) {
+						backlogIndex = backlog.length-1
+					}
+					$(this).val( backlog[backlogIndex] )	
+				} 
+
+		})
+
+
+		$("#codeinput").keypress(function(e) {
+			
+			if (e.which==126) {
+    		// ~   (shift ~, NOT cmd shift ~)
+    		var nextcolor = rainbow[colorcount.tick()]
+    		
+				socket.emit('senddata','createwall',nextcolor)
+				
+    		local.context = nextcolor
+    		local.walls.push(nextcolor)
+    		$(this).val("")
+    		$("#prompt").css("color", local.context)
+    		return false;
+
+    	} else if (e.which==96) {
+    		// `
+    		local.context = local.nextWall();
+    		$("#prompt").css("color", local.context)
+    		return false;
+    	}
+
+    })
+
+
+		$("#codeinput").keyup(function() {
+			socket.emit("senddata", "typing", $("#codeinput").val())
+		})
+
+
+
 
 		var rainbow = ["red", "orange", "green", "blue", "purple", "gray", "lightblue", "pink", "indigo" ]
 

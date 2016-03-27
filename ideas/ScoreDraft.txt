@@ -41,93 +41,90 @@ mapping life:
 N ~ explore("america")
 ~ hear("reflected")
 ~ N route("youth")
-~ write("i lived across america")
+P  ~ write("i lived across america")
 M ~ wiki("life").fade(0.5)
 ~ M load(alt("art","life")) @ 5000
-~ write("finding art and life")
-
-~ gif("tv")
-~ write("this is not life")
+~ P rewrite("everywhere i go")
 
 dell road:
 ~ hear("boot")
 
 bird video:
-N ~ watch("birds").size(900)
+N ~ watch("birds")
+~ P rewrite("there is always motion")
 ~ N pixelate(40)
-// looks great in frame mode
-
-~ watch("road")
-
-
-
-life:
-N ~ hack("en.wikipedia.org/wiki/life")
-~ N load("en.wikipedia.org/wiki/"+alt("life","art"))
-
-// or -- ~ wiki("life")
-
+~ P rewrite("there is always noise")
+// ~ watch("road")
 
 design fiction:
 N ~ write("poem")
-~ N flash() @ 130   //wash
-
+~ N flash() && noise.vol(0.5,0,50) @ 100
 
 candle:
 ~ watch("candle")
 ~ hear("silence")
-~ write("there is always silence")
-
-
-proust:
-~ hack("proust poem")
-
-text poem:
-N ~ sms("word1")
-~ N.add("word2")
-~ N.add("word3")
-~ N.add("word4")
-~ N.rapid() @ 50
-//(or could make this funny...)
-
+~ P rewrite("there is always silence")
 
 phone:
 N ~ see("ios")   // need to change file to jpg
-~ scramble() @ 50
 ~ phone.dialtone.start()
-~ shape(pick("frame", ..., ...)) @ 700 
+~ phone.dialtone.dial(r(9),0.5) @ 100
+~ scramble() @ 50
+~ empty() 
 
-hack("nogovernment")
+text poem:
+N ~ sms("there")
+~ N add("is")
+~ N add("always")
+~ N add("connection")
+~ N rapid() && tick() @ 50
+//(or could make this funny... "u up?" "no im in a dream"
+
+reflection/proust:
+~ hear("vibes")
+N ~ hack("reflection")
+~ P rewrite("there is always reflection")
+~ N load("proust")
 
 now:
 see("now")
-siri("now") @ 500
+siri("nooooooooooooow") @ 500
 echo.fb(0.7)
 bp.freq(100,5)
 N ~ sms("now")
-~ N tick() @ 100
+~ N rapid() @ 100
 bp.q(70,10)
 kick() @ random(10)*200
 
 
-wonderland & mac startup
+wonderland
 watch("wonder1")
-N ~ hear("mac")
+N ~ hear("boot3")
 ~ N skip(1,2)
+
+Q ~ hear("lowlands")
+~ load("wonder2")
+
 ~ echo.time(0.3)
 ~ echo.fb(0.8)
-load("wonder2")
+
+load("wonder3")
+
 ~ bp.q(5,10)
 ~ bp.freq(350,1500,20)
 ~ N unskip()
-// wait for 3 repetitions
-~ N kill()
-load("wonder3")
+// wait 3x repetitions
+~ empty()
+~ kill()
+
+
+
+
 
 
 
 =====
-possibly out?
+possibly for long form?
 
 
 lilypond:

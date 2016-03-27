@@ -598,7 +598,7 @@ PhoneEvent.prototype.setup = function(){
     this.osc2.connect(this.gainNode);
 
     this.gainNode.connect(this.filter);
-    this.filter.connect(m.pitch.ugen);
+    this.filter.connect(m.fx);
 }
 
 PhoneEvent.prototype.start = function(freq1,freq2){

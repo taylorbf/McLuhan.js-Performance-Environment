@@ -60,7 +60,7 @@ uuuup next...
 	there is always motion
 	there is always noise
 	there is always silence
-	there is always water
+	there is always a medium
 	there is always reflection
 	there is always connection
 	there is always a dream
@@ -81,28 +81,45 @@ uuuup next...
 
 
 
-change wall key code to be wall("line") -- i'm only creating it ocassionally anyway. ` can still cycle through them.
+?? change wall key code to be wall("line") -- i'm only creating it ocassionally anyway. ` can still cycle through them.
 
-connect audio to browser placement when window opens or moves
-	create general purpose sine wave (or one in each window?)
-	create general purpose noise generator in main window
+// connect audio to browser placement when window opens or moves
+//	create general purpose sine wave (var sine)
+//	create general purpose noise generator in main window (var noise)
+//	make window.fx a gain node that all other audio media can connect into that leads directly to the fx chain (rather than connecting to m.pitch.ugen)
 
-make controller text input area editable
+// make controller text input area editable
+
+still to do in score:
+	find first sound file to skip (E maj 7 chord? or A maj 7 guit? or la monte young chord?)
+	change random() to r() and rf() (additional to random because random may be used in the code)
+	make wall pattern "4low" (4 small in a row)
+	autoxray function
+	make wiki function that bundles "hack" -- not needed? better to just be general.
+	have a text area always writable to, and write in real time?
+	find text for design fiction -- from gutenberg?
+	change ios file to jpg
+	make now.jpg
+	make general kick function? or use sine with vol?
+	investigate if siri "noooow" is in key of E or sounds OK
+	get movie from phone of my walking, or use vines of travel
+
+then try to screen capture a performance!
+
+
 
 get parsedb connected... ?
+put on heroku
 
 run as much of the piece as you can!
 	look at score and see whats still impossible
 	incorporate "material"
 	improv with it a bit more, too! (audio) (windows)
 
-still to do in score:
-	find first sound file to skip (E maj 7 chord? or A maj 7 guit? or la monte young chord?)
-	change random() to r() and rf()
-	make wall pattern "4low" (4 small in a row)
-	autoxray function
-	make wiki function that just hacks stuff
-	have a text area always writable to, and write in real time?
+
+Able to type the WAC score in 7 minutes.
+	(still might want to shorten or have more breathing room)
+	OK if 11 minutes though.
 
 
 
