@@ -76,9 +76,12 @@ function speak(text, args) {
     and in this function, just deal with creating the audio file and playing it.
    */
     siri.element.src = "data:audio/x-wav;base64,"+encode64(wav)
+    // siri.element.src = "/media/audio/piano0.mp3"
     //this was a major need:
     siri.element.crossOrigin = "Anonymous"
     siri.element.play()
+
+    console.log("playing")
   }
 
   function playAudioDataAPI(data) {

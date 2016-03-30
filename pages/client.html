@@ -130,14 +130,14 @@
 						m.mediapaths.images = data
 						mediatotal += m.mediapaths.images.length
 						for (var i=0;i<m.mediapaths.images.length;i++) {
-							console.log("load: "+m.mediapaths.images[i])
+							//console.log("load: "+m.mediapaths.images[i])
 							m.mediapaths.images[i] = {
 								path: m.mediapaths.images[i],
 								data: new Image()
 							}
 							m.mediapaths.images[i].data.onload = function(data) {
 								
-								console.log("loaded:", medialoaded)
+								//console.log("loaded:", medialoaded)
 								medialoaded++
 								NProgress.set(medialoaded/mediatotal)
 								if (medialoaded/mediatotal>=0.9) {
@@ -151,7 +151,7 @@
 						m.mediapaths.video = data
 						mediatotal += m.mediapaths.video.length
 						for (var i=0;i<m.mediapaths.video.length;i++) {
-							console.log("load: "+m.mediapaths.video[i])
+							//console.log("load: "+m.mediapaths.video[i])
 							m.mediapaths.video[i] = {
 								path: m.mediapaths.video[i],
 								data: document.createElement("video")
@@ -159,7 +159,7 @@
 							//console.log("====", m.media.video[i])
 							m.mediapaths.video[i].data.addEventListener('canplaythrough',function(data) {
 								
-								console.log(medialoaded/mediatotal)
+								//console.log(medialoaded/mediatotal)
 								medialoaded++
 								NProgress.set(medialoaded/mediatotal)
 								if (medialoaded/mediatotal>=0.9) {
@@ -173,16 +173,16 @@
 						m.mediapaths.audio = data
 						mediatotal += m.mediapaths.audio.length
 						for (var i=0;i<m.mediapaths.audio.length;i++) {
-							console.log("load: "+m.mediapaths.audio[i])
+							//console.log("load: "+m.mediapaths.audio[i])
 							m.mediapaths.audio[i] = {
 								path: m.mediapaths.audio[i],
 								data: new Audio()
 							}
 							m.mediapaths.audio[i].data.addEventListener('canplaythrough', function(data) {
-								console.log(data)
+								//console.log(data)
 								medialoaded++
 								NProgress.set(medialoaded/mediatotal)
-								console.log(medialoaded/mediatotal)
+								//console.log(medialoaded/mediatotal)
 								if (medialoaded/mediatotal>=0.9) {
 									NProgress.done()
 									$('#splash').fadeOut()
@@ -216,12 +216,12 @@
 	rcvPresence.canvas.height = rcvPresence.defaultSize.h;
 	rcvPresence.context = rcvPresence.canvas.getContext('2d');
 	rcvPresence.update = function(data) {
-		console.log(data[0][0])
+		//console.log(data[0][0])
     this.context.clearRect(0,0,this.canvas.width,this.canvas.height)
     //this.context.fillStyle = "#fff"
     //this.context.fillRect(0,0,this.canvas.width,this.canvas.height)
 		var dim = Math.floor(this.canvas.height / data.length)
-		console.log(dim)
+		//console.log(dim)
     var w = this.canvas.width
     var h = this.canvas.height
 	  for (var i=0;i<data.length;i++) {
@@ -290,8 +290,6 @@
 		function evalIncomingEntry(data) {
 
 			//here exists:
-			//
-			console.log(data)
 
 			var data = createCodeGroups(data)
 
@@ -304,8 +302,6 @@
 					data.groups[i][j].gencode = createGens(data.index,data.groups[i][j].code)
 				}
 			}
-			console.log("data.gencode",data.gencode)
-			console.log("data.code",data.code)
 
 			//IF NO BEAT
 			if (!data.duration) {

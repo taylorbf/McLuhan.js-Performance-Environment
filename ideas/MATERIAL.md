@@ -154,6 +154,28 @@ voice
 
 
 
+
+or:
+explore("atlanta")
+N marker()
+N info("<audio controls autoplay src='http://whitechord.org/DemS1.mp3'></audio>")
+
+
+for one word, killin it:
+-l 30 hear("piano"+i%5).move(0,i*27)
+
+needs be pushed into an array though
+
+
+
+
+
+
+
+
+
+
+
 ### Vine embed script
 
 <

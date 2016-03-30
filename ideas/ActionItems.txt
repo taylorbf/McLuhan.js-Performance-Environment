@@ -90,19 +90,55 @@ uuuup next...
 
 // make controller text input area editable
 
+
+bug fixes:
+	skip(0,0.1) doesn't work because starts with 0, needs a ===0
+	in text area, hitting enter needs to reset backlogIndex to 0
+	in text area, typing should be added to backlog[0], which should be empty otherwise
+	one word no longer works -- mediaelementsource not garbage collected!
+		4 ~ hear("piano"+random(5)).move(random(500),random(500)).bomb(4000) @ random(3000) + 200
+		investigating 
+		if never solved, can create another mcluhan media that is not connected to a mediaelementsource / fx. just a straight <audio>.
+	client onunload should close all windows
+	test //sine and noise
+	siri.say no longer working
+
+
 still to do in score:
-	find first sound file to skip (E maj 7 chord? or A maj 7 guit? or la monte young chord?)
-	change random() to r() and rf() (additional to random because random may be used in the code)
-	make wall pattern "4low" (4 small in a row)
-	autoxray function
-	make wiki function that bundles "hack" -- not needed? better to just be general.
-	have a text area always writable to, and write in real time?
-	find text for design fiction -- from gutenberg?
-	change ios file to jpg
-	make now.jpg
+	// find first sound file to skip (E maj 7 chord? or A maj 7 guit? or la monte young chord?)
+	// change random() to r() and rf() (additional to random because random may be used in the code)
+	// make wall pattern "4low" (4 small in a row)
+	move "frame" out of the way of the code window
+	// autoxray function
+	// make wiki function that bundles "hack" -- not needed? better to just be general.
+	// have a text area always writable to, and write in real time?
+	// find text for design fiction -- from gutenberg?
+	// find text for proust
+	// change ios file to jpg
+	// make now.jpg
 	make general kick function? or use sine with vol?
-	investigate if siri "noooow" is in key of E or sounds OK
+	investigate if siri "noooow" is in key of E or sounds OK - NO LONGER WORKING, switch?
 	get movie from phone of my walking, or use vines of travel
+
+	test all of these
+
+	plan is to...
+	// backup voice.js, cassette.js
+	integrate mespeak
+	// disconnect cassette from mediaelementsource.
+		// should also be simple
+	// make a new media: dj("piano") or the "dj" media 
+		// uses a tone.player? no media element
+		// connected through effects
+		// just expose the ugen api, basically, using shorthands
+	make sure DJ and Voice have a 'kill' method
+
+
+
+	better quality for reflected.mp3
+	add phone life videos
+	detune dialtone & dials to match vibes.
+
 
 then try to screen capture a performance!
 

@@ -14,12 +14,14 @@ Opening audio gesture:
  ~ gif("heartbeat")
 [x]2
  ~ log().load("client.html")
- ~ empty().hear("         ").skip( , )
+ ~ empty().hear("Emaj").skip(0.1,0.2)
 [x] heartbeat/log
+
+
 
 one word:
 ~ sine.freq(100).vol(0.3)
-~ hear("piano"+r(5)).move(r(800),r(600)).bomb(4000) @ r(4000)
+~ hear("piano"+r(7)).move(r(800),r(600)).bomb(10000) @ r(4000)
 ~ xray()
 ~ echo.fb(0.7)
 ~ echo.time(.5)
