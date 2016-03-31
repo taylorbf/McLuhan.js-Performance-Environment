@@ -1,6 +1,101 @@
 Next steps
 ==========
 
+// move "frame" out of the way of the code window
+find siri in key of E or that sounds OK 
+// get movie from phone of my walking, vines of travel
+// change wall key code to be wall("line") 
+// 	-- i'm only creating it ocassionally anyway. ` can still cycle through them.
+
+
+bug fixes:
+	// autofocus on code input area when page loads in controller
+	//skip(0,0.1) doesn't work because starts with 0, needs a ===0
+	//in text area, hitting enter needs to reset backlogIndex to -1
+	// in text area, typing should be added to backlog[0], which should be empty otherwise
+	
+	? client onunload should close all windows
+
+test: 
+	// r and rf(),
+	// wall "low",
+	// autoscroll(),
+	? make wiki function,
+	// ios image,
+	// now image,
+	// sine and noise
+
+infinite or cyclic colors for walls
+
+make sure DJ and Voice have a 'kill' method, and are highlighted
+
+better quality for reflected.mp3
+detune dialtone & dials to match vibes in key of E
+
+make sure "empty" also removes all elements of that wall from m.media and from the audiograph
+
+
+incorporate new one word:
+-l 30 hear("piano"+i%5).move(0,i*27).jumpTo(i%14)
+needs be pushed into an array though
+
+MIX all audio in studio one, maybe using the wavs.
+
+
+
+
+THEN:
+=====
+
+then try to screen capture a performance!
+
+get parsedb connected... ? -- can do after wac
+put on heroku -- can do after wac
+
+run as much of the piece as you can!
+	look at score and see whats still impossible
+	incorporate "material"
+	improv with it a bit more, too! (audio) (windows)
+
+
+
+
+Revisit TEXT media
+// reexamine text overlays
+	- randomize placement (via separate function) -- middle, 	corner
+	- turn wash and flip into own functions controlled by @, rather than creating own intervals withing wash function
+	- wash seems to skip a letter if at 300 ms?
+
+	create design fiction rapid-fire section 
+	w/ noise on each play ... but that may be separate
+	1 next() && noise.vol(0.8,0,100) @ 100
+
+
+
+
+lookin great tho!
+	"
+	i lived across america
+	finding life and art
+	life does not look like this
+	this is life
+	everywhere i go
+	there is always motion
+	there is always noise
+	there is always silence
+	there is always a medium
+	there is always reflection
+	there is always connection
+	there is always a dream
+	"
+
+
+man, wish i could incorporate!
+	paulstretch.js
+
+
+
+
 
 // pixelate images.
 // get presence working
@@ -41,7 +136,7 @@ pixelation function not working
 	// choose a tonic
 		// prepared dreams
 		//old max patches
-		paulstretch.js
+		
 
 =============
 uuuup next...
@@ -50,22 +145,7 @@ uuuup next...
 // test music to make sure all turned out correctly
 	//run in browser too
 
-	lookin great tho!
-	"
-	i lived across america
-	finding life and art
-	life does not look like this
-	this is life
-	everywhere i go
-	there is always motion
-	there is always noise
-	there is always silence
-	there is always a medium
-	there is always reflection
-	there is always connection
-	there is always a dream
-	"
-
+	
 // make client code area look better
 	//test out w/ showing in main windows
 
@@ -73,7 +153,6 @@ uuuup next...
 
 // then coordination for ongoing performance
 	// refresh master = refresh audience
-	infinite or cyclic colors for walls
 	// or a command? reboot()
 
 // pixelation on video not working right on "birds"
@@ -81,7 +160,7 @@ uuuup next...
 
 
 
-?? change wall key code to be wall("line") -- i'm only creating it ocassionally anyway. ` can still cycle through them.
+
 
 // connect audio to browser placement when window opens or moves
 //	create general purpose sine wave (var sine)
@@ -91,24 +170,12 @@ uuuup next...
 // make controller text input area editable
 
 
-bug fixes:
-	skip(0,0.1) doesn't work because starts with 0, needs a ===0
-	in text area, hitting enter needs to reset backlogIndex to 0
-	in text area, typing should be added to backlog[0], which should be empty otherwise
-	one word no longer works -- mediaelementsource not garbage collected!
-		4 ~ hear("piano"+random(5)).move(random(500),random(500)).bomb(4000) @ random(3000) + 200
-		investigating 
-		if never solved, can create another mcluhan media that is not connected to a mediaelementsource / fx. just a straight <audio>.
-	client onunload should close all windows
-	test //sine and noise
-	siri.say no longer working
-
 
 still to do in score:
 	// find first sound file to skip (E maj 7 chord? or A maj 7 guit? or la monte young chord?)
 	// change random() to r() and rf() (additional to random because random may be used in the code)
 	// make wall pattern "4low" (4 small in a row)
-	move "frame" out of the way of the code window
+	
 	// autoxray function
 	// make wiki function that bundles "hack" -- not needed? better to just be general.
 	// have a text area always writable to, and write in real time?
@@ -117,10 +184,8 @@ still to do in score:
 	// change ios file to jpg
 	// make now.jpg
 	make general kick function? or use sine with vol?
-	investigate if siri "noooow" is in key of E or sounds OK - NO LONGER WORKING, switch?
-	get movie from phone of my walking, or use vines of travel
 
-	test all of these
+	
 
 	plan is to...
 	// backup voice.js, cassette.js
@@ -131,45 +196,7 @@ still to do in score:
 		// uses a tone.player? no media element
 		// connected through effects
 		// just expose the ugen api, basically, using shorthands
-	make sure DJ and Voice have a 'kill' method
-
-
-
-	better quality for reflected.mp3
-	add phone life videos
-	detune dialtone & dials to match vibes.
-
-
-then try to screen capture a performance!
-
-
-
-get parsedb connected... ?
-put on heroku
-
-run as much of the piece as you can!
-	look at score and see whats still impossible
-	incorporate "material"
-	improv with it a bit more, too! (audio) (windows)
-
-
-Able to type the WAC score in 7 minutes.
-	(still might want to shorten or have more breathing room)
-	OK if 11 minutes though.
-
-
-
-// create video rapidfire slideshow of lily images?
-
-Revisit TEXT media
-// reexamine text overlays
-	- randomize placement (via separate function) -- middle, 	corner
-	- turn wash and flip into own functions controlled by @, rather than creating own intervals withing wash function
-	- wash seems to skip a letter if at 300 ms?
-
-	create design fiction rapid-fire section 
-	w/ noise on each play ... but that may be separate
-	1 next() && noise.vol(0.8,0,100) @ 100
+	
 
 //	implement && and ||
 

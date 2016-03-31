@@ -166,8 +166,8 @@
   		intervals: {}
   	}
 
-		var backlog = []
-		var backlogIndex = 0
+		var backlog = [""]
+		var backlogIndex = -1
 
 		$("#codeinput").keydown(function(e) {
 					console.log(e.which)
@@ -175,16 +175,31 @@
 				if (e.which==13) {
 					e.preventDefault()
 
-					// WAS evalling code locally
 					var command = $(this).val()
-					console.log(command)
+
+	     		backlog.splice(1,0,command)
 
 	      	var info = Translate.toCode(command)
-	     		playlist.add(command, info, local.context)
 
-	     		backlog.unshift(command)
+	     		$(this).val("")
 
-	     		$(this).val("")		  
+	     		backlogIndex = 0  
+
+	     		if (command.indexOf("wall(")===0) {
+	     			var nextcolor = rainbow[colorcount.tick()]
+
+	     			var shape = command.split('\"')[1]
+		    		
+						socket.emit('senddata','createwall',[nextcolor,shape])
+						
+		    		local.context = nextcolor
+		    		local.walls.push(nextcolor)
+		    		//$(this).val("")
+		    		$("#prompt").css("color", local.context)
+		    		return false;
+	     		} else {
+	     			playlist.add(command, info, local.context)
+	     		}
 
 		     	return false;
 				} else if (e.which==38) {
@@ -203,7 +218,9 @@
 						backlogIndex = backlog.length-1
 					}
 					$(this).val( backlog[backlogIndex] )	
-				} 
+				} else {
+					
+				}
 
 		})
 
@@ -234,8 +251,13 @@
 
 		$("#codeinput").keyup(function() {
 			socket.emit("senddata", "typing", $("#codeinput").val())
+
+    	if (backlogIndex===0) {
+				backlog[0] = $(this).val()
+			}
 		})
 
+		$("#codeinput").focus()
 
 
 
