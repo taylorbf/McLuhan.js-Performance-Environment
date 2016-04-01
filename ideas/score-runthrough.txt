@@ -1,0 +1,91 @@
+
+
+
+
+
+
+
+wall("big1")
+show() || hide() @ 200
+shape("frame")
+shape("line")
+shape("frame")
+gif("heartbeat")
+log().load("client.html")
+empty().hear("kajsdf").skip(2,2.1)
+
+sine.freq(100).vol(0.3)
+hear("piano"+r(5)).move(r(800),r(600)).bomb(4000) @ r(4000)
+xray()
+echo.fb(0.7)
+echo.time(.5)
+
+wall("low4")
+watch("skype")
+hear("displacement")
+write("browsing is dreaming")
+
+echo.fb(0)
+
+shape("line").xray()
+explore("america")
+hear("reflected")
+N route("youth")
+write("i lived across america")
+wiki("life").fade(0.5)
+M load(alt("art","life")) @ 5000
+P rewrite("everywhere I go")
+
+hear("boot")
+
+watch("birds")
+pixelate(40)
+
+watch("candle")
+hear("silence")
+
+see("ios")
+phone.dialtone.start()
+phone.dial(r(9),0.5) @ 100
+scramble() @ 50
+empty()
+
+sms("there")
+N add("is")
+N add("always")
+N add("connection")
+N rapid() && tick() @ 50
+
+hear("vibes")
+hack("reflection")
+rewrite("there is always reflection")
+N load("proust")
+
+see("now")
+siri("nooooooooooow") @ 500
+echo.fb(0.7)
+bp.freq(100,5)
+sms("now")
+N rapid() @ 100
+bp.q(70,10)
+kick() @ random(10)*200
+
+watch("wonder1")
+hear("boot3")
+N skip(1,2)
+hear("lowlands")
+load("wonder2")
+
+echo.time(0.3)
+echo.fb(0.8)
+
+load("wonder3")
+bp.q(5,10)
+bp.freq(350,1500,20)
+N unskip()
+empty()
+kill()
+
+
+all typed in ~ 7 minutes. naw... 54.5 to 01.5 = 7 min
+

@@ -25,23 +25,44 @@ test:
 	// now image,
 	// sine and noise
 
-infinite or cyclic colors for walls
 
-make sure DJ and Voice have a 'kill' method, and are highlighted
+// infinite or cyclic colors for walls
 
-better quality for reflected.mp3
-detune dialtone & dials to match vibes in key of E
+// make sure DJ and Voice have a 'kill' method, and are highlighted
+
+// better quality for reflected.mp3
+// turn down window sines
+? make sure window sines are panned correctly
+//detune dialtone & dials to match vibes in key of E
+// dj volume doesn't work
+// test all dj functions one by one
 
 make sure "empty" also removes all elements of that wall from m.media and from the audiograph
-
 
 incorporate new one word:
 -l 30 hear("piano"+i%5).move(0,i*27).jumpTo(i%14)
 needs be pushed into an array though
+====
+here:
+====
+MIX all audio in studio one, using the wavs.
+-- make pianos louder
+-- make displacement softer
+-- make prepareds softer
 
-MIX all audio in studio one, maybe using the wavs.
+Revisit TEXT media
+// reexamine text overlays
+	- randomize placement (via separate function) -- middle, 	corner
+	- turn wash and flip into own functions controlled by @, rather than creating own intervals withing wash function
+	- wash seems to skip a letter if at 300 ms?
+
+	create design fiction rapid-fire section 
+	w/ noise on each play ... but that may be separate
+	1 next() && noise.vol(0.8,0,100) @ 100
 
 
+
+CALL IT DONE
 
 
 THEN:
@@ -56,20 +77,6 @@ run as much of the piece as you can!
 	look at score and see whats still impossible
 	incorporate "material"
 	improv with it a bit more, too! (audio) (windows)
-
-
-
-
-Revisit TEXT media
-// reexamine text overlays
-	- randomize placement (via separate function) -- middle, 	corner
-	- turn wash and flip into own functions controlled by @, rather than creating own intervals withing wash function
-	- wash seems to skip a letter if at 300 ms?
-
-	create design fiction rapid-fire section 
-	w/ noise on each play ... but that may be separate
-	1 next() && noise.vol(0.8,0,100) @ 100
-
 
 
 
@@ -94,6 +101,9 @@ man, wish i could incorporate!
 	paulstretch.js
 
 
+
+bugs that can stay until after WAC:
+	wall.kill() does not remove it from local.walls within controller.html, nor does it switch the color of the ~ in controller, or change local.context in controller.
 
 
 

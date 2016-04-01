@@ -552,16 +552,14 @@
  phone.dial(1-9)
  phone.dial(1-9,1)
 
-
-
-
  */
 
-function PhoneEvent(context) {
-    this.context = m.context;
+function PhoneEvent(transposition) {
+	//	this.transposition = transposition
     this.status = 0;
 
-    this.dialfreqs = {
+    this._freqs = {
+    	"dialtone": {f1: 350, f2: 440},
 	    "1": {f1: 697, f2: 1209},
 	    "2": {f1: 697, f2: 1336},
 	    "3": {f1: 697, f2: 1477},
@@ -575,6 +573,12 @@ function PhoneEvent(context) {
 	    "0": {f1: 941, f2: 1336},
 	    "#": {f1: 941, f2: 1477}
 		}
+		this.dialfreqs = {}
+
+		console.log(transposition)
+		this.transpose(transposition)
+
+
 }
 
 PhoneEvent.prototype.setup = function(){
@@ -584,7 +588,7 @@ PhoneEvent.prototype.setup = function(){
     this.osc2.frequency.value = 0;
 
     this.gainNode = Tone.context.createGain();
-    this.gainNode.gain.value = 0.75;
+    this.gainNode.gain.value = 0.05;
 
     this.filter = Tone.context.createBiquadFilter();
     this.filter.type = "lowpass";
@@ -609,14 +613,14 @@ PhoneEvent.prototype.start = function(freq1,freq2){
 
 PhoneEvent.prototype.stop = function(duration){
 		console.log("duration",duration)
-		duration = duration || 5
+		duration = duration || 0
     this.osc1.stop(Tone.context.currentTime + duration);
     this.osc2.stop(Tone.context.currentTime + duration);
     this.status = 0;
 }
 
 PhoneEvent.prototype.dialtone = function() {
-  this.start(350,440)
+  this.start(this.dialfreqs["dialtone"].f1,this.dialfreqs["dialtone"].f2)
 }
 
 PhoneEvent.prototype.dial = function(number,duration) {
@@ -624,32 +628,59 @@ PhoneEvent.prototype.dial = function(number,duration) {
   this.stop(duration)
 }
 
+PhoneEvent.prototype.transpose = function(step) {
+	step = step || 0;
+  for (var key in this._freqs) {
+  	this.dialfreqs[key] = {
+  		f1: prune( this._freqs[key].f1 * Math.pow(2,step*100/1200), 8),
+  		f2: prune( this._freqs[key].f2 * Math.pow(2,step*100/1200), 8)
+  	}
+  	console.log(this._freqs[key])
+  	console.log(this.dialfreqs[key])
+  	console.log(step)
+  }
+}
+
 
 
 
 
 var Phone = function() {
+	var self = this
+
+	this.synth = false
 
 	this.dialtone = {
 		start: function() {
-			this.synth = new PhoneEvent()
-			this.synth.dialtone()
+			console.log(self.transposition)
+			self.synth ? self.synth.stop() : false;
+			self.synth = new PhoneEvent(self.transposition)
+			self.synth.dialtone()
 		},
 		stop: function() {
-			this.synth.stop()
+			self.synth.stop()
 		}
 	}
 
 	this.tones = []
 	this.toneIndex = 0
 
+	this.transposition = 0
+
 }
 
 Phone.prototype.dial = function(number,duration) {
 
 	this.toneIndex++
-	this.tones[this.toneIndex] = new PhoneEvent()
+	this.tones[this.toneIndex] = new PhoneEvent(this.transposition)
 	this.tones[this.toneIndex].dial(number,duration)
+
+}
+
+Phone.prototype.transpose = function(step) {
+
+	this.transposition = step
+	console.log(this.transposition)
 
 }
 

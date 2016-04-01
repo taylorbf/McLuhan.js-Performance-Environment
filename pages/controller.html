@@ -93,12 +93,10 @@
 			});
 
 			socket.on('updateusers', function (users) {
-				console.log($("#usertally").html())
 				$("#usertally").html("connected: " + users)
 			});
 
 			socket.on('discotally', function (disco) {
-				console.log(disco)
 				$("#discotally").html("disconnections: " + disco)
 			});
 
@@ -170,7 +168,6 @@
 		var backlogIndex = -1
 
 		$("#codeinput").keydown(function(e) {
-					console.log(e.which)
 
 				if (e.which==13) {
 					e.preventDefault()
@@ -186,15 +183,25 @@
 	     		backlogIndex = 0  
 
 	     		if (command.indexOf("wall(")===0) {
+
+	     			console.log("making a wall")
 	     			var nextcolor = rainbow[colorcount.tick()]
 
+	     			console.log(nextcolor)
 	     			var shape = command.split('\"')[1]
 		    		
+	     			console.log(shape)
 						socket.emit('senddata','createwall',[nextcolor,shape])
 						
 		    		local.context = nextcolor
-		    		local.walls.push(nextcolor)
-		    		//$(this).val("")
+
+	     			console.log(local.context)
+		    		if (local.walls.indexOf(nextcolor)<0) {
+		    			local.walls.push(nextcolor)
+		    		}
+
+	     			console.log(local.walls)
+
 		    		$("#prompt").css("color", local.context)
 		    		return false;
 	     		} else {
@@ -274,8 +281,7 @@
 		
 			// data.index, data.command, data.event
 			// data.duration, data.reference
-			// 
-			console.log(data)
+			
 			
 			// now send it to socket
 	    socket.emit("senddata", "entry", data)
@@ -284,21 +290,6 @@
 			if (!data.duration) {
 
 				//happens distantly
-				//SWAP
-				//new:
-  				
-		/*		data.gencode = createGens(data.index,data.code)
-				if (data.reference) {
-					with (m.variables[data.reference]) {
-						eval(data.gencode)
-					}
-				} else {
-					with (eval(data.wall)) {
-						console.log("no beat!")
-						console.log("with the "+this+" wall")
-						m.variables[data.index] = eval(data.gencode)
-					}
-				} */
 				
 			//IF A BEAT		
 			} else {
@@ -308,26 +299,6 @@
 				}.bind(playlist,data))
 
 				// happens distantly
-				// //SWAP
-				/*
-				
-				data.gencode = createGens(data.index,data.code)
-				distant.intervals["line"+data.index] = interval(data.duration,function(data) {
-						// distant
-						if (data.reference) {
-							with (m.variables[data.reference]) {
-								//happens distantly
-								eval(data.gencode)
-							}
-						} else {
-							with (eval(data.wall)) {
-								console.log(data.wall)
-								m.variables[data.index] = eval(data.gencode)
-							}
-						}
-				}.bind(this,data))
-				
-				*/
 				
 			}
 		
@@ -341,7 +312,7 @@
 	    /* Ben Library */
 
 	    var Counter = function(limit) {
-	    	this.max = 0;
+	    	this.limit = limit ? limit : 0;
 	    	this.current = -1;
 	    	this.tick = function() {
 	    		this.current++;

@@ -27,7 +27,7 @@ var LCPlaylist = function(parentID, cb) {
 
 	this.nexttitle = false;
 
-	this.highlighted = ["hear", "watch", "say", "write", "gif", "hack", "log", "explore", "see", "sms" ]
+	this.highlighted = ["hear", "watch", "say", "write", "gif", "hack", "log", "explore", "see", "sms", "voice", "dj" ]
 
 }
 
