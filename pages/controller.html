@@ -133,6 +133,7 @@
 
 
 
+
 		m.variables = []
 		
 		/*m = {
@@ -164,7 +165,15 @@
   		intervals: {}
   	}
 
-		var backlog = [""]
+
+  	if (localStorage["mcluhan-log"]) {
+			var backlog = JSON.parse(localStorage["mcluhan-log"])
+  	} else {
+			var backlog = [""]
+  	}
+  	if (!backlog.length) {
+  		backlog = [""]
+  	}
 		var backlogIndex = -1
 
 		$("#codeinput").keydown(function(e) {
@@ -175,6 +184,7 @@
 					var command = $(this).val()
 
 	     		backlog.splice(1,0,command)
+	     		localStorage["mcluhan-log"] = JSON.stringify(backlog)
 
 	      	var info = Translate.toCode(command)
 

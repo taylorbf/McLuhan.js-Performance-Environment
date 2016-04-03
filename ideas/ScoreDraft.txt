@@ -1,42 +1,136 @@
 
 ============
-Text score
+WAC score 
+============
+
+~ wall("big4") 
+~ show() || hide() @ 300
+~ shape("line")
+
+One word:
+~ piano = []
+[x] skip
+~ -l 22 piano[i] = hear("piano"+r(8)).move(0,i*30).jump(i%15) )
+
+~ dj("displacement")
+[x] P
+
+
+mapping life:
+R ~ explore("america")
+~ zoom(2)
+~ dj("reflected")
+~ R route("youth")
+S  ~ write("I lived across America")
+
+~ -l 20 piano[i].kill()
+
+~ watch("walk")
+~ write("this was life")
+~ load("tree")
+~ load("ride")
+~ load("sunset")
+~ load("mouse")
+~ scramble()
+
+[x] this was life
+
+~ xray()
+N ~ watch("birds")
+Q ~ hear("birdnoise")
+N pixelate()
+
+
+~ phone.dialtone.transpose(-1)
+
+N ~ see("ios")
+~ phone.dialtone.start()
+~ phone.dial(r(9),0.1) && scramble() @ 100
+~ empty() 
+
+N ~	text("full of dreams")
+~	N read("dreampoem").scroll()
+[x] dreampoem
+
+~ dj("vibes")
+N ~ hack("localhost/reflections")
+~ N load("localhost/proust")
+phone.dialtone.stop()
+
+~ see("now")
+N ~ dj("boot").move(50,50)
+echo.fb(0.7)
+~ N skip(1,3)
+
+Q ~ hear("lowlands")
+R ~ watch("wonder2")
+
+~ write("full of dreams")
+
+~ bp.q(5,10)
+~ bp.freq(350,1500,30)
+
+R ~ load("wonder3")
+
+~ R pixelate(50)
+~ size(200,200)
+~ scatter() @ 100
+~ kill()
+
+
+======
+SAVED SCRAPS
+======
+
+
+~ hear("silence").skip(0,2)
+
+google maps in fauve looks nice
+
+glitch mcluhan!
+
+what if have 2 walls -- one with 4 windows and one with 1 window (big1)?
+
+
+
+
+
+
+============
+OLD score
 ============
 
 Opening audio gesture:
 
 
-1 ~ wall("big1")
+1 ~ wall("big4")
 2 ~ show() || hide() @ 200
 3 ~ shape("frame")
 4 ~ shape("line") 
- ~ shape("frame")
  ~ gif("heartbeat")
+ ~ log().load("client.html") && tick()
 [x]2
- ~ log().load("client.html")
+ ~ shape("frame").show()
  ~ empty().hear("Emaj").skip(0.1,0.2)
-[x] heartbeat/log
-
 
 
 one word:
-~ sine.freq(100).vol(0.3)
-~ hear("piano"+r(7)).move(r(800),r(600)).bomb(10000) @ r(4000)
-~ xray()
-~ echo.fb(0.7)
-~ echo.time(.5)
-
+~ sine.freq(124.5).vol(0.85)
+~	shape("line")
+~ -l 30 hear("piano"+r(7)).move(0,i*23).jump(i%14) 
+~ sine.stop()
 
 
 dreaming:
-~ wall("4low")
+~ wall("low")
 ~ watch("skype")
 `
 ~ hear("displacement")
-~ write("browsing is dreaming") (in first wall)
+`
+~ write("browsing is dreaming")
 
-end one word
-echo.fb(0)
+end:
+empty().explore("america")
 
 mapping life:
 ~ shape("line").xray()

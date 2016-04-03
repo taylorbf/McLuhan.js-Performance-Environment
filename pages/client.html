@@ -445,7 +445,7 @@
 				console.log("fragment")
 				console.log(fragment)
 
-				if (data.reference) {
+				if (fragment.reference) {
 					// evalling with reference
 					with (m.variables[fragment.reference]) {
 						eval(fragment.gencode)

@@ -42,41 +42,69 @@ make sure "empty" also removes all elements of that wall from m.media and from t
 incorporate new one word:
 -l 30 hear("piano"+i%5).move(0,i*27).jumpTo(i%14)
 needs be pushed into an array though
+
 ====
 here:
 ====
 MIX all audio in studio one, using the wavs.
--- make pianos louder
--- make displacement softer
--- make prepareds softer
+// -- make pianos louder
+// -- make displacement softer
+// -- make prepareds softer
 
 Revisit TEXT media
 // reexamine text overlays
 	- randomize placement (via separate function) -- middle, 	corner
-	- turn wash and flip into own functions controlled by @, rather than creating own intervals withing wash function
-	- wash seems to skip a letter if at 300 ms?
+	// - turn wash and flip into own functions controlled by @, rather than creating own intervals withing wash function
+	// - wash seems to skip a letter if at 300 ms?
 
-	create design fiction rapid-fire section 
+	// create design fiction rapid-fire section 
 	w/ noise on each play ... but that may be separate
-	1 next() && noise.vol(0.8,0,100) @ 100
+	// 1 flash() && noise.vol(0.8,0,100) @ 100
+
+// make sine and noise have 0-1 volume
+// load dream text as a txt
+// make sure every function returns its media.
+// make the strobe alternate colors
 
 
 
 CALL IT DONE
+PHEW
+
+NEW BUGS, endless
+========
+// log() needs to delete its text when at a certain size -- its slowing down
+// window sines not working really at all -- mbe ditch?
+need a big4 wall shape to start
+create window.tick()
+ // move glitch images over, make mp4 video
+maybe have code entered into the top area of every wall? 
+	small black strip with white text?
+make low wall taller for skype vid
+take the filter off dj player
+CANNOT STOP DJ
+// must make wiki function, use idea of gif and of .prefix "en.wikipedia.org/wiki/"
+// lowlands sounds bad pitch shifted -- return to other key? with noise between. no window sines = no problem.
+use video of lowlands instead, in its own 1 window wall? 
+
+
+More material:
+10 ~ -l 4 elements[i].element.moveTo(r(1200),r(700)) @ 70
 
 
 THEN:
 =====
 
-then try to screen capture a performance!
-
-get parsedb connected... ? -- can do after wac
-put on heroku -- can do after wac
-
-run as much of the piece as you can!
-	look at score and see whats still impossible
+try a whole performance
 	incorporate "material"
 	improv with it a bit more, too! (audio) (windows)
+screen capture
+
+
+
+later:
+get parsedb connected... ? -- can do after wac
+put on heroku -- can do after wac
 
 
 
@@ -102,8 +130,10 @@ man, wish i could incorporate!
 
 
 
-bugs that can stay until after WAC:
+AFTER WAC
 	wall.kill() does not remove it from local.walls within controller.html, nor does it switch the color of the ~ in controller, or change local.context in controller.
+	load text from txt files into window.journal
+
 
 
 
