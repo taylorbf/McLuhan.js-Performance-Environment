@@ -1,0 +1,539 @@
+<!doctype html>
+<html>
+  <head>
+  <title>CONTROLLER</title>
+  <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<script src="/socket.io/socket.io.js"></script>
+   <script src="./jcubic/js/jquery-1.7.1.min.js"></script>
+	<script src="js/bt.js"></script>
+	<script src="js/lc-playlist-textinput.js"></script>
+	<script src="js/translator3.js"></script>
+	<script src="js/nexusUI.js"></script>
+	<script src="js/mcluhan.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Anonymous+Pro:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="css/coding.css">
+		<script src="js/jquery-ui.js"></script>
+  </head>
+  <body>
+
+	<div id="main">
+
+  	<!--<canvas id="presence" style="position:absolute;top:0px"></canvas> -->
+
+		<div id="playlist"></div>
+
+
+		<div id="prompt">~</div>
+		<textarea id="codeinput"></textarea>
+
+
+		<style>
+		#main {
+			width:100% !important;
+			border:none;
+			height:100px;
+		}
+		.playlist > .item {
+			float:left;
+			width:auto;
+		}
+		#playlist {
+			height:100px;
+		}
+		</style>
+
+		<style>
+			#prompt, #codeinput {
+				z-index:2;
+				text-align:left;
+				position:absolute;
+				bottom:0px;
+				border:solid 0px #0af;
+		    font-size:12pt;
+		    font-family: Anonymous Pro;
+		    padding: 8px 0px 8px 8px;
+		    height: 17px;
+		    outline:none;
+		    resize:none;
+		  }
+
+		  #codeinput {
+				width:93%;
+				left: 18px;
+		  }
+		  #prompt {
+				width:18px;
+				left: 0px;
+				background-color:#fff;
+				color:#333;
+		  }
+    </style>
+
+	</div>
+
+
+	<!--<div style="margin:30px auto 0px;font-size:10pt">Audience</div>-->
+
+	<div style="width:502px;margin:15px auto;border:solid 0px red;overflow:auto;display:none">
+
+		<div id="uservis" style="border:solid 2px black;width:350px;margin:0px;padding:10px;height:100px;float:left;box-sizing:border-box">
+			<div id="usertally">not connected</div>
+			<div id="discotally"></div>
+		</div>
+
+		<canvas id="presence" style="border:solid 2px black;width:142px;margin-left:10px;padding:0px;height:100px;float:left;box-sizing:border-box"></canvas>
+
+	<!--	<canvas nx="toggle" id="presencetog" style="border:solid 1px black"></canvas> -->
+		<button onclick="localpresence = new presence()" style="height:30px;width:auto;margin:10px">start presence</button>
+		
+		<button onclick="localpresence.kill()" style="height:30px;width:auto;margin:10px">stop presence</button>
+
+
+	</div>
+
+	<script>
+
+
+
+
+			var socket = io();
+
+			// chat data
+			socket.on('updatedata', function (type, data) {
+				if (type=="entry") {
+					
+				}
+			});
+
+			socket.on('updateusers', function (users) {
+				$("#usertally").html("connected: " + users)
+			});
+
+			socket.on('discotally', function (disco) {
+				$("#discotally").html("disconnections: " + disco)
+			});
+
+			socket.on('settings', function (settings) {
+				m.settings = settings
+				for (var key in settings.patterns) {
+					m.patterns[key] = m.settings.patterns[key]
+				}
+			});
+
+
+
+
+
+
+			nx.onload = function() {
+
+				presencetog.on('*',function() {
+					localpresence = new presence()
+				})
+
+			}
+
+
+
+			window.onbeforeunload = function(){
+			  socket.emit("senddata", "reboot")
+			};
+
+
+
+
+
+
+
+
+
+		m.variables = []
+		
+		/*m = {
+			variables: []
+		} */
+
+		
+
+	  var current = {
+  		wall: "",
+  		media: "",
+  		type: "",
+  		params: ""
+  	}
+
+  	var black = {test: "thing"}
+
+  	var local = {
+  		context: "black",
+  		walls: [],
+  		nextWall: function() {
+  			var colori = local.walls.indexOf(local.context)
+  			colori++
+  			if (colori >= local.walls.length) {
+  				colori = 0
+  			}
+  			return local.walls[colori];
+  		},
+  		intervals: {}
+  	}
+
+
+  	if (localStorage["mcluhan-log"]) {
+			var backlog = JSON.parse(localStorage["mcluhan-log"])
+  	} else {
+			var backlog = [""]
+  	}
+  	if (!backlog.length) {
+  		backlog = [""]
+  	}
+		var backlogIndex = -1
+
+		$("#codeinput").keydown(function(e) {
+
+				if (e.which==13) {
+					e.preventDefault()
+
+					var command = $(this).val()
+
+	     		backlog.splice(1,0,command)
+	     		localStorage["mcluhan-log"] = JSON.stringify(backlog)
+
+	      	var info = Translate.toCode(command)
+
+	     		$(this).val("")
+
+	     		backlogIndex = 0  
+
+	     		if (command.indexOf("wall(")===0) {
+
+	     			var nextcolor = rainbow[colorcount.tick()]
+
+	     			var shape = command.split('\"')[1]
+		    		
+						socket.emit('senddata','createwall',[nextcolor,shape])
+						
+		    		local.context = nextcolor
+
+		    		if (local.walls.indexOf(nextcolor)<0) {
+		    			local.walls.push(nextcolor)
+		    		}
+
+		    		$("#prompt").css("color", local.context)
+		    		return false;
+	     		} else {
+	     			playlist.add(command, info, local.context)
+	     		}
+
+		     	return false;
+				} else if (e.which==38) {
+					//up arrow
+					e.preventDefault()
+					backlogIndex++
+					if (backlogIndex>=backlog.length) {
+						backlogIndex = 0
+					}
+					$(this).val( backlog[backlogIndex] )
+				} else if (e.which==40) {
+					//down arrow
+					e.preventDefault()
+					backlogIndex--
+					if (backlogIndex<0) {
+						backlogIndex = backlog.length-1
+					}
+					$(this).val( backlog[backlogIndex] )	
+				} else {
+					
+				}
+
+		})
+
+
+		$("#codeinput").keypress(function(e) {
+			
+			if (e.which==126) {
+    		// ~   (shift ~, NOT cmd shift ~)
+    		var nextcolor = rainbow[colorcount.tick()]
+    		
+				socket.emit('senddata','createwall',nextcolor)
+				
+    		local.context = nextcolor
+    		local.walls.push(nextcolor)
+    		$(this).val("")
+    		$("#prompt").css("color", local.context)
+    		return false;
+
+    	} else if (e.which==96) {
+    		// `
+    		local.context = local.nextWall();
+    		$("#prompt").css("color", local.context)
+    		return false;
+    	}
+
+    })
+
+
+		$("#codeinput").keyup(function() {
+			socket.emit("senddata", "typing", $("#codeinput").val())
+
+    	if (backlogIndex===0) {
+				backlog[0] = $(this).val()
+			}
+		})
+
+		$("#codeinput").focus()
+
+
+
+		var rainbow = ["red", "orange", "green", "blue", "purple", "gray", "lightblue", "pink", "indigo" ]
+
+		var walls = []
+
+
+
+
+		/* INSTANCES */
+
+		var playlist = new LCPlaylist("playlist", function(data) {
+		
+			// data.index, data.command, data.event
+			// data.duration, data.reference
+			
+			
+			// now send it to socket
+	    socket.emit("senddata", "entry", data)
+
+			//IF NO BEAT
+			if (!data.duration) {
+
+				//happens distantly
+				
+			//IF A BEAT		
+			} else {
+				
+				local.intervals["line"+data.index] = interval(data.duration,function(data) {
+					this.ping(data)
+				}.bind(playlist,data))
+
+				// happens distantly
+				
+			}
+		
+
+		}.bind(window))
+
+
+
+
+
+	    /* Ben Library */
+
+	    var Counter = function(limit) {
+	    	this.limit = limit ? limit : 0;
+	    	this.current = -1;
+	    	this.tick = function() {
+	    		this.current++;
+	    		if (this.current>=this.limit) {
+	    			this.current = 0;
+	    		}
+	    		return this.current;
+	    	}
+	    	this.downtick = function() {
+	    		this.current--;
+	    		if (this.current <= this.limit) {
+	    			this.current = this.limit-1;
+	    		}
+	    		return this.current;
+	    	}
+	    }
+
+	    var colorcount = new Counter(rainbow.length);
+
+
+
+
+	    /* distant */
+
+    	var distant = {
+    		walls: {},
+    		createWall: function(nextcolor) {
+    			window[nextcolor] = new wall("line")
+    		},
+    		intervals: {},
+    		gens: {}
+    	}
+
+    	
+    	var createGens = function(index,code) {
+    		var gennames = ["bounce","gesture","markov"]
+    		distant.gens["line"+index] = []
+    		for (var i=0;i<code.length;i++) {
+    			for (var j=0;j<gennames.length;j++) {
+    				if (code.slice(i).indexOf(gennames[j]+"(")==0) {
+    					var end = code.slice(i).indexOf(")")+i+1
+    					var linekey = "line"+index
+    					distant.gens[linekey].push({
+    						orig: code.slice(i,end), 
+    						type: gennames[j],
+    						start: i,
+    						end: end
+    					})
+    					var genIndex = distant.gens[linekey].length - 1
+    					code = code.replace(distant.gens[linekey][genIndex].orig,'distant.gens["'+linekey+'"]['+genIndex+'].generator.tick()')
+    				}
+    			}
+    		}
+    		for (var i=0;i<distant.gens["line"+index].length;i++) {
+    			distant.gens["line"+index][i].generator = eval("new " + distant.gens["line"+index][i].orig[0].toUpperCase() + distant.gens["line"+index][i].orig.slice(1))
+    		}
+    		return code
+    	}
+
+
+
+
+
+
+
+
+
+
+
+
+   
+
+    	/* NEED TO BE ENCAPSULATED (in musicians toolkit?) */
+
+
+
+
+    	/* BOUNCE*/
+
+			function Bounce(lower,upper) {
+
+				this.value = lower
+
+				this.upper = Math.max(lower,upper)
+				this.lower = Math.min(lower,upper)
+
+				this.beats = 16
+
+				this.step = (this.upper - this.lower) / this.beats
+				this.direction = 1
+
+				this.tick = function() {
+					this.value += this.direction * this.step
+					if (this.value > this.upper) {
+						this.direction = -1
+						this.value = this.upper
+					} else if (this.value < this.lower) {
+						this.direction = 1
+						this.value = this.lower
+					}
+					return this.value
+				}
+			}
+
+
+			/* PICK*/
+
+			function Pick() {
+
+				this.choices = arguments
+
+				this.tick = function() {
+					return this.choices[random(this.choices.length)]
+				}
+
+			}
+
+
+
+
+
+
+			/* GESTURE */
+
+			_Gesture1Buffer = [
+					{x: 0, y: 1 },
+					{x: 1, y: 0 }
+			]
+
+			var Gesture = function(xlow,xhigh) {
+
+				var ylow = 0
+				var yhigh = 0
+
+				this.buffer = _Gesture1Buffer
+			
+				this.bufferIndex = 0
+				this.speed = 1
+				this.limit = 100
+
+				this.range = {
+					x: [ xlow ? xlow : 0 , xhigh ? xhigh : 1 ],
+					y: [ ylow ? ylow : 0 , yhigh ? yhigh : 1 ]
+				}
+
+			}
+
+			Gesture.prototype.setBuffer = function(buff) {
+				this.buffer = buff ? buff : this.buffer
+				
+			}
+
+			Gesture.prototype.kill = function() {
+			}
+
+			Gesture.prototype.tick = function() {
+
+				this.bufferIndex += this.speed
+				this.bufferIndex %= this.limit
+
+				var interval = this.limit / this.buffer.length;
+
+				var lowerIndex = Math.floor(this.bufferIndex/interval)
+				var upperIndex = lowerIndex + 1
+
+				upperIndex %= this.buffer.length
+
+				var interpDistance = (this.bufferIndex - lowerIndex*interval) / interval
+
+				var x = interp(interpDistance, this.buffer[lowerIndex].x,this.buffer[upperIndex].x)
+				var y = interp(interpDistance, this.buffer[lowerIndex].y,this.buffer[upperIndex].y)
+
+				x *= scale(x,0,1,this.range.x[0],this.range.x[1])
+
+				return x
+
+			}
+
+			/* PATTERN */
+
+
+
+
+			/* WANDER */
+
+
+
+//what kind of code?
+//
+//major(wander(20,70))
+//markov(majorscale)
+//markov(majorscale) .... really don't need to do 'major' stuff yet. going to focus on samples.
+//
+//pattern(0,10,8) could mean create a dream6 style pattern out of 8 divisions of 0 and 10
+//wander(0,10) could mean wander by step (1? 0.1?) between 0 and 10
+
+
+	
+
+
+
+
+	</script>
+
+  </body>
+</html>

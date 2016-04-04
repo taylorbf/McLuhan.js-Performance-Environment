@@ -3,13 +3,16 @@
 WAC score 
 ============
 
+TYPE THIS FIRST
+~ -l 22 piano[i] = hear("piano"+r(8)).move(0,i*30).jump(i%15) )
+
+
+Start:
 ~ wall("big4") 
 ~ show() || hide() @ 300
 ~ shape("line")
 
-One word:
 ~ piano = []
-[x] skip
 ~ -l 22 piano[i] = hear("piano"+r(8)).move(0,i*30).jump(i%15) )
 
 ~ dj("displacement")
@@ -18,64 +21,52 @@ One word:
 
 mapping life:
 R ~ explore("america")
-~ zoom(2)
+~ xray()
+~ R zoom(2)
 ~ dj("reflected")
 ~ R route("youth")
 S  ~ write("I lived across America")
 
-~ -l 20 piano[i].kill()
-
 ~ watch("walk")
+
 ~ write("this was life")
 ~ load("tree")
 ~ load("ride")
 ~ load("sunset")
-~ load("mouse")
-~ scramble()
+
+~ -l 20 piano[i].kill()
 
 [x] this was life
 
-~ xray()
 N ~ watch("birds")
-Q ~ hear("birdnoise")
+Q ~ dj("birdnoise")
 N pixelate()
+N pixelate(200)
 
+~ phone.transpose(-1)
+empty()
 
-~ phone.dialtone.transpose(-1)
-
-N ~ see("ios")
 ~ phone.dialtone.start()
-~ phone.dial(r(9),0.1) && scramble() @ 100
-~ empty() 
-
-N ~	text("full of dreams")
-~	N read("dreampoem").scroll()
-[x] dreampoem
-
+N ~ see("ios")
+scramble() @ 50
 ~ dj("vibes")
-N ~ hack("localhost/reflections")
-~ N load("localhost/proust")
-phone.dialtone.stop()
+~ watch("skype")
+~ xray()
+~ hack("whitechord.org/dreams").fade(0.4)
 
-~ see("now")
-N ~ dj("boot").move(50,50)
-echo.fb(0.7)
-~ N skip(1,3)
+~ empty()
 
-Q ~ hear("lowlands")
-R ~ watch("wonder2")
+N ~ hear("Emaj").skip(1,1.1)
+~ N move(300,300)
+Q ~ hear("piano1").skip(0,5)
 
-~ write("full of dreams")
-
-~ bp.q(5,10)
-~ bp.freq(350,1500,30)
-
-R ~ load("wonder3")
-
-~ R pixelate(50)
+~ watch("wonder2").pixelate(100)
 ~ size(200,200)
-~ scatter() @ 100
-~ kill()
+~ scatter(1200,700) @ 50
+~ phone.dialtone.stop() && kill()
+
+
+
 
 
 ======

@@ -54,12 +54,12 @@ immediate action:
 make killing walls work better
 // make wiki media
 // turn off window sines
-crunch piano samples in switch?
+// crunch piano samples in switch?
 // make "text" highlighted
 // delete text over a certain amount
 make lowlands video 
 	bounce from youtube or make in imovie with image
-make bp start with Q 0
+// make bp start with Q 0
 // make wall.scatter which loops through window elements
 // log() needs to delete its text when at a certain size -- its slowing down
 // window sines not working really at all -- mbe ditch?
@@ -69,15 +69,25 @@ create window.tick()
 maybe have code entered into the top area of every wall? 
 	small black strip with white text?
 make low wall taller for skype vid
-take the filter off dj player
-CANNOT STOP DJ
+// take the filter off dj player
 // must make wiki function, use idea of gif and of .prefix "en.wikipedia.org/wiki/"
 // lowlands sounds bad pitch shifted -- return to other key? with noise between. no window sines = no problem.
 use video of lowlands instead, in its own 1 window wall? 
 rename boot3 to boot
-take out all the console logs
+// take out all the console logs
 empty() should also loop through m.media and remove any with this wall
-user orig wonderland video, or cut QT out of it
+
+use orig wonderland video, or cut QT out of it
+
+upload proust to whitechord under a different name
+
+test whitechord.org/dreams
+
+
+
+
+
+
 
 
 

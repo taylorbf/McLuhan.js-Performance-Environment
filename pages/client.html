@@ -35,7 +35,7 @@
 				
 				<div id="code-entries" style="position:absolute;bottom:17px;font-size:15px;line-height:1.5em;text-align:left;height:auto;padding:5px;font-family:'Anonymous Pro';letter-spacing: 0.3px;color: #222;"></div>
 
-				<div id="code-typing" style="position:absolute;bottom:6px;font-size:15px;text-align:left;padding:5px;width:100%;height:22px;box-sizing:border-box;line-height:1.5em;font-family:'Anonymous Pro';letter-spacing: 0.3px;color: #222;"></div>
+				<div id="code-typing" style="position:absolute;bottom:6px;font-size:15px;text-align:left;padding:5px;width:100%;height:22px;box-sizing:border-box;line-height:1.5em;font-family:'Anonymous Pro';letter-spacing: 0.3px;color: #222;white-space: nowrap;"></div>
 
     
     
@@ -96,17 +96,20 @@
 				// chat data
 				socket.on('updatedata', function (type, data) {
 
-					console.log(type)
 					if (type=="entry") {
 						$("#code-entries").append("<br>"+data.command)
 						$("#code-typing").html("")
 						evalIncomingEntry(data)
 					} else if (type=="typing") {
 						$("#code-typing").html(data)
+						for (var key in walls) {
+							for (var i=0;i<walls[key].elements.length;i++) {
+								walls[key].elements[i].element.document.getElementById("code").innerHTML = data
+							}
+						}
 					} else if (type=="createwall") {
 						walls[data[0]] = new wall(data[1] ? data[1] : "line")
 					} else if (type=="removeentry") {
-						console.log("removing", data)
 						removeEntry(data)
 					} else if (type=="changeentry") {
 						changeEntry(data)
@@ -284,7 +287,7 @@
     	}
 
 		
-		var walls = []
+		var walls = {}
 
 
 		function evalIncomingEntry(data) {
@@ -357,7 +360,6 @@
 		}
 
 		function removeEntry(data) {
-			console.log("removeEntry called")
 			//clearInterval(distant.intervals["line"+data.index])
 			if (distant.intervals["line"+data.index]) {
 				distant.intervals["line"+data.index].stop()
@@ -399,13 +401,9 @@
 			for (var i=0;i<alts.length;i++) {
 				var group = alts[i].split(" && ")
 
-				console.log(group)
-
 				var pairs = []
 
 				for (var j=0;j<group.length;j++) {
-					console.log(j)
-					console.log(group[j])
 					var codeitem = {reference: false, code: false}
 					var firstword = group[j].split(" ")[0]
 					if (firstword==parseInt(firstword)) {
@@ -430,20 +428,15 @@
 
 		function chooseAndEval(data) {
 
-			console.log("chooseAndEval")
 
 
 			var chosen = data.groups[random(data.groups.length)]
 
-			console.log("chosen")
-			console.log(chosen)
 
 			for (var i=0;i<chosen.length;i++) {
 
 				var fragment = chosen[i]
 
-				console.log("fragment")
-				console.log(fragment)
 
 				if (fragment.reference) {
 					// evalling with reference
@@ -575,7 +568,6 @@ function PhoneEvent(transposition) {
 		}
 		this.dialfreqs = {}
 
-		console.log(transposition)
 		this.transpose(transposition)
 
 
@@ -602,7 +594,6 @@ PhoneEvent.prototype.setup = function(){
 }
 
 PhoneEvent.prototype.start = function(freq1,freq2){
-		console.log(freq1,freq2)
 		this.setup()
 		this.osc1.frequency.value = freq1
 		this.osc2.frequency.value = freq2
@@ -612,7 +603,6 @@ PhoneEvent.prototype.start = function(freq1,freq2){
 }
 
 PhoneEvent.prototype.stop = function(duration){
-		console.log("duration",duration)
 		duration = duration || 0
     this.osc1.stop(Tone.context.currentTime + duration);
     this.osc2.stop(Tone.context.currentTime + duration);
@@ -635,9 +625,6 @@ PhoneEvent.prototype.transpose = function(step) {
   		f1: prune( this._freqs[key].f1 * Math.pow(2,step*100/1200), 8),
   		f2: prune( this._freqs[key].f2 * Math.pow(2,step*100/1200), 8)
   	}
-  	console.log(this._freqs[key])
-  	console.log(this.dialfreqs[key])
-  	console.log(step)
   }
 }
 
@@ -652,7 +639,6 @@ var Phone = function() {
 
 	this.dialtone = {
 		start: function() {
-			console.log(self.transposition)
 			self.synth ? self.synth.stop() : false;
 			self.synth = new PhoneEvent(self.transposition)
 			self.synth.dialtone()
@@ -680,7 +666,6 @@ Phone.prototype.dial = function(number,duration) {
 Phone.prototype.transpose = function(step) {
 
 	this.transposition = step
-	console.log(this.transposition)
 
 }
 
