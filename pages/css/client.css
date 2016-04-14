@@ -134,14 +134,17 @@ footer {
 	top:0px;
 	background-color:#19d;
 	color:#fff;
-	font:300 100px 'Quicksand';
+	font-weight:300;
+	font-size:30px;
+	font-family: helvetica, 'Quicksand';
 	z-index:10;
 	text-align:center;
-	display:table;
+	/* display:table; */
 }
 
 #splash span {
-	display: table-cell;
-  	vertical-align: middle;
+	line-height:100px;
+	/* display: table-cell;
+  	vertical-align: middle; */
 }
 
