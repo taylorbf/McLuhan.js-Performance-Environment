@@ -4,11 +4,13 @@ var LCPlaylist = function(parentID, cb) {
 
 	this.playlist = []
 
+	this.lineIndex = 0;
+
 	this.callback = cb;
 
 	this.color = "black"
 
-	this.limit = 10
+	this.limit = 20
 	this.current = 0
 
 	this.parentID = parentID
@@ -25,37 +27,75 @@ var LCPlaylist = function(parentID, cb) {
 
 	this.nexttitle = false;
 
+	this.highlighted = ["hear", "watch", "say", "write", "gif", "hack", "log", "explore", "see", "text", "voice", "dj", "wiki" ]
+
 }
 
-LCPlaylist.prototype.add = function(command, code, color, norepeat) {
+LCPlaylist.prototype.add = function(command, info, color) {
 
 	this.color = color
 
-	var name = this.nameIndex++
+	this.lineIndex++
 
 	var piece = document.createElement("div")
 	piece.className = "item"
 	piece.style.color = this.color
-	piece.id = "fragment"+name
+	piece.id = "fragment"+this.lineIndex
 	this.container.appendChild(piece)
 
-	var text = document.createElement("div")
-	text.innerHTML = "~ " + command;
+
+
+	var text = document.createElement("input")
+	text.type = "text"
+	text.value = this.lineIndex + " ~ " + command;
 	text.className = "text"
+	text.parent = piece
+	text.addEventListener('keydown',function(e) {
+		if (e.which==13) {
+			this.cut(e.target.parent.id.replace("fragment",""))
+			var code = e.target.value.split(" ~ ")
+			var info = Translate.toCode(code[1])
+      this.add(code[1], info, local.context )
+		} 
+	}.bind(this))
 	piece.appendChild(text)
+
+	var vis = document.createElement("div")
+	vis.className = "beatvis"
+	vis.style.backgroundColor = color
+	piece.appendChild(vis)
 
 	var closer = document.createElement("div")
 	closer.className = "close"
 	closer.innerHTML = "&times;"
 	piece.appendChild(closer)
-	closer.addEventListener("mousedown",this.cut.bind(this,name,piece))
+	closer.addEventListener("mousedown",this.cut.bind(this,this.lineIndex))
 
-	this.playlist.push({
-		name: name,
+	var newline = {
+		index: this.lineIndex,
+		wall: color,
 		command: command,
-		code: code,
-		norepeat: norepeat
-	})
+		code: info.code,
+		reference: info.reference,
+		duration: info.beat, // duration is now a string to be evaluated later
+		newmedia: false
+	}
+
+	if (this.highlighted.indexOf(info.code.split("(")[0])>=0) {
+		piece.className += " newmedia"
+		newline.newmedia = true;
+	}
+
+/*	newline.interval = interval(info.beat,function(newline) {
+			//with (eval(newline.color)) {
+				eval(newline.code) // distant, most likely....
+			//}
+			//console.log(this)
+			this.ping(newline)
+	}.bind(this,newline))
+		//.bind(eval(color)) */
+
+	this.playlist.push(newline)
 
 	var self = this;
 
@@ -70,7 +110,7 @@ LCPlaylist.prototype.add = function(command, code, color, norepeat) {
 	  }.bind(self)
 	})
 
-	var data = this.playlist[this.playlist.length-1]
+	var data = newline
 	data.event = "add"
 
 	if (this.playlist.length>=this.limit) {
@@ -78,6 +118,9 @@ LCPlaylist.prototype.add = function(command, code, color, norepeat) {
 		this.cut(index,document.getElementById("fragment"+index))
 	}
 
+	this.parent.scrollTop = 10000;
+
+	//executes playlist callback
 	this.callback(data);
 
 }
@@ -120,14 +163,41 @@ LCPlaylist.prototype.tick = function() {
 
 }
 
-LCPlaylist.prototype.cut = function(index,piece) {
+LCPlaylist.prototype.cut = function(index) {
 	for (var i=0;i<this.playlist.length;i++) {
-		if (this.playlist[i].name == index) {
+		if (this.playlist[i].index == index) {
+			this.container.removeChild(document.getElementById("fragment"+index))
+			if (local.intervals["line"+index]) {
+				local.intervals["line"+index].stop()
+				local.intervals["line"+index] = null
+				//distant.intervals["line"+index].stop()
+				//distant.intervals["line"+index] = null
+				//
+							
+			}
+
+			if (socket) {
+				var data = {"index": index, "newmedia": false}
+				if (this.playlist[i].newmedia) {
+					data.newmedia = true
+				}
+				socket.emit("senddata", "removeentry", data)
+			}
+
 			this.playlist.splice(i,1)
-			this.container.removeChild(piece)
+
 		}
 	}
 }
+
+LCPlaylist.prototype.ping = function(line) {
+	$("#fragment"+line.index+" .beatvis").stop().css("opacity","1").animate({"opacity":0},100)
+}
+
+
+
+
+
 
 
 

@@ -1,180 +1,52 @@
 var Translate = {
 	last: {},
-	shorthands: {
-		//audio/video
-		find: "load",
-		is: "play",
-		isnt: "stop",
-		seek: "jumpTo",
-		clamp: "skip",
-		release: "unskip",
-		time: "speed"
-
-
-	},
 	toCode: function translate(command) {
 
-    	var words = command.split(" ");
+      //incoming command might be: 
+      //-l 10 14 move(100,100) @ 1000
+
     	var output = "";
+      var loop = false
 
-    	var mode = ""
-    	// modes: wall, media, newmedia, newwall
+      var parsed = command.split(" @ ")
+      var code = parsed[0]
+      if (parsed[1]) {
+        var beat = parsed[1]
+      }
 
-    	var current = {}
+      //code is now: -l 10 14 move(100,100)
+      //beat is now: 1000
 
-    	current.variable = false;
-    	current.media = false
-    	current.type = false
-    	current.method = false
-    	current.params = false
-    	current.rhythm = false
+      if (code.split(" ")[0] == "-l") {
+        var loop = code.split(" ")[1]
+        code = code.slice(code.indexOf(code.split(" ")[2]))
+      }
 
-    	
+      //code is now: 14 move(100,100)
+      //beat is now: 1000
+      //loop is now: 10
 
-    	switch (words[0]) {
+      if (code.split(" ")[0] == parseInt(code.split(" ")[0])) {
+        var reference = parseInt(code.split(" ")[0])
+        code = code.slice(code.indexOf(" ")+1)
+      }
 
-    		// phrase starters
+      //code is now: move(100,100)
+      //reference is now: 14
+      //beat is now: 1000
+      //loop is now: 10
 
-    		case "a":
-    			current.method = "shapeshift"
-    			current.params = words.slice(1)
-    			mode = "wall"
-    			break;
+      // add an condition for | or &?
+       
+      if (loop) {
+        code = "for (var i=0;i<"+loop+";i++) { " + code + " }"
+      }
 
-    		case "to":
-    			// to hear a piano playing pno
-    			current.variable = words[3]
-    			current.method = words[1]
-    			current.params = words.slice(5)
-    			mode = "newmedia"
-    			// for 'and's later ...
-    			current.media = words[3]
-    			break;
-
-    		case "and":
-    			console.log(this.last.media)
-    			current.media = this.last.media
-    			current.method = words[1]
-    			current.params = words.slice(2)
-    			mode = "media"
-    			break;
-    		//case or
-        
-
-        case "wander":
-          //cut off the first 3
-          //send everything else through this.toCode()
-          //wander by foot piano move
-          //=> var something = m.interval("piano.move(A1,B1)",50)
-          //or..
-          //=> gesture1.add(piano.move)
-          //what about for walls?
-          //
-          current.method = "scramble"
-          current.params = ""
-          mode = "wall"
-          break;
-
-
-    		// wall-specific
-        case "gone":
-          current.method = "kill"
-          current.params = ""
-          mode = "wall"
-          // need to delete wall from local.walls too
-          break; 
-        case "move":
-          current.method = "move"
-          current.params = words.slice(1)
-          mode = "wall"
-          break; 
-    		case "blink":
-    			current.method = "hide"
-    			current.params = ""
-    			mode = "wall"
-    			break;
-    		case "unblink":
-    			current.method = "show"
-    			current.params = ""
-    			mode = "wall"
-    			break;
-        case "clarity":
-          current.method = "xray"
-          current.params = ""
-          mode = "wall"
-          break;
-        case "break":
-          current.method = "scramble"
-          current.params = ""
-          mode = "wall"
-          break;
-
-    		// media
-    		
-    		default: 
-    			current.media = words[0]
-    			current.method = words[1]
-    			current.params = words.slice(2)
-
-    			mode = "media"
-
-
-    	}
-
-  		for (var key in this.shorthands) {
-  			if (current.method==key) {
-  				current.method = this.shorthands[key]
-  			}
-  		}
-
-      if (current.params[0]=="by") {
-        // var a = new Gesture(box.move.bind(box),100,100)
-        if (mode=="wall") {
-          var subject = local.context
-        } else if (mode=="media") {
-          var subject = current.media
-        }
-        output = "var a = new Gesture("+subject+"."+current.method+".bind("+subject+"),"+current.params[1]+","+current.params[2]+","+current.params[3]+","+current.params[4]+","+current.params[4]+")"
-      } else if (mode=="wall") {
-
-   			// output looks like: red.shapeshift("line")
-   			
-   			output = local.context + "." 
-   				   + current.method 
-   				   + "("
-   				   + this.parseParams(current.params)
-   				   + ")"
-			
-   		} else if (mode=="media") {
-
-   			// output looks like: piano.open("pno")
-   			
-   			output = current.media + "."
-   				   + current.method 
-   				   + "("
-   				   + this.parseParams(current.params) 
-   				   + ")"
-
-   		} else if (mode=="newmedia") {
-			
-			// output looks like: var piano = red.hear("line")
-   			
-   			output = current.variable 
-   				   + " = " + local.context + "." 
-   				   + current.method 
-   				   + "("
-   				   + this.parseParams(current.params) 
-   				   + ")"
-
-
-   		}
-
-   		current.media = current.media ? current.media : this.last.media
-   		this.last = JSON.parse(JSON.stringify(current));
-    	
-      console.log(output)
-
-    	return output
+    	return {
+        code: code, // eventually an array?
+        beat: beat,
+        reference: reference
+      }
 
     },
     parseParams: function(paramsIn) {
@@ -279,4 +151,4 @@ var Gesture = function(cb,xlow,xhigh,ylow,yhigh) {
 
 
 
-
+    
