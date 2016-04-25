@@ -4,7 +4,6 @@
 
 /* "node server.js" starts local server with this script */
 
-
 /* Definitions */
 var express = require('express');
 var app = express();

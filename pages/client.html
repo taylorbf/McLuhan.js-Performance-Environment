@@ -13,9 +13,10 @@
 	<script src="js/mcluhan.js"></script>
 	<!-- cannot use .min because scrambles global 'm' variable -->
 	<link href='http://fonts.googleapis.com/css?family=Anonymous+Pro:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="css/client.css">
-		<script src="js/jquery-ui.js"></script>
-		 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+  <link rel="stylesheet" type="text/css" href="css/client.css">
+	<script src="js/jquery-ui.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+	<script src="js/parse-1.6.2.js"></script>
   </head>
   <body>
 
@@ -782,81 +783,41 @@ phone = new Phone()
 
 			}
 
-			/* PATTERN */
 
 
 
-
-			/* WANDER */
-
+	Parse.initialize("zIjWyooDbAynj9p4P4SGNHGY5rAMzjY5jSoW8o8o", "o6Qkn9lkR8izWuTE1scAsV4L2fHUYWLoKs0yYfvN")
 
 
-//what kind of code?
-//
-//major(wander(20,70))
-//markov(majorscale)
-//markov(majorscale) .... really don't need to do 'major' stuff yet. going to focus on samples.
-//
-//pattern(0,10,8) could mean create a dream6 style pattern out of 8 divisions of 0 and 10
-//wander(0,10) could mean wander by step (1? 0.1?) between 0 and 10
+	var db = {
+
+		retrieve: function() {
+
+			var Works = Parse.Object.extend("Works")
+
+		  var query = new Parse.Query(Works)
+		  query.equalTo("name", "LastCloud")
+		  query.first({
+		    success: function (result) {
+		    	console.log(result)
+		    	if (result) {
+		    		var savedwalls = result.get("model")
+		    		if (savedwalls.length>0) {
+		    			for (var i=0;i<savedwalls.length;i++) {
+		    				walls[savedwalls[i]] = new wall("line")
+		    			}
+		    		}
+		    	}
+		    },
+		    failure: function(err) {
+		    	console.log(err)
+		    }
+		  })
+		}
+	}
 
 
-
-
-
- /* LOOP shorthand...
-
-1 ~ pian = [] 
-2 ~ -l 10 pian.push(hear("pno"))
-3 ~ -l 10 pian[i].play(r(2)) @ 500
-
-1 ~ pian = [] 
-2 ~ -l 10 pian.push(hear("pno"))
-3 ~ pian.each("play(600)") @ 500
-
-1 ~ [] 
-2 ~ -l 10 1 push(hear("pno"))
-3 ~ 1 each("play(600)") @ 500
-
-1 ~ []
-2 ~ 1 push(hear("piano")) @ 0 10
-3 ~ 1 play(r(1,2)) @ 0 10 @ 500
-
-
-would you ever do -l lineNum code....?
-
-1 ~ explore("montana")
-2 ~ 1 info() -l ...
-
-
-
-
-
-
-so.....
-
-
-1 ~ piano = []
-2 ~ -l 10 piano[i] = hear("pno")
-3 ~ 1 each("play(600)") @ 500
-
-
-
-
--1 wraps a loop around the code
-for (var i=0;i<10;i++) {
-	piano[i] = hear("pno"))
-}
-
--1 wraps a loop around the code
-every 500ms:
-for (var i=0;i<10;i++) {
-	piano[i].play(r(1,2))
-}
-
-loops cannot be used accurately with: gesture, markov, bounce
-*/
-
+	db.retrieve()
 
 
 

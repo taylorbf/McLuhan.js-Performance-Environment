@@ -1,18 +1,19 @@
 <!doctype html>
 <html>
   <head>
-  <title>CONTROLLER</title>
-  <meta charset="utf-8">
-	<meta name="viewport" content="width=device-width">
-	<script src="/socket.io/socket.io.js"></script>
-   <script src="js/jquery.js"></script>
-	<script src="js/bt.js"></script>
-	<script src="js/lc-playlist.js"></script>
-	<script src="js/translator.js"></script>
-	<script src="js/mcluhan.js"></script>
-	<link href='http://fonts.googleapis.com/css?family=Anonymous+Pro:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="css/coding.css">
+	  <title>CONTROLLER</title>
+	  <meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<script src="/socket.io/socket.io.js"></script>
+	   <script src="js/jquery.js"></script>
+		<script src="js/bt.js"></script>
+		<script src="js/lc-playlist.js"></script>
+		<script src="js/translator.js"></script>
+		<script src="js/mcluhan.js"></script>
+		<link href='http://fonts.googleapis.com/css?family=Anonymous+Pro:400,700' rel='stylesheet' type='text/css'>
+	  <link rel="stylesheet" type="text/css" href="css/coding.css">
 		<script src="js/jquery-ui.js"></script>
+		<script src="js/parse-1.6.2.js"></script>
   </head>
   <body>
 
@@ -187,36 +188,39 @@
 
 	      	var info = Translate.toCode(command)
 
+	      	console.log(info)
+
 	     		$(this).val("")
 
 	     		backlogIndex = 0  
 
 	     		if (command.indexOf("wall(")===0) {
 
-	     			console.log("making a wall")
 	     			var nextcolor = rainbow[colorcount.tick()]
 
-	     			console.log(nextcolor)
 	     			var shape = command.split('\"')[1]
 		    		
-	     			console.log(shape)
 						socket.emit('senddata','createwall',[nextcolor,shape])
 						
 		    		local.context = nextcolor
 
-	     			console.log(local.context)
 		    		if (local.walls.indexOf(nextcolor)<0) {
 		    			local.walls.push(nextcolor)
 		    		}
 
-	     			console.log(local.walls)
-
 		    		$("#prompt").css("color", local.context)
-		    		return false;
+		    		
 	     		} else {
 	     			playlist.add(command, info, local.context)
 	     		}
+	     		if (command.indexOf("kill(")===0) {
 
+	     			local.walls.splice(local.walls.indexOf(local.context),1)
+
+		    	}
+
+	     		console.log("update db")
+		    	db.update(local.walls)
 		     	return false;
 				} else if (e.which==38) {
 					//up arrow
@@ -500,26 +504,42 @@
 
 			}
 
-			/* PATTERN */
+
+
+	Parse.initialize("zIjWyooDbAynj9p4P4SGNHGY5rAMzjY5jSoW8o8o", "o6Qkn9lkR8izWuTE1scAsV4L2fHUYWLoKs0yYfvN")
+
+
+	var db = {
+
+		update: function(status) {
+
+			var Works = Parse.Object.extend("Works")
+
+			console.log(status)
+
+			if (!status) {
+				status = []
+			}
+
+		  var query = new Parse.Query(Works)
+		  query.equalTo("name", "LastCloud")
+		  query.first({
+		    success: function (result) {
+		    	console.log(result)
+		    	if (result) {
+		    		result.set("model",status)
+		    		result.save()
+		    	}
+		    },
+		    failure: function(err) {
+		    	console.log(err)
+		    }
+		  })
+		}
+	}
 
 
 
-
-			/* WANDER */
-
-
-
-//what kind of code?
-//
-//major(wander(20,70))
-//markov(majorscale)
-//markov(majorscale) .... really don't need to do 'major' stuff yet. going to focus on samples.
-//
-//pattern(0,10,8) could mean create a dream6 style pattern out of 8 divisions of 0 and 10
-//wander(0,10) could mean wander by step (1? 0.1?) between 0 and 10
-
-
-	
 
 
 
