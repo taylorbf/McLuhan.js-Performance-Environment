@@ -123,6 +123,7 @@
 
 
 			window.onbeforeunload = function(){
+				db.update([])
 			  socket.emit("senddata", "reboot")
 			};
 

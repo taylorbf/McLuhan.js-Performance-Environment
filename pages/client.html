@@ -13,6 +13,7 @@
 	<script src="js/mcluhan.js"></script>
 	<!-- cannot use .min because scrambles global 'm' variable -->
 	<link href='http://fonts.googleapis.com/css?family=Anonymous+Pro:400,700' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Quicksand:400' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" type="text/css" href="css/client.css">
 	<script src="js/jquery-ui.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
@@ -21,8 +22,8 @@
   <body>
 
 
-	<div id="shell" style="background-color:white">
-		<div class="guides" style="background-color:white">
+	<div id="shell">
+		<div class="guides">
 
 			<!--<button onclick="m.static.begin()">Begin</button>-->
 
@@ -30,13 +31,9 @@
 
 			<div id="playlistvis" style="position:relative;height:100%;background-color:transparent;opacity:1">
 				
-				<div id="code-entries" style="position:absolute;bottom:17px;font-size:15px;line-height:1.5em;text-align:left;height:auto;padding:5px;font-family:'Anonymous Pro';letter-spacing: 0.3px;color: #222;"></div>
+				<div id="code-entries" style="position:absolute;bottom:17px;font-size:15px;line-height:1.5em;text-align:left;height:auto;padding:5px;font-family:'Anonymous Pro';letter-spacing: 0.3px;color: #fff;"></div>
 
-				<div id="code-typing" style="position:absolute;bottom:6px;font-size:15px;text-align:left;padding:5px;width:100%;height:22px;box-sizing:border-box;line-height:1.5em;font-family:'Anonymous Pro';letter-spacing: 0.3px;color: #222;white-space: nowrap;"></div>
-
-    
-    
-    
+				<div id="code-typing" style="position:absolute;bottom:6px;font-size:15px;text-align:left;padding:5px;width:100%;height:22px;box-sizing:border-box;line-height:1.5em;font-family:'Anonymous Pro';letter-spacing: 0.3px;color: #fff;white-space: nowrap;">Connected. Awaiting performance.</div>
 
 			</div>
 
@@ -105,7 +102,11 @@
 							}
 						}
 					} else if (type=="createwall") {
-						walls[data[0]] = new wall(data[1] ? data[1] : "line")
+						try {
+							walls[data[0]] = new wall(data[1] ? data[1] : "line")
+						} catch(e) {
+		  				console.log(e)
+		  			}
 					} else if (type=="removeentry") {
 						removeEntry(data)
 					} else if (type=="changeentry") {
@@ -434,22 +435,27 @@
 
 				var fragment = chosen[i]
 
+				try {
 
-				if (fragment.reference) {
-					// evalling with reference
-					with (m.variables[fragment.reference]) {
-						eval(fragment.gencode)
-					}
-				} else {
-					// evalling with wall"
-					if (walls[data.wall]) {
-						with (eval(walls[data.wall])) {
-							m.variables[data.index] = eval(fragment.gencode)
+					if (fragment.reference) {
+						// evalling with reference
+						with (m.variables[fragment.reference]) {
+							eval(fragment.gencode)
 						}
 					} else {
-						// no wall, just try as is
-						m.variables[data.index] = eval(fragment.gencode)
+						// evalling with wall"
+						if (walls[data.wall]) {
+							with (eval(walls[data.wall])) {
+								m.variables[data.index] = eval(fragment.gencode)
+							}
+						} else {
+							// no wall, just try as is
+							m.variables[data.index] = eval(fragment.gencode)
+						}
 					}
+
+				} catch(e) {
+					console.log("ERROR",e)
 				}
 
 			}
@@ -495,7 +501,11 @@
   	var distant = {
   		walls: {},
   		createWall: function(nextcolor) {
-  			window[nextcolor] = new wall("line")
+  			try {
+  				window[nextcolor] = new wall("line")
+  			} catch(e) {
+  				console.log(e)
+  			}
   		},
   		intervals: {},
   		gens: {}
