@@ -27,7 +27,7 @@
 
 			<!--<button onclick="m.static.begin()">Begin</button>-->
 
-			<canvas id="presence" style="position:absolute;top:0px;left:0px;border:solid 0px #158;height:300px;width:400px"></canvas>
+			<canvas id="presence" style="position:absolute;top:0px;left:0px;border:solid 0px #158;height:320px;width:440px;opacity:0.8"></canvas>
 
 			<div id="playlistvis" style="position:relative;height:100%;background-color:transparent;opacity:1">
 				
@@ -209,7 +209,7 @@
 		will need to generate this second canvas programatically
 	*/
 	var rcvPresence = {}
-	rcvPresence.defaultSize = {w: 400, h: 300}
+	rcvPresence.defaultSize = {w: 460, h: 330}
 	rcvPresence.canvas = document.getElementById("presence")
 	rcvPresence.canvas.style.height = rcvPresence.defaultSize.h+"px";
 	rcvPresence.canvas.style.width = rcvPresence.defaultSize.w+"px";
@@ -231,11 +231,11 @@
         // j means which column
         var placex = j*dim;
         var placey = i*dim;
-       	/* if (data[i][j] > 0) {
-        	this.context.fillStyle = "#333"
+       	/*if (data[i][j] > 3) {
+        	this.context.fillStyle = "#fff"
         } else {
-		      this.context.fillStyle = "#fff"
-        } */ 
+		      this.context.fillStyle = "#333"
+        } */
         /* basic grayscale */
         var colornum = data[i][j]*20 + 50
         this.context.fillStyle = "rgb(" + colornum + "," + colornum + "," + colornum + ")"
