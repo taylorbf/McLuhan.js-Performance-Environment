@@ -1,0 +1,837 @@
+<!doctype html>
+<html>
+  <head>
+   <title>THE LAST CLOUD</title>
+  <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<script src="/socket.io/socket.io.js"></script>
+  <script src="js/jquery.js"></script>
+  <!-- my libs -->
+	<script src="js/bt.js"></script>
+	<script src="js/lc-playlist.js"></script>
+	<script src="js/translator.js"></script>
+	<script src="js/mcluhan.js"></script>
+	<!-- cannot use .min because scrambles global 'm' variable -->
+	<link href='https://fonts.googleapis.com/css?family=Anonymous+Pro:400,700' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Quicksand:400' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="css/client.css">
+	<script src="js/jquery-ui.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+	<script src="js/parse-1.6.2.js"></script>
+  </head>
+  <body>
+
+
+	<div id="shell">
+		<div class="guides">
+
+		  <button onclick="m.static.begin()">Begin</button>
+
+			<canvas id="presence" style="position:absolute;top:0px;left:0px;border:solid 0px #158;height:320px;width:440px;opacity:0.8"></canvas>
+
+			<div id="playlistvis" style="position:relative;height:100%;background-color:transparent;opacity:1">
+
+				<div id="code-entries" style="position:absolute;bottom:17px;font-size:15px;line-height:1.5em;text-align:left;height:auto;padding:5px;font-family:'Anonymous Pro';letter-spacing: 0.3px;color: #fff;"></div>
+
+				<div id="code-typing" style="position:absolute;bottom:6px;font-size:15px;text-align:left;padding:5px;width:100%;height:22px;box-sizing:border-box;line-height:1.5em;font-family:'Anonymous Pro';letter-spacing: 0.3px;color: #fff;white-space: nowrap;">Connected. Awaiting performance.</div>
+
+			</div>
+
+			<!-- <footer>&copy; 2016 Ben Taylor</footer> -->
+
+		</div>
+	</div>
+
+	<div id="main">
+
+
+
+	</div>
+
+
+	<script>
+
+				var mediatotal = 0
+				var medialoaded = 0
+				m.mediapaths = []
+
+				$(function() {
+
+					NProgress.start()
+
+					// will become m.client.setup
+					m.client.setup({
+						w: 400,
+						h: 300,
+						x: 0.5,
+						y: 0.5,
+						bg: "#eee",
+						text: "#333",
+						type: "static"
+					})
+
+					/* m.mediapaths = [ "images/ios7icon-01.png" ]
+					for (var i=0;i<m.mediapaths.length;i++) {
+						m.mediapaths[i] = {
+							path: m.mediapaths[i],
+							image: new Image()
+						}
+						m.mediapaths[i].image.src = m.mediapaths[i].path
+					}
+					console.log(m.mediapaths)
+					*/
+
+				})
+
+
+
+				var socket = io();
+
+				// chat data
+				socket.on('updatedata', function (type, data) {
+
+					if (type=="entry") {
+						$("#code-entries").append("<br>"+data.command)
+						$("#code-typing").html("")
+						evalIncomingEntry(data)
+					} else if (type=="typing") {
+						$("#code-typing").html(data)
+						for (var key in walls) {
+							for (var i=0;i<walls[key].elements.length;i++) {
+								walls[key].elements[i].element.document.getElementById("code").innerHTML = data
+							}
+						}
+					} else if (type=="createwall") {
+						try {
+							walls[data[0]] = new wall(data[1] ? data[1] : "line")
+						} catch(e) {
+		  				console.log(e)
+		  			}
+					} else if (type=="removeentry") {
+						removeEntry(data)
+					} else if (type=="changeentry") {
+						changeEntry(data)
+					} else if (type=="reboot") {
+						location.reload()
+					}
+
+				})
+
+
+
+				// presence data
+				socket.on('updatepresence', function (data) {
+					rcvPresence.update(data)
+				});
+
+				// receives the paths to media to preload
+				socket.on('mediapaths', function (type, data) {
+
+					if (type=="images") {
+						m.mediapaths.images = data
+						mediatotal += m.mediapaths.images.length
+						for (var i=0;i<m.mediapaths.images.length;i++) {
+							//console.log("load: "+m.mediapaths.images[i])
+							m.mediapaths.images[i] = {
+								path: m.mediapaths.images[i],
+								data: new Image()
+							}
+							m.mediapaths.images[i].data.onload = function(data) {
+
+								//console.log("loaded:", medialoaded)
+								medialoaded++
+								NProgress.set(medialoaded/mediatotal)
+								if (medialoaded/mediatotal>=0.9) {
+									NProgress.done()
+									$('#splash').fadeOut()
+								}
+							}
+							m.mediapaths.images[i].data.src = m.mediapaths[type][i].path
+						}
+					} else if (type=="video") {
+						m.mediapaths.video = data
+						mediatotal += m.mediapaths.video.length
+						for (var i=0;i<m.mediapaths.video.length;i++) {
+							//console.log("load: "+m.mediapaths.video[i])
+							m.mediapaths.video[i] = {
+								path: m.mediapaths.video[i],
+								data: document.createElement("video")
+							}
+							//console.log("====", m.media.video[i])
+							m.mediapaths.video[i].data.addEventListener('canplaythrough',function(data) {
+
+								//console.log(medialoaded/mediatotal)
+								medialoaded++
+								NProgress.set(medialoaded/mediatotal)
+								if (medialoaded/mediatotal>=0.9) {
+									NProgress.done()
+									$('#splash').fadeOut()
+								}
+							})
+							m.mediapaths.video[i].data.src = m.mediapaths[type][i].path
+						}
+					} else if (type=="audio") {
+						m.mediapaths.audio = data
+						mediatotal += m.mediapaths.audio.length
+						for (var i=0;i<m.mediapaths.audio.length;i++) {
+							//console.log("load: "+m.mediapaths.audio[i])
+							m.mediapaths.audio[i] = {
+								path: m.mediapaths.audio[i],
+								data: new Audio()
+							}
+							m.mediapaths.audio[i].data.addEventListener('canplaythrough', function(data) {
+								//console.log(data)
+								medialoaded++
+								NProgress.set(medialoaded/mediatotal)
+								//console.log(medialoaded/mediatotal)
+								if (medialoaded/mediatotal>=0.9) {
+									NProgress.done()
+									$('#splash').fadeOut()
+								}
+							})
+							m.mediapaths.audio[i].data.src = m.mediapaths[type][i].path
+						}
+					}
+
+				})
+
+
+				socket.on('settings', function (settings) {
+					m.settings = settings
+					for (var key in settings.patterns) {
+						m.patterns[key] = m.settings.patterns[key]
+					}
+				})
+
+
+	/* this gets the "presence" canvas in coding.html ...
+		if want to send presence through network or add to a Wall,
+		will need to generate this second canvas programatically
+	*/
+	var rcvPresence = {}
+	rcvPresence.defaultSize = {w: 460, h: 330}
+	rcvPresence.canvas = document.getElementById("presence")
+	rcvPresence.canvas.style.height = rcvPresence.defaultSize.h+"px";
+	rcvPresence.canvas.style.width = rcvPresence.defaultSize.w+"px";
+	rcvPresence.canvas.width = rcvPresence.defaultSize.w;
+	rcvPresence.canvas.height = rcvPresence.defaultSize.h;
+	rcvPresence.context = rcvPresence.canvas.getContext('2d');
+	rcvPresence.update = function(data) {
+		//console.log(data[0][0])
+    this.context.clearRect(0,0,this.canvas.width,this.canvas.height)
+    //this.context.fillStyle = "#fff"
+    //this.context.fillRect(0,0,this.canvas.width,this.canvas.height)
+		var dim = Math.floor(this.canvas.height / data.length)
+		//console.log(dim)
+    var w = this.canvas.width
+    var h = this.canvas.height
+	  for (var i=0;i<data.length;i++) {
+      for (var j=0;j<data[i].length;j++) {
+        // i means which row
+        // j means which column
+        var placex = j*dim;
+        var placey = i*dim;
+       	/*if (data[i][j] > 3) {
+        	this.context.fillStyle = "#fff"
+        } else {
+		      this.context.fillStyle = "#333"
+        } */
+        /* basic grayscale */
+        var colornum = data[i][j]*20 + 50
+        this.context.fillStyle = "rgb(" + colornum + "," + colornum + "," + colornum + ")"
+        this.context.fillRect(placex,placey,dim,dim)
+        /* text
+        this.context.fillStyle = "#000"
+        this.context.fillText(vidtext[data[i][j]],placex,placey,dim,dim) */
+        /* a little trippy
+        this.context.fillStyle = "#" + data[i][j] + data[i][j] + data[i][j]
+        var box = dim * m.random(10)/10
+        this.context.fillRect(placex + (dim - box)/2,placey + (dim - box)/2,box+1,box+1)
+        */
+      }
+    }
+	}
+
+  var vidtext = "#@*xoi!~.`"
+
+
+
+			//general
+
+			m.deck(16)
+			m.variables = []
+
+		  var current = {
+    		wall: "",
+    		media: "",
+    		type: "",
+    		params: ""
+    	}
+
+    	var black = {test: "thing"}
+
+    	var local = {
+    		context: "black",
+    		walls: [],
+    		nextWall: function() {
+    			var colori = local.walls.indexOf(local.context)
+    			colori++
+    			if (colori >= local.walls.length) {
+    				colori = 0
+    			}
+    			return local.walls[colori];
+    		},
+    		intervals: {}
+    	}
+
+
+		var walls = {}
+
+
+		function evalIncomingEntry(data) {
+
+			//here exists:
+
+			var data = createCodeGroups(data)
+
+
+			//data.gencode = createGens(data.index,data.code)
+
+			distant.gens["line"+data.index] = []
+			for (var i=0;i<data.groups.length;i++) {
+				for (var j=0;j<data.groups[i].length;j++) {
+					data.groups[i][j].gencode = createGens(data.index,data.groups[i][j].code)
+				}
+			}
+
+			//IF NO BEAT
+			if (!data.duration) {
+
+				chooseAndEval(data)
+
+			} else {
+
+				distant.intervals["line"+data.index] = interval(data.duration,function(data) {
+
+						chooseAndEval(data)
+
+				}.bind(this,data))
+
+			}
+
+/*
+				if (data.reference) {
+					// evalling with reference
+					with (m.variables[data.reference]) {
+						eval(data.gencode)
+					}
+				} else {
+					// evalling with wall"
+					if (walls[data.wall]) {
+						with (eval(walls[data.wall])) {
+							m.variables[data.index] = eval(data.gencode)
+						}
+					} else {
+						// no wall, just try as is
+						m.variables[data.index] = eval(data.gencode)
+					}
+				}
+
+			//IF A BEAT
+			} else {
+				distant.intervals["line"+data.index] = interval(data.duration,function(data) {
+						if (data.reference) {
+							with (m.variables[data.reference]) {
+								eval(data.gencode)
+							}
+						} else {
+							with (eval(walls[data.wall])) {
+								m.variables[data.index] = eval(data.gencode)
+							}
+						}
+				}.bind(this,data))
+
+			}
+
+*/
+
+		}
+
+		function removeEntry(data) {
+			//clearInterval(distant.intervals["line"+data.index])
+			if (distant.intervals["line"+data.index]) {
+				distant.intervals["line"+data.index].stop()
+			}
+			if (data.newmedia) {
+				m.variables[data.index].kill()
+			}
+
+		}
+
+		function changeEntry(data) {
+			//clearInterval(distant.intervals["line"+data.index])
+			//distant.intervals["line"+data.index] = setInterval(data.function,data.delay)
+			distant.intervals["line"+data.index].event = data.function
+			distant.intervals["line"+data.index].ms(data.delay)
+
+		}
+		/* plan:
+				 in createcodegroups, split by || and &&
+				 store a reference for each, too!
+				 in creategens, do not set the gens to []
+				 do that in the createcodegroups func first
+				 then run a 'create gens' on each item in the new code array
+				 reformat if statement to fit....
+				 		if (duration)
+				 			for ()...
+				 				if (reference)
+
+				 	only try to store if newmedia is true
+			*/
+
+		function createCodeGroups(data) {
+
+			var command = data.code
+
+			var alts = command.split(" || ")
+			data.groups = []
+
+			for (var i=0;i<alts.length;i++) {
+				var group = alts[i].split(" && ")
+
+				var pairs = []
+
+				for (var j=0;j<group.length;j++) {
+					var codeitem = {reference: false, code: false}
+					var firstword = group[j].split(" ")[0]
+					if (firstword==parseInt(firstword)) {
+						codeitem.reference = firstword
+						codeitem.code = group[j].slice(group[j].indexOf(" ")+1)
+					} else {
+						codeitem.code = group[j]
+					}
+					if (i==0 && j==0) {
+						codeitem.reference = data.reference
+					}
+					pairs.push(codeitem)
+				}
+
+				data.groups.push( pairs )
+			}
+
+			return data
+
+		}
+
+
+		function chooseAndEval(data) {
+
+
+
+			var chosen = data.groups[random(data.groups.length)]
+
+
+			for (var i=0;i<chosen.length;i++) {
+
+				var fragment = chosen[i]
+
+				try {
+
+					if (fragment.reference) {
+						// evalling with reference
+						with (m.variables[fragment.reference]) {
+							eval(fragment.gencode)
+						}
+					} else {
+						// evalling with wall"
+						if (walls[data.wall]) {
+							with (eval(walls[data.wall])) {
+								m.variables[data.index] = eval(fragment.gencode)
+							}
+						} else {
+							// no wall, just try as is
+							m.variables[data.index] = eval(fragment.gencode)
+						}
+					}
+
+				} catch(e) {
+					console.log("ERROR",e)
+				}
+
+			}
+
+		}
+
+
+
+
+
+
+
+
+
+    /* Ben Library */
+
+    var Counter = function(limit) {
+    	this.max = 0;
+    	this.current = -1;
+    	this.tick = function() {
+    		this.current++;
+    		if (this.current>=this.limit) {
+    			this.current = 0;
+    		}
+    		return this.current;
+    	}
+    	this.downtick = function() {
+    		this.current--;
+    		if (this.current <= this.limit) {
+    			this.current = this.limit-1;
+    		}
+    		return this.current;
+    	}
+    }
+
+   // var colorcount = new Counter(rainbow.length);
+
+
+
+
+    /* distant */
+
+  	var distant = {
+  		walls: {},
+  		createWall: function(nextcolor) {
+  			try {
+  				window[nextcolor] = new wall("line")
+  			} catch(e) {
+  				console.log(e)
+  			}
+  		},
+  		intervals: {},
+  		gens: {}
+  	}
+
+
+  	var createGens = function(index,code) {
+  		var gennames = ["bounce","gesture","markov","pick"]
+  		// distant.gens["line"+index] = []
+  		for (var i=0;i<code.length;i++) {
+  			for (var j=0;j<gennames.length;j++) {
+  				if (code.slice(i).indexOf(gennames[j]+"(")==0) {
+  					var end = code.slice(i).indexOf(")")+i+1
+  					var linekey = "line"+index
+  					distant.gens[linekey].push({
+  						orig: code.slice(i,end),
+  						type: gennames[j],
+  						start: i,
+  						end: end
+  					})
+  					var genIndex = distant.gens[linekey].length - 1
+  					code = code.replace(distant.gens[linekey][genIndex].orig,'distant.gens["'+linekey+'"]['+genIndex+'].generator.tick()')
+  				}
+  			}
+  		}
+  		for (var i=0;i<distant.gens["line"+index].length;i++) {
+  			distant.gens["line"+index][i].generator = eval("new " + distant.gens["line"+index][i].orig[0].toUpperCase() + distant.gens["line"+index][i].orig.slice(1))
+  		}
+  		return code
+  	}
+
+
+
+
+ /*
+
+ PHONE
+ -- this should all go in manager and be applied to window?
+
+ API:
+
+ phone.dialtone.start()
+ phone.dialtone.stop()
+ phone.dial(1-9)
+ phone.dial(1-9,1)
+
+ */
+
+function PhoneEvent(transposition) {
+	//	this.transposition = transposition
+    this.status = 0;
+
+    this._freqs = {
+    	"dialtone": {f1: 350, f2: 440},
+	    "1": {f1: 697, f2: 1209},
+	    "2": {f1: 697, f2: 1336},
+	    "3": {f1: 697, f2: 1477},
+	    "4": {f1: 770, f2: 1209},
+	    "5": {f1: 770, f2: 1336},
+	    "6": {f1: 770, f2: 1477},
+	    "7": {f1: 852, f2: 1209},
+	    "8": {f1: 852, f2: 1336},
+	    "9": {f1: 852, f2: 1477},
+	    "*": {f1: 941, f2: 1209},
+	    "0": {f1: 941, f2: 1336},
+	    "#": {f1: 941, f2: 1477}
+		}
+		this.dialfreqs = {}
+
+		this.transpose(transposition)
+
+
+}
+
+PhoneEvent.prototype.setup = function(){
+    this.osc1 = Tone.context.createOscillator();
+    this.osc2 = Tone.context.createOscillator();
+    this.osc1.frequency.value = 0;
+    this.osc2.frequency.value = 0;
+
+    this.gainNode = Tone.context.createGain();
+    this.gainNode.gain.value = 0.05;
+
+    this.filter = Tone.context.createBiquadFilter();
+    this.filter.type = "lowpass";
+    this.filter.frequency.value = 8000;
+
+    this.osc1.connect(this.gainNode);
+    this.osc2.connect(this.gainNode);
+
+    this.gainNode.connect(this.filter);
+    this.filter.connect(m.fx);
+}
+
+PhoneEvent.prototype.start = function(freq1,freq2){
+		this.setup()
+		this.osc1.frequency.value = freq1
+		this.osc2.frequency.value = freq2
+    this.osc1.start(0)
+    this.osc2.start(0)
+    this.status = 1
+}
+
+PhoneEvent.prototype.stop = function(duration){
+		duration = duration || 0
+    this.osc1.stop(Tone.context.currentTime + duration);
+    this.osc2.stop(Tone.context.currentTime + duration);
+    this.status = 0;
+}
+
+PhoneEvent.prototype.dialtone = function() {
+  this.start(this.dialfreqs["dialtone"].f1,this.dialfreqs["dialtone"].f2)
+}
+
+PhoneEvent.prototype.dial = function(number,duration) {
+  this.start(this.dialfreqs[number].f1,this.dialfreqs[number].f2)
+  this.stop(duration)
+}
+
+PhoneEvent.prototype.transpose = function(step) {
+	step = step || 0;
+  for (var key in this._freqs) {
+  	this.dialfreqs[key] = {
+  		f1: prune( this._freqs[key].f1 * Math.pow(2,step*100/1200), 8),
+  		f2: prune( this._freqs[key].f2 * Math.pow(2,step*100/1200), 8)
+  	}
+  }
+}
+
+
+
+
+
+var Phone = function() {
+	var self = this
+
+	this.synth = false
+
+	this.dialtone = {
+		start: function() {
+			self.synth ? self.synth.stop() : false;
+			self.synth = new PhoneEvent(self.transposition)
+			self.synth.dialtone()
+		},
+		stop: function() {
+			self.synth.stop()
+		}
+	}
+
+	this.tones = []
+	this.toneIndex = 0
+
+	this.transposition = 0
+
+}
+
+Phone.prototype.dial = function(number,duration) {
+
+	this.toneIndex++
+	this.tones[this.toneIndex] = new PhoneEvent(this.transposition)
+	this.tones[this.toneIndex].dial(number,duration)
+
+}
+
+Phone.prototype.transpose = function(step) {
+
+	this.transposition = step
+
+}
+
+phone = new Phone()
+
+
+
+
+
+
+
+
+
+
+    	/* NEED TO BE ENCAPSULATED (in musicians toolkit?) */
+
+
+
+
+    	/* BOUNCE*/
+
+			function Bounce(lower,upper) {
+
+				this.value = lower
+
+				this.upper = Math.max(lower,upper)
+				this.lower = Math.min(lower,upper)
+
+				this.beats = 16
+
+				this.step = (this.upper - this.lower) / this.beats
+				this.direction = 1
+
+				this.tick = function() {
+					this.value += this.direction * this.step
+					if (this.value > this.upper) {
+						this.direction = -1
+						this.value = this.upper
+					} else if (this.value < this.lower) {
+						this.direction = 1
+						this.value = this.lower
+					}
+					return this.value
+				}
+			}
+
+
+
+
+    	/* PICK*/
+
+			function Pick() {
+
+				this.choices = arguments
+
+				this.tick = function() {
+					return this.choices[random(this.choices.length)]
+				}
+
+			}
+
+
+
+
+			/* GESTURE */
+
+			_Gesture1Buffer = [
+					{x: 0, y: 1 },
+					{x: 1, y: 0 }
+			]
+
+			var Gesture = function(xlow,xhigh) {
+
+				var ylow = 0
+				var yhigh = 0
+
+				this.buffer = _Gesture1Buffer
+
+				this.bufferIndex = 0
+				this.speed = 1
+				this.limit = 100
+
+				this.range = {
+					x: [ xlow ? xlow : 0 , xhigh ? xhigh : 1 ],
+					y: [ ylow ? ylow : 0 , yhigh ? yhigh : 1 ]
+				}
+
+			}
+
+			Gesture.prototype.setBuffer = function(buff) {
+				this.buffer = buff ? buff : this.buffer
+
+			}
+
+			Gesture.prototype.kill = function() {
+			}
+
+			Gesture.prototype.tick = function() {
+
+				this.bufferIndex += this.speed
+				this.bufferIndex %= this.limit
+
+				var interval = this.limit / this.buffer.length;
+
+				var lowerIndex = Math.floor(this.bufferIndex/interval)
+				var upperIndex = lowerIndex + 1
+
+				upperIndex %= this.buffer.length
+
+				var interpDistance = (this.bufferIndex - lowerIndex*interval) / interval
+
+				var x = interp(interpDistance, this.buffer[lowerIndex].x,this.buffer[upperIndex].x)
+				var y = interp(interpDistance, this.buffer[lowerIndex].y,this.buffer[upperIndex].y)
+
+				x *= scale(x,0,1,this.range.x[0],this.range.x[1])
+
+				return x
+
+			}
+
+
+
+
+	Parse.initialize("zIjWyooDbAynj9p4P4SGNHGY5rAMzjY5jSoW8o8o", "o6Qkn9lkR8izWuTE1scAsV4L2fHUYWLoKs0yYfvN")
+
+
+	var db = {
+
+		retrieve: function() {
+
+			var Works = Parse.Object.extend("Works")
+
+		  var query = new Parse.Query(Works)
+		  query.equalTo("name", "LastCloud")
+		  query.first({
+		    success: function (result) {
+		    	console.log(result)
+		    	if (result) {
+		    		var savedwalls = result.get("model")
+		    		if (savedwalls.length>0) {
+		    			for (var i=0;i<savedwalls.length;i++) {
+		    				walls[savedwalls[i]] = new wall("line")
+		    			}
+		    		}
+		    	}
+		    },
+		    failure: function(err) {
+		    	console.log(err)
+		    }
+		  })
+		}
+	}
+
+
+	db.retrieve()
+
+
+
+	</script>
+
+  </body>
+</html>

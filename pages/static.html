@@ -1,0 +1,643 @@
+<!doctype html>
+<html>
+  <head>
+	  <meta charset="utf-8">
+	  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width">
+		<script src="js/mcluhan.js"></script>
+		<link href='http://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="css/client.css">
+    <script src="js/jquery.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyApKfdsgIGGnhsbHa_Vj26jOoiwbc5a9GM"></script>
+    <script src="js/last-minute-extras.js"></script>
+
+  </head>
+  <body>
+
+		<script>
+
+			$(function() {
+
+				m.static.setup({
+					w: 400,
+					h: 400,
+					x: 0.5,
+					y: 0.5,
+					background: "#19d",
+					text: "#fff",
+					type: "static"
+				})
+
+				m.deck(8);
+
+        var patterns =  {
+      		"flower": [
+      			{
+      				"x": 0.4,
+      				"y": 0,
+      				"w": 0.2,
+      				"h": 1
+      			},
+      			{
+      				"x": 0.25,
+      				"y": 0,
+      				"w": 0.5,
+      				"h": 0.3
+      			}
+      		],
+      		"frame": [
+      			{
+      				"x": 0,
+      				"y": 0,
+      				"w": "250/900",
+      				"h": 1
+      			},
+      			{
+      				"x": "650/900",
+      				"y": 0,
+      				"w": "250/900",
+      				"h": 1
+      			},
+      			{
+      				"x": "250/900",
+      				"y": 0,
+      				"w": "400/900",
+      				"h": "240/700"
+      			},
+      			{
+      				"x": "250/900",
+      				"y": "525/700",
+      				"w": "400/900",
+      				"h": "175/700"
+      			}
+      		],
+      		"big4": [
+      			{
+      				"x": 0,
+      				"y": 0,
+      				"w": 1,
+      				"h": 1
+      			},
+      			{
+      				"x": 0,
+      				"y": 0,
+      				"w": 1,
+      				"h": 1
+      			},
+      			{
+      				"x": 0,
+      				"y": 0,
+      				"w": 1,
+      				"h": 1
+      			},
+      			{
+      				"x": 0,
+      				"y": 0,
+      				"w": 1,
+      				"h": 1
+      			}
+      		],
+      		"grid16": [
+      			{
+      				"x": 0,
+      				"y": 0,
+      				"w": 0.25,
+      				"h": 0.25
+      			},
+      			{
+      				"x": 0.25,
+      				"y": 0,
+      				"w": 0.25,
+      				"h": 0.25
+      			},
+      			{
+      				"x": 0.505,
+      				"y": 0,
+      				"w": 0.25,
+      				"h": 0.25
+      			},
+      			{
+      				"x": 0.75,
+      				"y": 0,
+      				"w": 0.25,
+      				"h": 0.25
+      			},
+      			{
+      				"x": 0,
+      				"y": 0.25,
+      				"w": 0.25,
+      				"h": 0.25
+      			},
+      			{
+      				"x": 0.25,
+      				"y": 0.25,
+      				"w": 0.25,
+      				"h": 0.25
+      			},
+      			{
+      				"x": 0.505,
+      				"y": 0.25,
+      				"w": 0.25,
+      				"h": 0.25
+      			},
+      			{
+      				"x": 0.75,
+      				"y": 0.25,
+      				"w": 0.25,
+      				"h": 0.25
+      			},
+      			{
+      				"x": 0,
+      				"y": 0.5,
+      				"w": 0.25,
+      				"h": 0.25
+      			},
+      			{
+      				"x": 0.25,
+      				"y": 0.5,
+      				"w": 0.25,
+      				"h": 0.25
+      			},
+      			{
+      				"x": 0.505,
+      				"y": 0.5,
+      				"w": 0.25,
+      				"h": 0.25
+      			},
+      			{
+      				"x": 0.75,
+      				"y": 0.5,
+      				"w": 0.25,
+      				"h": 0.25
+      			},
+      			{
+      				"x": 0,
+      				"y": 0.75,
+      				"w": 0.25,
+      				"h": 0.25
+      			},
+      			{
+      				"x": 0.25,
+      				"y": 0.75,
+      				"w": 0.25,
+      				"h": 0.25
+      			},
+      			{
+      				"x": 0.505,
+      				"y": 0.75,
+      				"w": 0.25,
+      				"h": 0.25
+      			},
+      			{
+      				"x": 0.75,
+      				"y": 0.75,
+      				"w": 0.25,
+      				"h": 0.25
+      			}
+      		],
+      		"r8": [
+      			{
+      				"x": 0.3,
+      				"y": 0,
+      				"w": 0.4,
+      				"h": 0.4
+      			},
+      			{
+      				"x": 0,
+      				"y": 0.4,
+      				"w": 0.4,
+      				"h": 0.4
+      			},
+      			{
+      				"x": 0.1,
+      				"y": 0.55,
+      				"w": 0.4,
+      				"h": 0.4
+      			},
+      			{
+      				"x": 0.5,
+      				"y": 0.2,
+      				"w": 0.4,
+      				"h": 0.4
+      			},
+      			{
+      				"x": 0.6,
+      				"y": 0.2,
+      				"w": 0.4,
+      				"h": 0.4
+      			},
+      			{
+      				"x": 0.3,
+      				"y": 0.7,
+      				"w": 0.4,
+      				"h": 0.4
+      			},
+      			{
+      				"x": 0.6,
+      				"y": 0.6,
+      				"w": 0.4,
+      				"h": 0.4
+      			},
+      			{
+      				"x": 0,
+      				"y": 0,
+      				"w": 0.4,
+      				"h": 0.4
+      			}
+      		],
+      		"grid8": [
+      			{
+      				"x": 0,
+      				"y": 0,
+      				"w": 0.25,
+      				"h": 0.5
+      			},
+      			{
+      				"x": 0.25,
+      				"y": 0,
+      				"w": 0.245,
+      				"h": 0.5
+      			},
+      			{
+      				"x": 0.5,
+      				"y": 0,
+      				"w": 0.25,
+      				"h": 0.5
+      			},
+      			{
+      				"x": 0.75,
+      				"y": 0,
+      				"w": 0.25,
+      				"h": 0.5
+      			},
+      			{
+      				"x": 0,
+      				"y": 0.5,
+      				"w": 0.25,
+      				"h": 0.5
+      			},
+      			{
+      				"x": 0.25,
+      				"y": 0.5,
+      				"w": 0.245,
+      				"h": 0.5
+      			},
+      			{
+      				"x": 0.5,
+      				"y": 0.5,
+      				"w": 0.25,
+      				"h": 0.5
+      			},
+      			{
+      				"x": 0.75,
+      				"y": 0.5,
+      				"w": 0.25,
+      				"h": 0.5
+      			}
+      		]
+      	}
+
+        for (var key in patterns) {
+          m.patterns[key] = patterns[key]
+        }
+
+
+        var scorelocation = 0
+
+        m.start = function() {
+          nextEvent()
+        }
+
+        function nextEvent() {
+          SCORE[scorelocation][1]()
+          scorelocation++
+          if (scorelocation>=SCORE.length) { return; }
+          setTimeout(nextEvent, SCORE[scorelocation][0]*1000)
+        }
+
+
+
+
+                /*create time score
+                var Time_Score = {}
+                var scoretime = 20
+                for (var i=0;i<SCORE.length;i++) {
+                  var event = SCORE[i]
+                  var delay = event[i][0]
+                  var code = event[i][1]
+                  scoretime += (delay*10)
+                  TimeScore[scoretime] = event
+                }*/
+
+/*
+				m.timeline = function(scheduler) {
+          starttime = 0
+          if (scheduler<starttime) {
+            scheduler = starttime
+          }
+          for (var key in TimeScore) {
+            if (scheduler)
+          }
+
+				/*  switch(scheduler) {
+					case 10:
+					  a = new wall("line");
+						break;
+					case 70:
+            b = interval(300,function() {
+              if (random(0,2)==0) {
+                a.show()
+              } else {
+                a.hide()
+              }
+            })
+						break;
+					case 140:
+            a.shape("big1")
+						break;
+					case 150:
+            a.shape("big1")
+						break;
+				  }
+        // end of mcluhan scheduler
+				}
+*/
+
+      // end of jquery load
+			})
+
+
+
+
+var SCORE = [
+  [ 0, function() {
+      a = new wall("line")
+  }],
+  [ 3, function() {
+    b = interval(300,function() {
+      if (random(0,2)==0) {
+        a.show()
+      } else {
+        a.hide()
+      }
+    })
+  }],
+  [ 6, function() {
+    a.shape("big1")
+  }],
+  [ 6, function() {
+    a.shape("line")
+  }],
+  [ 6, function() {
+    b.stop()
+    a.show()
+  }],
+  [ 4, function() {
+    piano = []
+    for (var i=0;i<14;i++) {
+      piano[i] = a.hear("piano"+r(8)).move(0,i*45).jump(i%15)
+    }
+  }],
+  [ 20, function() {
+    c = a.dj("displacement")
+    c.vol(1.1)
+    d = a.explore("Northampton, Massachusetts")
+  }],
+  [ 12, function() {
+    a.xray()
+    for (var i=0;i<piano.length;i++){
+      piano[i].vol(0.8)
+    }
+  }],
+  [ 14, function() {
+    d.route("youth")
+    for (var i=0;i<piano.length;i++){
+      piano[i].vol(0.6)
+    }
+  }],
+  [ 20, function() {
+    f = a.watch("ride")
+    for (var i=0;i<piano.length;i++){
+      piano[i].vol(0.4)
+    }
+  }],
+  [ 20, function() {
+    f.load("tree")
+    for (var i=0;i<piano.length;i++){
+      piano[i].vol(0.2)
+    }
+  }],
+  [ 20, function() {
+    for (var i=0;i<piano.length;i++){
+      piano[i].kill()
+    }
+    f.load("sunset")
+  }],
+  [ 30, function() {
+    g = a.watch("birds")
+    h = a.dj("birdnoise").vol(1.2)
+  }],
+  [ 30, function() {
+    g.pixelate(20)
+    f.kill()
+  }],
+  [ 5, function() {
+    g.pixelate(30)
+    c.vol(0,20)
+  }],
+  [ 5, function() {
+    g.pixelate(40)
+  }],
+  [ 5, function() {
+    g.pixelate(50)
+  }],
+  [ 5, function() {
+    g.pixelate(60)
+  }],
+  [ 5, function() {
+    a.empty()
+    b = false
+    c = false
+    d = false
+    e = false
+    f = false
+    g = false
+
+    b = a.hack("https://en.wikipedia.org/wiki/life")
+    a.xray()
+  }],
+  [ 10, function() {
+    phone.transpose(-1)
+    phone.dialtone.start()
+  }],
+  [ 5, function() {
+    a.scroll(0)
+    c = a.see("ios")
+    d = a.dj("vibes").vol(1.1)
+  }],
+  [ 15, function() {
+    b.kill()
+    e = interval(50,a.scramble.bind(a))
+  }],
+  [ 35, function() {
+    e.stop()
+    c.kill()
+    f = a.watch("skype")
+  }],
+  [ 5, function() {
+    a.xray();
+  }],
+  [ 30, function() {
+    g = a.hack("whitechord.org/dreams").fade(0.3)
+  }],
+  [ 34, function() {
+    a.empty()
+    h = a.hear("Emaj").skip(1,1.1).move(300,50)
+  }],
+  [ 10, function() {
+    o = a.hear("piano0").skip(0,5).move(300,100)
+  }],
+  [ 7, function() {
+    a.size(150,150)
+  }],
+  [ 3, function() {
+    n = interval(100,a.scatter.bind(a))
+  }],
+  [ 20, function() {
+    phone.dialtone.stop()
+    a.kill()
+  }],
+
+ // PART 2
+  [ 5, function() {
+    a = new wall("r8")
+  }],
+  [ 5, function() {
+    b = a.text("hey")
+    c = a.dj("ringtone").vol(1.2)
+  }],
+  [ 5, function() {
+    b.scroll()
+    c.skip(1,1.1)
+  }],
+  [ 10, function() {
+    b.read("dreampoem")
+    hall.wet(0.9,30)
+    hall.size(0.97,30)
+  }],
+  [ 30, function() {
+    b.kill()
+    c.kill()
+    a.shape("grid8")
+    hall.wet(0.4,20)
+  }],
+  [ 5, function() {
+    b = a.hear("dreamdrone")
+  }],
+  [ 10, function() {
+    c = a.hear("scratch").move(0,100)
+  }],
+  [ 10, function() {
+    d = a.hear("gnarly").move(0,200)
+  }],
+  [ 10, function() {
+    e = a.see("mcluhan")
+  }],
+  [ 7, function() {
+    g = interval(200,e.glitch.bind(e))
+  }],
+  [ 10, function() {
+    e.load("mcluhan")
+    e.fade(0.8)
+  }],
+  [ 10, function() {
+    e.load("mcluhan")
+  }],
+  [ 20, function() {
+    g.stop()
+    c.kill()
+    d.kill()
+    f = a.watch("wheel")
+  }],
+  [ 10, function() {
+    e.kill()
+    e1 = a.hear("Emaj").skip(0,5).move(r(800),r(500)).vol(0.2)
+    e2 = a.hear("Emaj").skip(0,5).move(r(800),r(500)).vol(0.2)
+  }],
+  [ 8, function() {
+    e3 = a.hear("Emaj").skip(0,5).move(r(800),r(500)).vol(0.1)
+    e4 = a.hear("Emaj").skip(0,5).move(r(800),r(500)).vol(0.2)
+    e5 = a.hear("Emaj").skip(0,5).move(r(800),r(500)).vol(0.1)
+  }],
+  [ 4, function() {
+    h = a.log().load("client.html")
+    e8 = a.hear("Emaj").skip(0,5).move(r(800),r(500)).vol(0.1)
+    e9 = a.hear("Emaj").skip(0,5).move(r(800),r(500)).vol(0.2)
+  }],
+  [ 5, function() {
+    a.shape("line")
+  }],
+  [ 5, function() {
+    a.xray()
+  }],
+  [ 4, function() {
+    e6 = a.hear("Emaj").skip(0,5).move(r(800),r(500)).vol(0.2)
+    e7 = a.hear("Emaj").skip(0,5).move(r(800),r(500)).vol(0.1)
+  }],
+  [ 10, function() {
+    a.scroll(0)
+    o = a.watch("ride")
+  }],
+  [ 10, function() {
+    a.shape("grid8")
+  }],
+  [ 15, function() {
+    o.pixelate(112)
+    e1.kill()
+    h.kill()
+  }],
+  [ 15, function() {
+    e4.kill()
+    e7.kill()
+  }],
+  [ 5, function() {
+    e2.kill()
+    e8.kill()
+  }],
+  [ 5, function() {
+    e5.kill()
+    e6.kill()
+  }],
+  [ 5, function() {
+    b.kill()
+  }],
+  [ 5, function() {
+    e9.kill()
+    e3.kill()
+  }],
+  [ 10, function() {
+    a.kill()
+  }]
+]
+
+
+
+
+
+		</script>
+
+		<div id="shell">
+			<div class="guides">
+
+				<h1 style="color:#eee">THE LAST CLOUD</h1>
+
+				<button onclick="m.static.begin()">Begin</button>
+
+				<footer style="color:#fff">Ben Taylor &copy; Composed 2015
+          <br />Lovingly made with McLuhan.js</footer>
+
+			</div>
+		</div>
+
+  </body>
+</html>
