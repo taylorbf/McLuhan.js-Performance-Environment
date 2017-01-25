@@ -386,6 +386,9 @@ var SCORE = [
     a.shape("big1")
   }],
   [ 6, function() {
+    a.shape("frame")
+  }],
+  [ 6, function() {
     a.shape("line")
   }],
   [ 6, function() {
@@ -398,10 +401,10 @@ var SCORE = [
       piano[i] = a.hear("piano"+r(8)).move(0,i*45).jump(i%15)
     }
   }],
-  [ 20, function() {
+  [ 30, function() {
     c = a.dj("displacement")
     c.vol(1.1)
-    d = a.explore("Northampton, Massachusetts")
+    d = a.explore("montana")
   }],
   [ 12, function() {
     a.xray()
@@ -433,7 +436,7 @@ var SCORE = [
     }
     f.load("sunset")
   }],
-  [ 30, function() {
+  [ 26, function() {
     g = a.watch("birds")
     h = a.dj("birdnoise").vol(1.2)
   }],
@@ -443,7 +446,7 @@ var SCORE = [
   }],
   [ 5, function() {
     g.pixelate(30)
-    c.vol(0,20)
+    c.kill()
   }],
   [ 5, function() {
     g.pixelate(40)
@@ -454,7 +457,7 @@ var SCORE = [
   [ 5, function() {
     g.pixelate(60)
   }],
-  [ 5, function() {
+  [ 11, function() {
     a.empty()
     b = false
     c = false
@@ -462,11 +465,8 @@ var SCORE = [
     e = false
     f = false
     g = false
-
-    b = a.hack("https://en.wikipedia.org/wiki/life")
-    a.xray()
   }],
-  [ 10, function() {
+  [ 5, function() {
     phone.transpose(-1)
     phone.dialtone.start()
   }],
@@ -475,8 +475,10 @@ var SCORE = [
     c = a.see("ios")
     d = a.dj("vibes").vol(1.1)
   }],
-  [ 15, function() {
-    b.kill()
+  [ 8, function() {
+    a.xray()
+  }],
+  [ 7, function() {
     e = interval(50,a.scramble.bind(a))
   }],
   [ 35, function() {
@@ -490,20 +492,20 @@ var SCORE = [
   [ 30, function() {
     g = a.hack("whitechord.org/dreams").fade(0.3)
   }],
-  [ 34, function() {
+  [ 36, function() {
     a.empty()
+  }],
+  [ 3, function() {
     h = a.hear("Emaj").skip(1,1.1).move(300,50)
   }],
   [ 10, function() {
     o = a.hear("piano0").skip(0,5).move(300,100)
   }],
-  [ 7, function() {
+  [ 10, function() {
     a.size(150,150)
-  }],
-  [ 3, function() {
     n = interval(100,a.scatter.bind(a))
   }],
-  [ 20, function() {
+  [ 30, function() {
     phone.dialtone.stop()
     a.kill()
   }],
@@ -561,62 +563,62 @@ var SCORE = [
   }],
   [ 10, function() {
     e.kill()
-    e1 = a.hear("Emaj").skip(0,5).move(r(800),r(500)).vol(0.2)
-    e2 = a.hear("Emaj").skip(0,5).move(r(800),r(500)).vol(0.2)
+    e1 = a.hear("Emaj").skip(0,5).move(r(100),r(300)).vol(0.1)
+    e2 = a.hear("Emaj").skip(0,5).move(r(100),r(300)).vol(0.1)
   }],
   [ 8, function() {
+    h = a.log().load("client.html")
     e3 = a.hear("Emaj").skip(0,5).move(r(800),r(500)).vol(0.1)
-    e4 = a.hear("Emaj").skip(0,5).move(r(800),r(500)).vol(0.2)
+    e4 = a.hear("Emaj").skip(0,5).move(r(800),r(500)).vol(0.1)
     e5 = a.hear("Emaj").skip(0,5).move(r(800),r(500)).vol(0.1)
   }],
-  [ 4, function() {
-    h = a.log().load("client.html")
+  [ 9, function() {
     e8 = a.hear("Emaj").skip(0,5).move(r(800),r(500)).vol(0.1)
-    e9 = a.hear("Emaj").skip(0,5).move(r(800),r(500)).vol(0.2)
+    e9 = a.hear("Emaj").skip(0,5).move(r(800),r(500)).vol(0.1)
   }],
-  [ 5, function() {
+  [ 15, function() {
     a.shape("line")
   }],
-  [ 5, function() {
+  [ 15, function() {
     a.xray()
   }],
-  [ 4, function() {
-    e6 = a.hear("Emaj").skip(0,5).move(r(800),r(500)).vol(0.2)
+  [ 9, function() {
+    e6 = a.hear("Emaj").skip(0,5).move(r(800),r(500)).vol(0.1)
     e7 = a.hear("Emaj").skip(0,5).move(r(800),r(500)).vol(0.1)
   }],
-  [ 10, function() {
+  [ 15, function() {
     a.scroll(0)
     o = a.watch("ride")
   }],
   [ 10, function() {
     a.shape("grid8")
   }],
-  [ 15, function() {
-    o.pixelate(112)
-    e1.kill()
+  [ 5, function() {
     h.kill()
   }],
-  [ 15, function() {
+  [ 10, function() {
+    e1.kill()
+  }],
+  [ 10, function() {
+    o.pixelate(112)
     e4.kill()
     e7.kill()
   }],
-  [ 5, function() {
+  [ 10, function() {
     e2.kill()
     e8.kill()
   }],
   [ 5, function() {
+    b.vol(0.4)
+  }],
+  [ 15, function() {
     e5.kill()
     e6.kill()
   }],
-  [ 5, function() {
-    b.kill()
-  }],
-  [ 5, function() {
-    e9.kill()
-    e3.kill()
-  }],
-  [ 10, function() {
+  [ 15, function() {
+    a.empty()
     a.kill()
+    window.location.reload()
   }]
 ]
 
